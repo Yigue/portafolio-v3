@@ -1,0 +1,199 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Apple-inspired color palette - Light mode */
+  --background: #f4f1ea; /* Bone/Off-white */
+  --foreground: #0f1115; /* Ink */
+  --card: #ffffff; /* White surfaces */
+  --card-foreground: #0f1115;
+  --popover: #ffffff;
+  --popover-foreground: #0f1115;
+  --primary: #0a84ff; /* iOS Blue accent */
+  --primary-foreground: #ffffff;
+  --secondary: #f4f1ea;
+  --secondary-foreground: #0f1115;
+  --muted: #e8e5de;
+  --muted-foreground: #6b6b6b;
+  --accent: #0a84ff;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: #ffffff;
+  --border: #e0ddd6;
+  --input: #e0ddd6;
+  --ring: #0a84ff;
+  --radius: 1rem;
+
+  /* Rail colors for central line */
+  --rail: #e0ddd6;
+  --rail-active: #0a84ff;
+}
+
+.dark {
+  /* Apple-inspired color palette - Dark mode */
+  --background: #0b0c10; /* Graphite */
+  --foreground: #ededed; /* Light ink */
+  --card: #101214; /* Dark surfaces */
+  --card-foreground: #ededed;
+  --popover: #101214;
+  --popover-foreground: #ededed;
+  --primary: #0a84ff; /* iOS Blue accent */
+  --primary-foreground: #ffffff;
+  --secondary: #1a1c20;
+  --secondary-foreground: #ededed;
+  --muted: #1a1c20;
+  --muted-foreground: #8e8e93;
+  --accent: #0a84ff;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: #ededed;
+  --border: #1a1c20;
+  --input: #1a1c20;
+  --ring: #0a84ff;
+
+  /* Rail colors for dark mode */
+  --rail: #1a1c20;
+  --rail-active: #0a84ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* iOS-style multi-layer shadows */
+.shadow-soft-1 {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-soft-2 {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-soft-3 {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.16);
+}
+
+/* Combined multi-layer shadow for cards */
+.shadow-apple {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-apple-lg {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.12), 0 16px 48px rgba(0, 0, 0, 0.16);
+}
+
+/* Glassmorphism effect */
+.glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .glass {
+  background: rgba(16, 18, 20, 0.5);
+}
+
+/* Glow effects for iOS-style lighting */
+.glow-blue {
+  box-shadow: 0 0 40px rgba(10, 132, 255, 0.3);
+}
+
+.glow-blue-strong {
+  box-shadow: 0 0 60px rgba(10, 132, 255, 0.4), 0 0 100px rgba(10, 132, 255, 0.2);
+}
+
+/* Radial gradient glow backgrounds */
+.radial-glow {
+  background: radial-gradient(circle at 30% 20%, rgba(10, 132, 255, 0.3) 0%, transparent 60%);
+}
+
+/* Floating animation for skill bubbles */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Fade in up animation for sections */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Rail styling */
+.bg-rail {
+  background: var(--rail);
+}
+
+.bg-rail-active {
+  background: var(--rail-active);
+  box-shadow: 0 0 20px rgba(10, 132, 255, 0.5);
+}
