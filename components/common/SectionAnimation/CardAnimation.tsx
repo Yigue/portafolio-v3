@@ -115,18 +115,27 @@ export default function CardAnimation({
   // Brightness aumenta cuando pasa por el centro
   const brightness = useTransform(glowIntensity, [0, 1], [1, 1.15])
 
-  // ===== CALCULAR PERÍMETRO Y TRAZADO PARA SVG =====
-  const perimeter = (dimensions.width + dimensions.height) * 2
-  const strokeDasharray = perimeter
+  // ===== CALCULAR PATHS PARA TRAZADO SIMÉTRICO =====
+  // En lugar de un rectángulo completo, usamos dos paths:
+  // - Path izquierdo: desde top-center bajando por izquierda
+  // - Path derecho: desde top-center bajando por derecha
+  // Ambos se dibujan simultáneamente
+  
+  const w = dimensions.width
+  const h = dimensions.height
+  const r = 18 // border-radius
+  
+  // Longitud de cada path (mitad del perímetro aproximadamente)
+  // Cada path va desde arriba en el medio, baja por el lado, y llega hasta abajo
+  const pathLength = w / 2 + h + r * 2 // mitad del ancho + altura + compensación por radius
   
   // El strokeDashoffset se anima con el scroll progress
-  // Va de perimeter completo (sin dibujar) a 0 (completamente dibujado)
-  const strokeDashoffset = useTransform(smoothProgress, [0, 0.8], [perimeter, 0])
+  const strokeDashoffset = useTransform(smoothProgress, [0, 0.8], [pathLength, 0])
   
   // Opacidad de la línea secundaria de glow
   const secondaryGlowOpacity = useTransform(borderOpacity, [0, 1], [0, 0.6])
   
-  // Opacidad del punto brillante que sigue el trazado
+  // Opacidad del punto brillante inicial (centro superior)
   const pointOpacity = useTransform(smoothProgress, [0, 0.2, 0.6, 0.8], [0, 1, 1, 0])
 
   return (
@@ -191,13 +200,13 @@ export default function CardAnimation({
               </filter>
             </defs>
 
-            {/* Borde base estático (gris sutil) */}
+            {/* Borde base estático completo (gris sutil) */}
             <motion.rect
               x="1"
               y="1"
-              width={dimensions.width - 2}
-              height={dimensions.height - 2}
-              rx="18"
+              width={w - 2}
+              height={h - 2}
+              rx={r}
               stroke="hsl(var(--border))"
               strokeWidth="1"
               strokeOpacity="0.3"
@@ -206,38 +215,90 @@ export default function CardAnimation({
               }}
             />
 
-            {/* Rectángulo que se va "dibujando" con el scroll */}
-            <motion.rect
-              x="1"
-              y="1"
-              width={dimensions.width - 2}
-              height={dimensions.height - 2}
-              rx="18"
+            {/* PATH IZQUIERDO: desde top-center bajando por la izquierda */}
+            <motion.path
+              d={`
+                M ${w / 2},1
+                L ${r},1
+                A ${r} ${r} 0 0 0 1,${r}
+                L 1,${h - r}
+                A ${r} ${r} 0 0 0 ${r},${h - 1}
+                L ${w / 2},${h - 1}
+              `}
               stroke="url(#card-tracing-gradient)"
               strokeWidth="2.5"
-              strokeDasharray={strokeDasharray}
+              strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
               filter="url(#card-glow-filter)"
+              fill="none"
+              strokeLinecap="round"
               style={{
-                strokeLinecap: "round",
                 opacity: borderOpacity,
               }}
             />
-            
-            {/* Línea secundaria más gruesa para efecto de glow intenso */}
-            <motion.rect
-              x="1"
-              y="1"
-              width={dimensions.width - 2}
-              height={dimensions.height - 2}
-              rx="18"
-              stroke="hsl(var(--primary) / 0.25)"
-              strokeWidth="6"
-              strokeDasharray={strokeDasharray}
+
+            {/* PATH DERECHO: desde top-center bajando por la derecha (simétrico) */}
+            <motion.path
+              d={`
+                M ${w / 2},1
+                L ${w - r},1
+                A ${r} ${r} 0 0 1 ${w - 1},${r}
+                L ${w - 1},${h - r}
+                A ${r} ${r} 0 0 1 ${w - r},${h - 1}
+                L ${w / 2},${h - 1}
+              `}
+              stroke="url(#card-tracing-gradient)"
+              strokeWidth="2.5"
+              strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
               filter="url(#card-glow-filter)"
+              fill="none"
+              strokeLinecap="round"
               style={{
-                strokeLinecap: "round",
+                opacity: borderOpacity,
+              }}
+            />
+
+            {/* PATH IZQUIERDO - Glow secundario */}
+            <motion.path
+              d={`
+                M ${w / 2},1
+                L ${r},1
+                A ${r} ${r} 0 0 0 1,${r}
+                L 1,${h - r}
+                A ${r} ${r} 0 0 0 ${r},${h - 1}
+                L ${w / 2},${h - 1}
+              `}
+              stroke="hsl(var(--primary) / 0.25)"
+              strokeWidth="6"
+              strokeDasharray={pathLength}
+              strokeDashoffset={strokeDashoffset}
+              filter="url(#card-glow-filter)"
+              fill="none"
+              strokeLinecap="round"
+              style={{
+                opacity: secondaryGlowOpacity,
+              }}
+            />
+
+            {/* PATH DERECHO - Glow secundario */}
+            <motion.path
+              d={`
+                M ${w / 2},1
+                L ${w - r},1
+                A ${r} ${r} 0 0 1 ${w - 1},${r}
+                L ${w - 1},${h - r}
+                A ${r} ${r} 0 0 1 ${w - r},${h - 1}
+                L ${w / 2},${h - 1}
+              `}
+              stroke="hsl(var(--primary) / 0.25)"
+              strokeWidth="6"
+              strokeDasharray={pathLength}
+              strokeDashoffset={strokeDashoffset}
+              filter="url(#card-glow-filter)"
+              fill="none"
+              strokeLinecap="round"
+              style={{
                 opacity: secondaryGlowOpacity,
               }}
             />
@@ -257,17 +318,21 @@ export default function CardAnimation({
             }}
           />
 
-          {/* Punto brillante que sigue el progreso del trazado */}
+          {/* Punto brillante en el centro superior (origen del trazado) */}
           <motion.div
             style={{
               position: "absolute",
               left: "50%",
               top: "0",
-              width: "8px",
-              height: "8px",
+              width: "10px",
+              height: "10px",
               borderRadius: "50%",
               background: "hsl(var(--primary))",
-              boxShadow: "0 0 16px hsl(var(--primary)), 0 0 32px hsl(var(--primary) / 0.6)",
+              boxShadow: `
+                0 0 20px hsl(var(--primary)),
+                0 0 40px hsl(var(--primary) / 0.6),
+                0 0 60px hsl(var(--primary) / 0.3)
+              `,
               pointerEvents: "none",
               transform: "translate(-50%, -50%)",
               opacity: pointOpacity,
