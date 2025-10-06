@@ -12,26 +12,30 @@ export { default as ProjectsSection } from './sections/ProjectsSection'
 export { default as ContactSection } from './sections/ContactSection'
 
 // Common Components - Modular exports
-export { default as BackgroundEffects } from './common/BackgroundEffects'
-export { default as SmoothScroll } from './common/SmoothScroll'
-export { default as LightRails } from './common/LightRails'
-export { default as ConnectingLines } from './common/ConnectingLines'
-export { default as RailGlow } from './common/RailGlow'
-export { default as SectionAnimation } from './common/SectionAnimation'
-export { default as PerformanceOptimizer } from './common/PerformanceOptimizer'
-export { default as ClientOnly } from './common/ClientOnly'
+export { BackgroundEffects } from './common/BackgroundEffects'
+export { LightRails } from './common/LightRails'
+export { PerformanceOptimizer } from './common/PerformanceOptimizer'
+export { ClientOnly } from './common/ClientOnly'
 
 // Subcomponent exports for advanced usage
 export * from './common/LightRails'
-export * from './common/ConnectingLines'
+
 export * from './common/BackgroundEffects'
 export * from './common/SectionAnimation'
 export * from './common/PerformanceOptimizer'
-export * from './common/RailGlow'
+
 export * from './common/ScrollController'
+export * from './common/ConnectedLines'
+export * from './common/ScrollSpotlight'
+export * from './common/ScrollBeamOverlay'
+export { default as AnimatedSection } from './common/AnimatedSection/AnimatedSection'
+export { default as LightPassThrough } from './common/LightPassThrough/LightPassThrough'
+export { default as LightCard } from './common/LightCard/LightCard'
+
 
 // Hooks
 export { useScrollSync } from '@/lib/hooks/useScrollSync'
+export { useScrollSpotlight, useScrollSpotlightMultiple } from '@/lib/hooks/useScrollSpotlight'
 
 // UI Components - Componentes de interfaz reutilizables
 export { default as Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './ui/card'

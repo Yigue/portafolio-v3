@@ -1,14 +1,18 @@
 "use client"
 
-import SectionAnimation, { CardAnimation, TextAnimation } from "@/components/common/SectionAnimation"
+import { SectionAnimation, CardAnimation, TextAnimation } from "@/components/common/SectionAnimation"
+import LightCard from "@/components/common/LightCard/LightCard"
 
 export default function AboutSection() {
   return (
     <section id="sobre-mí" className="py-32">
       <div className="max-w-5xl mx-auto px-6">
-        <CardAnimation
-          className="glass rounded-[20px] p-8 md:p-12 shadow-card-lg border border-border/50 hover:shadow-primary-lg transition-all duration-500"
-          delay={0.2}
+        <LightCard
+          sectionId="sobre-mí"
+          cardVariant="glass"
+          lightIntensity={0.6}
+          lightColor="hsl(var(--primary))"
+          className="rounded-[20px] p-8 md:p-12 shadow-card-lg border border-border/50 hover:shadow-primary-lg transition-all duration-500"
         >
           <div className="grid md:grid-cols-[200px_1fr] gap-8 items-center">
             <CardAnimation
@@ -46,7 +50,7 @@ export default function AboutSection() {
               </TextAnimation>
             </div>
           </div>
-        </CardAnimation>
+        </LightCard>
       </div>
     </section>
   )

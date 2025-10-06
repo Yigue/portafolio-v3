@@ -29,12 +29,12 @@ import ContactSection from "@/components/sections/ContactSection"   // Sección 
 
 // Common Components - Componentes de efectos y utilidades
 import { BackgroundEffects } from "@/components/common/BackgroundEffects" // Efectos de fondo
-  
+
 import { LightRails } from "@/components/common/LightRails"               // Sistema de railes de luz
-import { ConnectingLines } from "@/components/common/ConnectingLines"     // Líneas de conexión animadas
-import { RailGlow } from "@/components/common/RailGlow"                   // Efecto de glow del rail
 import { PerformanceOptimizer } from "@/components/common/PerformanceOptimizer" // Optimizador de rendimiento
 import { ScrollProvider } from "@/components/providers/ScrollProvider" // Provider de scroll global
+import { ConnectedLines } from "@/components/common/ConnectedLines"     // Líneas conectadas del boceto
+import AnimatedSection from "@/components/common/AnimatedSection/AnimatedSection" // Secciones animadas
 
 // ===== CONFIGURACIÓN DE SECCIONES =====
 // Array con los IDs de todas las secciones para el sistema de navegación
@@ -47,94 +47,35 @@ const sections = [
   "contacto"     // Sección de contacto
 ]
 
-/**
- * COMPONENTE PRINCIPAL HOME
- * 
- * Estructura del portafolio con efectos visuales avanzados:
- * 1. Optimizador de rendimiento (se ejecuta primero)
- * 2. Scroll suave con Lenis
- * 3. Header con navegación y toggle de tema
- * 4. Barra de progreso de scroll
- * 5. Sistema de railes de luz (lado izquierdo)
- * 6. Líneas de conexión animadas (SVG)
- * 7. Secciones principales del contenido
- * 8. Efectos de fondo
- */
+
 export default function Home() {
   // Referencia al contenedor principal para el scroll
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
     <ScrollProvider debug={false}>
-      <div 
-        ref={containerRef} 
+      <div
+        ref={containerRef}
         className="min-h-screen bg-background text-foreground relative overflow-x-hidden"
       >
-        {/* ===== OPTIMIZADOR DE RENDIMIENTO ===== */}
-        {/* Detecta dispositivos de bajo rendimiento y ajusta animaciones automáticamente */}
+
         <PerformanceOptimizer />
-        
-        {/* ===== SCROLL SUAVE ===== */}
-        
-
-        
-        {/* ===== HEADER ===== */}
-        {/* Barra de navegación superior con toggle de tema y navegación */}
         <Header />
-        
-        {/* ===== BARRA DE PROGRESO ===== */}
-        {/* Muestra el progreso de scroll en el lado derecho */}
+
         <ProgressBar />
-
-        {/* ===== SISTEMA DE RAILES DE LUZ ===== */}
-        {/* Barra vertical con puntos de luz que se llenan al hacer scroll */}
         <LightRails sections={sections} debug={false} />
-        
-        {/* ===== GLOW DEL RAIL ===== */}
-        {/* Efecto de iluminación dinámico del rail principal */}
-        <RailGlow sections={sections} debug={false} />
-        
-        {/* ===== LÍNEAS DE CONEXIÓN ===== */}
-        {/* Líneas curvas SVG que conectan visualmente las secciones */}
-        <ConnectingLines sections={sections} debug={false} />
 
-        {/* ===== CONTENIDO PRINCIPAL ===== */}
+        {/* <ConnectedLines debug={false} /> */}
         <main className="relative">
-          {/* Sección Hero - Presentación principal */}
-          <section id="hero">
-            <HeroSection />
-          </section>
-          
-          {/* Sección Sobre mí - Información personal */}
-          <section id="sobre-mí">
-            <AboutSection />
-          </section>
-          
-          {/* Sección Timeline - Trayectoria y experiencia */}
-          <section id="timeline">
-            <TimelineSection />
-          </section>
-          
-
-          <section id="habilidades">
-            <SkillsSection />
-          </section>
-  
-          <section id="proyectos">
-            <ProjectsSection />
-          </section>
-          
-
-          <section id="contacto">
-            <ContactSection />
-          </section>
-          
-       
+          <HeroSection />
+          <AboutSection />
+          <TimelineSection />
+          <SkillsSection />
+          <ProjectsSection />
+          <ContactSection />
           <Footer />
         </main>
 
-        {/* ===== EFECTOS DE FONDO ===== */}
-        {/* Efectos visuales de fondo para profundidad */}
         <BackgroundEffects />
       </div>
     </ScrollProvider>
