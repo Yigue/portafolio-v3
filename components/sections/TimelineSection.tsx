@@ -1,6 +1,7 @@
 "use client"
 
 import { CardAnimation, TextAnimation } from "@/components/common/SectionAnimation"
+import { TracingBeam } from "@/components/ui/TracingBeam"
 
 interface TimelineItem {
   year: string
@@ -8,107 +9,125 @@ interface TimelineItem {
   institution?: string
   company?: string
   description: string
+  type: "education" | "experience"
 }
 
 interface TimelineCardProps {
   item: TimelineItem
   index: number
-  side: "left" | "right"
 }
 
-function TimelineCard({ item, index, side }: TimelineCardProps) {
+function TimelineCard({ item, index }: TimelineCardProps) {
   return (
     <CardAnimation
-      delay={0.3 + index * 0.1}
-      className="glass rounded-[16px] p-6 shadow-card border border-border/50 hover:shadow-primary hover:border-primary/30 hover:glow-blue transition-all duration-500 group cursor-pointer hover-lift"
+      delay={0.2 + index * 0.1}
+      className="glass rounded-[20px] p-8 shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500 group cursor-pointer relative overflow-hidden"
     >
-      <div className="text-xs text-primary font-medium mb-2">{item.year}</div>
-      <h4 className="text-lg font-medium mb-1 group-hover:text-primary transition-colors">{item.title}</h4>
-      <div className="text-sm text-muted-foreground mb-2">{item.institution || item.company}</div>
-      <p className="text-sm text-muted-foreground">{item.description}</p>
+      {/* Indicador de tipo con badge */}
+      <div className="absolute top-4 right-4">
+        <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+          item.type === "education" 
+            ? "bg-blue-500/10 text-blue-500 border border-blue-500/20" 
+            : "bg-primary/10 text-primary border border-primary/20"
+        }`}>
+          {item.type === "education" ? "Formación" : "Experiencia"}
+        </span>
+      </div>
+
+      {/* Contenido de la card */}
+      <div className="space-y-3">
+        <div className="text-sm text-primary font-semibold tracking-wide uppercase">
+          {item.year}
+        </div>
+        
+        <h4 className="text-2xl font-medium group-hover:text-primary transition-colors leading-tight">
+          {item.title}
+        </h4>
+        
+        <div className="text-base text-muted-foreground font-medium">
+          {item.institution || item.company}
+        </div>
+        
+        <p className="text-sm text-muted-foreground leading-relaxed pt-2">
+          {item.description}
+        </p>
+      </div>
+
+      {/* Efecto de glow decorativo en hover */}
+      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </CardAnimation>
   )
 }
 
 export default function TimelineSection() {
-  const education: TimelineItem[] = [
+  // Combinamos ambos arrays en uno solo para el TracingBeam
+  const timelineItems: TimelineItem[] = [
+    {
+      year: "2023 - Presente",
+      title: "Desarrollador Full Stack",
+      company: "Andreani",
+      description: "Desarrollo de plataformas logísticas y sistemas de tracking en tiempo real con React, .NET y microservicios en AWS.",
+      type: "experience",
+    },
     {
       year: "2021 - Presente",
       title: "Licenciatura en Sistemas",
       institution: "UADE",
-      description: "Especialización en desarrollo de software y arquitectura de sistemas",
+      description: "Especialización en desarrollo de software, arquitectura de sistemas, algoritmos avanzados y bases de datos distribuidas.",
+      type: "education",
     },
     {
       year: "2023",
       title: "Certificación Full Stack",
       institution: "Plataforma Online",
-      description: "React, Node.js, PostgreSQL, Docker",
-    },
-    {
-      year: "2022",
-      title: "Curso de Cloud Computing",
-      institution: "AWS Academy",
-      description: "Arquitectura cloud y servicios AWS",
-    },
-  ]
-
-  const experience: TimelineItem[] = [
-    {
-      year: "2023 - Presente",
-      title: "Desarrollador Full Stack",
-      company: "Andreani",
-      description: "Desarrollo de plataformas logísticas y sistemas de tracking en tiempo real",
+      description: "Stack MERN completo: React, Node.js, Express, MongoDB, PostgreSQL, Docker y despliegue en producción.",
+      type: "education",
     },
     {
       year: "2022 - 2023",
       title: "Freelance Developer",
       company: "Proyectos SaaS",
-      description: "Creación de productos SaaS para startups y pequeñas empresas",
+      description: "Creación de productos SaaS para startups: dashboards de analytics, sistemas de autenticación y APIs RESTful.",
+      type: "experience",
+    },
+    {
+      year: "2022",
+      title: "Curso de Cloud Computing",
+      institution: "AWS Academy",
+      description: "Arquitectura cloud, servicios AWS (EC2, S3, Lambda, RDS), infraestructura como código y CI/CD pipelines.",
+      type: "education",
     },
     {
       year: "2021 - 2022",
       title: "Junior Developer",
       company: "Startup Tech",
-      description: "Desarrollo frontend con React y TypeScript",
+      description: "Desarrollo frontend con React, TypeScript, integración de APIs REST y GraphQL, y trabajo en equipo ágil.",
+      type: "experience",
     },
   ]
 
   return (
-    <section id="timeline" className="py-32">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="timeline" className="py-32 relative">
+      <div className="max-w-5xl mx-auto px-6">
         <TextAnimation delay={0.2}>
-          <h2 className="text-4xl md:text-5xl font-light text-center mb-20">
-            Trayectoria
-          </h2>
+          <div className="text-center mb-24 space-y-4">
+            <h2 className="text-5xl md:text-6xl font-light">
+              Trayectoria
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Mi recorrido profesional y académico en el desarrollo de software
+            </p>
+          </div>
         </TextAnimation>
 
-        <div className="grid md:grid-cols-2 gap-8 md:gap-16 relative">
-          {/* Left Branch - Education */}
-          <div className="space-y-6">
-            <TextAnimation delay={0.4}>
-              <h3 className="text-2xl font-light text-primary mb-8">
-                Formación
-              </h3>
-            </TextAnimation>
-
-            {education.map((item, index) => (
-              <TimelineCard key={index} item={item} index={index} side="left" />
+        {/* TracingBeam con la línea animada */}
+        <TracingBeam className="px-6">
+          <div className="space-y-12 md:space-y-16">
+            {timelineItems.map((item, index) => (
+              <TimelineCard key={index} item={item} index={index} />
             ))}
           </div>
-
-          {/* Right Branch - Experience */}
-          <div className="space-y-6">
-            <TextAnimation delay={0.4}>
-              <h3 className="text-2xl font-light text-primary mb-8">
-                Experiencia
-              </h3>
-            </TextAnimation>
-
-            {experience.map((item, index) => (
-              <TimelineCard key={index} item={item} index={index} side="right" />
-            ))}
-          </div>
-        </div>
+        </TracingBeam>
       </div>
     </section>
   )

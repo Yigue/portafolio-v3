@@ -20,30 +20,74 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 
   return (
     <CardAnimation
-      delay={index * 0.15}
-      className="glass rounded-[20px] overflow-hidden shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500 group cursor-pointer"
+      delay={index * 0.12}
+      className="group cursor-pointer"
     >
-      <div className="aspect-video bg-muted overflow-hidden">
-        <img
-          src={project.image || "/placeholder.svg"}
-          alt={project.title}
-          className={`w-full h-full object-cover transition-transform duration-500 ${
-            isHovered ? "scale-105" : "scale-100"
-          }`}
-        />
-      </div>
-      <div className="p-6 space-y-3">
-        <h3 className="text-xl font-medium group-hover:text-primary transition-colors">{project.title}</h3>
-        <p className="text-sm text-muted-foreground">{project.description}</p>
-        <div className="flex flex-wrap gap-2">
-          {project.stack.map((tech: string, techIndex: number) => (
-            <span 
-              key={techIndex} 
-              className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-            >
-              {tech}
-            </span>
-          ))}
+      <div 
+        className="relative rounded-[20px] overflow-hidden glass border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Borde animado con gradiente */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+          <div className="absolute inset-[-10%]">
+            <div 
+              className="absolute inset-0 animate-spin-slow"
+              style={{
+                background: `conic-gradient(
+                  from 0deg,
+                  transparent 0deg,
+                  hsl(var(--primary)) 40deg,
+                  hsl(var(--primary) / 0.8) 80deg,
+                  hsl(var(--primary) / 0.4) 160deg,
+                  transparent 360deg
+                )`,
+                animationDuration: "3s",
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Contenido de la card */}
+        <div className="relative bg-background rounded-[20px] overflow-hidden">
+          <div className="aspect-video bg-muted overflow-hidden relative">
+            <img
+              src={project.image || "/placeholder.svg"}
+              alt={project.title}
+              className={`w-full h-full object-cover transition-all duration-700 ${
+                isHovered ? "scale-110 brightness-110" : "scale-100 brightness-100"
+              }`}
+            />
+            {/* Overlay con gradiente */}
+            <div className={`absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+          </div>
+          
+          <div className="p-6 space-y-4 relative">
+            <h3 className="text-xl font-medium group-hover:text-primary transition-colors duration-300">
+              {project.title}
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {project.description}
+            </p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {project.stack.map((tech: string, techIndex: number) => (
+                <span 
+                  key={techIndex} 
+                  className="text-xs px-3 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 hover:border-primary/30 transition-all duration-300 font-medium"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* Botón de acción en hover */}
+            <div className={`pt-3 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+              <div className="flex items-center gap-2 text-sm text-primary font-medium">
+                Ver proyecto 
+                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </CardAnimation>

@@ -83,6 +83,8 @@ const config: Config = {
         'fade-up': 'fade-up 0.6s ease-out',
         'fade-in': 'fade-in 0.8s ease-out',
         'scale-in': 'scale-in 0.5s ease-out',
+        // Animación de rotación lenta para bordes
+        'spin-slow': 'spin 3s linear infinite',
       },
       
       // ===== KEYFRAMES PERSONALIZADOS =====

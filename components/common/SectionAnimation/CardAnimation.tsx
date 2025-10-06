@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion"
+import { motion, useInView, useMotionValue, useTransform, animate, useScroll, useSpring } from "framer-motion"
 import { useRef, ReactNode, useEffect, useState } from "react"
 import { useScrollProgress } from "@/components/providers/ScrollProvider"
 
@@ -22,16 +22,19 @@ interface CardAnimationProps {
 }
 
 /**
- * CARD ANIMATION – Tracing Beam Edition
+ * CARD ANIMATION – Tracing Beam Edition (Sincronizado con Scroll)
  *
- * Una luz viaja progresivamente alrededor de los bordes del componente,
- * trazando su contorno cuando la card cruza la franja central del viewport.
+ * Los bordes de la card se trazan progresivamente mientras scrolleas,
+ * similar al efecto TracingBeam pero aplicado al contorno de cada card.
  * 
- * La luz recorre el perímetro completo en sentido horario,
- * sincronizada con la proximidad al centro de la pantalla.
+ * Características:
+ * - Trazado SVG que se dibuja de 0% a 100% según scroll progress
+ * - Sincronizado con el scroll individual de cada card
+ * - Glow dinámico que aumenta al alcanzar el centro del viewport
+ * - Animaciones fluidas con spring physics
  */
-export default function CardAnimation({
-  children,
+export default function CardAnimation({ 
+  children, 
   className = "",
   delay = 0,
   stagger = 0.1,
@@ -43,9 +46,23 @@ export default function CardAnimation({
 }: CardAnimationProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-50px", amount: 0.2 })
-  const { progress } = useScrollProgress()
+  const { progress: globalProgress } = useScrollProgress()
   const glowIntensity = useMotionValue(0)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+
+  // ===== SCROLL PROGRESS DE LA CARD INDIVIDUAL =====
+  // Esto hace que los bordes se tracen según la posición de la card en el viewport
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"], // Se dibuja desde que entra hasta que sale
+  })
+
+  // Suavizar el scroll progress con spring para transiciones fluidas
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  })
 
   // ===== ACTUALIZAR DIMENSIONES DE LA CARD =====
   useEffect(() => {
@@ -63,6 +80,7 @@ export default function CardAnimation({
   }, [])
 
   // ===== CALCULAR INTENSIDAD SEGÚN DISTANCIA A LA FRANJA =====
+  // Este efecto controla el glow cuando la card está cerca del centro
   useEffect(() => {
     if (!enableBeam || !ref.current) return
 
@@ -82,18 +100,34 @@ export default function CardAnimation({
       duration: 0.4,
       ease: [0.25, 0.46, 0.45, 0.94],
     })
-  }, [progress, enableBeam, glowIntensity, beamHeight, influenceRadius, maxIntensity])
+  }, [globalProgress, enableBeam, glowIntensity, beamHeight, influenceRadius, maxIntensity])
 
   // ===== TRANSFORMACIONES VISUALES =====
-  const borderOpacity = useTransform(glowIntensity, [0, 1], [0, 1])
+  // Opacidad del borde basada en scroll progress (se dibuja gradualmente)
+  const borderOpacity = useTransform(smoothProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.3])
+  
+  // Opacidad del glow ambiental aumenta cuando está cerca del centro
   const ambientOpacity = useTransform(glowIntensity, [0, 1], [0, 0.6])
+  
+  // Escala sutil en el centro
   const scale = useTransform(glowIntensity, [0, 1], [1, 1.02])
+  
+  // Brightness aumenta cuando pasa por el centro
   const brightness = useTransform(glowIntensity, [0, 1], [1, 1.15])
 
-  // ===== CALCULAR PERÍMETRO PARA SVG =====
+  // ===== CALCULAR PERÍMETRO Y TRAZADO PARA SVG =====
   const perimeter = (dimensions.width + dimensions.height) * 2
   const strokeDasharray = perimeter
-  const strokeDashoffset = useTransform(glowIntensity, [0, 1], [perimeter, 0])
+  
+  // El strokeDashoffset se anima con el scroll progress
+  // Va de perimeter completo (sin dibujar) a 0 (completamente dibujado)
+  const strokeDashoffset = useTransform(smoothProgress, [0, 0.8], [perimeter, 0])
+  
+  // Opacidad de la línea secundaria de glow
+  const secondaryGlowOpacity = useTransform(borderOpacity, [0, 1], [0, 0.6])
+  
+  // Opacidad del punto brillante que sigue el trazado
+  const pointOpacity = useTransform(smoothProgress, [0, 0.2, 0.6, 0.8], [0, 1, 1, 0])
 
   return (
     <motion.div
@@ -115,10 +149,10 @@ export default function CardAnimation({
         filter: `brightness(${brightness})`,
       }}
     >
-      {/* ===== SVG TRACING BEAM ===== */}
+      {/* ===== SVG TRACING BEAM SINCRONIZADO CON SCROLL ===== */}
       {enableBeam && dimensions.width > 0 && (
         <>
-          {/* SVG que traza el borde progresivamente */}
+          {/* SVG que traza el borde progresivamente según el scroll */}
           <motion.svg
             style={{
               position: "absolute",
@@ -126,25 +160,30 @@ export default function CardAnimation({
               width: "100%",
               height: "100%",
               pointerEvents: "none",
-              opacity: borderOpacity,
             }}
             viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              {/* Gradiente para la línea trazadora */}
-              <linearGradient id="tracing-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              {/* Gradiente dinámico que crea el efecto de "luz viajera" */}
+              <linearGradient
+                id="card-tracing-gradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="hsl(var(--primary) / 0)" />
-                <stop offset="40%" stopColor="hsl(var(--primary) / 0.4)" />
+                <stop offset="40%" stopColor="hsl(var(--primary) / 0.3)" />
                 <stop offset="50%" stopColor="hsl(var(--primary) / 1)" />
-                <stop offset="60%" stopColor="hsl(var(--primary) / 0.4)" />
+                <stop offset="60%" stopColor="hsl(var(--primary) / 0.3)" />
                 <stop offset="100%" stopColor="hsl(var(--primary) / 0)" />
               </linearGradient>
               
               {/* Filtro de glow para la línea */}
-              <filter id="glow-filter" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+              <filter id="card-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
                   <feMergeNode in="SourceGraphic" />
@@ -152,122 +191,88 @@ export default function CardAnimation({
               </filter>
             </defs>
 
-            {/* Rectángulo que se va "dibujando" alrededor de la card */}
+            {/* Borde base estático (gris sutil) */}
             <motion.rect
               x="1"
               y="1"
               width={dimensions.width - 2}
               height={dimensions.height - 2}
-              rx="8"
-              stroke="url(#tracing-gradient)"
-              strokeWidth="3"
-              strokeDasharray={strokeDasharray}
-              strokeDashoffset={strokeDashoffset}
-              filter="url(#glow-filter)"
+              rx="18"
+              stroke="hsl(var(--border))"
+              strokeWidth="1"
+              strokeOpacity="0.3"
               style={{
                 strokeLinecap: "round",
               }}
             />
-            
-            {/* Línea secundaria más gruesa y difusa para el glow */}
+
+            {/* Rectángulo que se va "dibujando" con el scroll */}
             <motion.rect
               x="1"
               y="1"
               width={dimensions.width - 2}
               height={dimensions.height - 2}
-              rx="8"
-              stroke="hsl(var(--primary) / 0.3)"
-              strokeWidth="8"
+              rx="18"
+              stroke="url(#card-tracing-gradient)"
+              strokeWidth="2.5"
               strokeDasharray={strokeDasharray}
               strokeDashoffset={strokeDashoffset}
-              filter="url(#glow-filter)"
+              filter="url(#card-glow-filter)"
               style={{
                 strokeLinecap: "round",
+                opacity: borderOpacity,
+              }}
+            />
+            
+            {/* Línea secundaria más gruesa para efecto de glow intenso */}
+            <motion.rect
+              x="1"
+              y="1"
+              width={dimensions.width - 2}
+              height={dimensions.height - 2}
+              rx="18"
+              stroke="hsl(var(--primary) / 0.25)"
+              strokeWidth="6"
+              strokeDasharray={strokeDasharray}
+              strokeDashoffset={strokeDashoffset}
+              filter="url(#card-glow-filter)"
+              style={{
+                strokeLinecap: "round",
+                opacity: secondaryGlowOpacity,
               }}
             />
           </motion.svg>
 
-          {/* Borde base sutil */}
+          {/* Resplandor ambiental difuso que aumenta cuando pasa por el centro */}
           <motion.div
             style={{
               position: "absolute",
-              inset: 0,
-              borderRadius: "8px",
-              border: "1px solid hsl(var(--primary) / 0.2)",
-              opacity: borderOpacity,
-              pointerEvents: "none",
-            }}
-          />
-
-          {/* Resplandor ambiental difuso */}
-          <motion.div
-            style={{
-              position: "absolute",
-              inset: "-16px",
-              borderRadius: "16px",
+              inset: "-20px",
+              borderRadius: "24px",
               background:
-                "radial-gradient(circle at center, hsl(var(--primary) / 0.25) 0%, transparent 70%)",
-              filter: "blur(28px)",
+                "radial-gradient(circle at center, hsl(var(--primary) / 0.2) 0%, transparent 70%)",
+              filter: "blur(32px)",
               opacity: ambientOpacity,
               pointerEvents: "none",
             }}
           />
 
-          {/* Partículas brillantes que siguen la luz */}
-          <motion.div style={{ opacity: borderOpacity }}>
-            {[25, 50, 75].map((percentage, i) => {
-              // Calcular posición en el perímetro
-              const distanceAlong = (perimeter * percentage) / 100
-              let x = 0, y = 0
-              
-              if (distanceAlong < dimensions.width) {
-                // Top edge
-                x = distanceAlong
-                y = 0
-              } else if (distanceAlong < dimensions.width + dimensions.height) {
-                // Right edge
-                x = dimensions.width
-                y = distanceAlong - dimensions.width
-              } else if (distanceAlong < 2 * dimensions.width + dimensions.height) {
-                // Bottom edge
-                x = dimensions.width - (distanceAlong - dimensions.width - dimensions.height)
-                y = dimensions.height
-              } else {
-                // Left edge
-                x = 0
-                y = dimensions.height - (distanceAlong - 2 * dimensions.width - dimensions.height)
-              }
-
-              return (
-                <motion.div
-                  key={i}
-                  style={{
-                    position: "absolute",
-                    left: `${x}px`,
-                    top: `${y}px`,
-                    width: "6px",
-                    height: "6px",
-                    borderRadius: "50%",
-                    background: "hsl(var(--primary))",
-                    boxShadow: "0 0 12px hsl(var(--primary)), 0 0 24px hsl(var(--primary) / 0.5)",
-                    pointerEvents: "none",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{
-                    opacity: [0, 1, 1, 0],
-                    scale: [0.5, 1.2, 1.2, 0.5],
-                  }}
-                  transition={{
-                    duration: traceDuration,
-                    repeat: Infinity,
-                    ease: "linear",
-                    delay: (traceDuration * percentage) / 100,
-                  }}
-                />
-              )
-            })}
-          </motion.div>
+          {/* Punto brillante que sigue el progreso del trazado */}
+          <motion.div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "0",
+              width: "8px",
+              height: "8px",
+              borderRadius: "50%",
+              background: "hsl(var(--primary))",
+              boxShadow: "0 0 16px hsl(var(--primary)), 0 0 32px hsl(var(--primary) / 0.6)",
+              pointerEvents: "none",
+              transform: "translate(-50%, -50%)",
+              opacity: pointOpacity,
+            }}
+          />
         </>
       )}
       
