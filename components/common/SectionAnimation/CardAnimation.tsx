@@ -51,16 +51,16 @@ export default function CardAnimation({
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
   // ===== SCROLL PROGRESS DE LA CARD INDIVIDUAL =====
-  // Esto hace que los bordes se tracen según la posición de la card en el viewport
+  // Coordinado con el TracingBeam - comienza un poco antes para sincronizar mejor
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"], // Se dibuja desde que entra hasta que sale
+    offset: ["start 70%", "end 40%"], // Comienza más abajo, más tiempo visible
   })
 
-  // Suavizar el scroll progress con spring para transiciones fluidas
+  // Suavizar el scroll progress con spring para animación más lenta y fluida
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 50,      // Más bajo = más lento (antes: 100)
+    damping: 40,        // Más alto = más suave (antes: 30)
     restDelta: 0.001,
   })
 
@@ -103,8 +103,9 @@ export default function CardAnimation({
   }, [globalProgress, enableBeam, glowIntensity, beamHeight, influenceRadius, maxIntensity])
 
   // ===== TRANSFORMACIONES VISUALES =====
-  // Opacidad del borde basada en scroll progress (se dibuja gradualmente)
-  const borderOpacity = useTransform(smoothProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.3])
+  // Opacidad del borde basada en scroll progress
+  // Se ilumina gradualmente y permanece iluminado
+  const borderOpacity = useTransform(smoothProgress, [0, 0.3, 0.6, 1], [0, 1, 1, 1])
   
   // Opacidad del glow ambiental aumenta cuando está cerca del centro
   const ambientOpacity = useTransform(glowIntensity, [0, 1], [0, 0.6])
@@ -115,28 +116,24 @@ export default function CardAnimation({
   // Brightness aumenta cuando pasa por el centro
   const brightness = useTransform(glowIntensity, [0, 1], [1, 1.15])
 
-  // ===== CALCULAR PATHS PARA TRAZADO SIMÉTRICO =====
-  // En lugar de un rectángulo completo, usamos dos paths:
-  // - Path izquierdo: desde top-center bajando por izquierda
-  // - Path derecho: desde top-center bajando por derecha
-  // Ambos se dibujan simultáneamente
+  // ===== CALCULAR PATH PARA TRAZADO PROGRESIVO =====
+  // El trazado recorre todo el perímetro desde arriba hacia abajo
+  // Path único: top-left → down-left → bottom → up-right → top-right
   
   const w = dimensions.width
   const h = dimensions.height
   const r = 18 // border-radius
   
-  // Longitud de cada path (mitad del perímetro aproximadamente)
-  // Cada path va desde arriba en el medio, baja por el lado, y llega hasta abajo
-  const pathLength = w / 2 + h + r * 2 // mitad del ancho + altura + compensación por radius
+  // Longitud total del path (perímetro completo)
+  const perimeter = (w + h) * 2 + r * Math.PI * 2
+  const pathLength = perimeter
   
   // El strokeDashoffset se anima con el scroll progress
-  const strokeDashoffset = useTransform(smoothProgress, [0, 0.8], [pathLength, 0])
+  // Se dibuja progresivamente y más despacio para sincronizar con el TracingBeam
+  const strokeDashoffset = useTransform(smoothProgress, [0, 0.7], [pathLength, 0])
   
   // Opacidad de la línea secundaria de glow
   const secondaryGlowOpacity = useTransform(borderOpacity, [0, 1], [0, 0.6])
-  
-  // Opacidad del punto brillante inicial (centro superior)
-  const pointOpacity = useTransform(smoothProgress, [0, 0.2, 0.6, 0.8], [0, 1, 1, 0])
 
   return (
     <motion.div
@@ -175,21 +172,6 @@ export default function CardAnimation({
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              {/* Gradiente dinámico que crea el efecto de "luz viajera" */}
-              <linearGradient
-                id="card-tracing-gradient"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="hsl(var(--primary) / 0)" />
-                <stop offset="40%" stopColor="hsl(var(--primary) / 0.3)" />
-                <stop offset="50%" stopColor="hsl(var(--primary) / 1)" />
-                <stop offset="60%" stopColor="hsl(var(--primary) / 0.3)" />
-                <stop offset="100%" stopColor="hsl(var(--primary) / 0)" />
-              </linearGradient>
-              
               {/* Filtro de glow para la línea */}
               <filter id="card-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="4" result="coloredBlur" />
@@ -225,7 +207,7 @@ export default function CardAnimation({
                 A ${r} ${r} 0 0 0 ${r},${h - 1}
                 L ${w / 2},${h - 1}
               `}
-              stroke="url(#card-tracing-gradient)"
+              stroke="hsl(var(--primary))"
               strokeWidth="2.5"
               strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
@@ -247,7 +229,7 @@ export default function CardAnimation({
                 A ${r} ${r} 0 0 1 ${w - r},${h - 1}
                 L ${w / 2},${h - 1}
               `}
-              stroke="url(#card-tracing-gradient)"
+              stroke="hsl(var(--primary))"
               strokeWidth="2.5"
               strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
@@ -315,27 +297,6 @@ export default function CardAnimation({
               filter: "blur(32px)",
               opacity: ambientOpacity,
               pointerEvents: "none",
-            }}
-          />
-
-          {/* Punto brillante en el centro superior (origen del trazado) */}
-          <motion.div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "0",
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              background: "hsl(var(--primary))",
-              boxShadow: `
-                0 0 20px hsl(var(--primary)),
-                0 0 40px hsl(var(--primary) / 0.6),
-                0 0 60px hsl(var(--primary) / 0.3)
-              `,
-              pointerEvents: "none",
-              transform: "translate(-50%, -50%)",
-              opacity: pointOpacity,
             }}
           />
         </>

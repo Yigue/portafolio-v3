@@ -21,7 +21,8 @@ function TimelineCard({ item, index }: TimelineCardProps) {
   return (
     <CardAnimation
       delay={0.2 + index * 0.1}
-      className="glass rounded-[20px] p-8 shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500 group cursor-pointer relative overflow-hidden"
+      className="glass rounded-[20px] p-8 shadow-card border border-border/50 hover:shadow-primary-lg 
+      hover:border-primary/30 transition-all duration-500 group cursor-pointer relative overflow-hidden"
     >
       {/* Indicador de tipo con badge */}
       <div className="absolute top-4 right-4">
@@ -54,7 +55,8 @@ function TimelineCard({ item, index }: TimelineCardProps) {
       </div>
 
       {/* Efecto de glow decorativo en hover */}
-      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl opacity-0 
+      group-hover:opacity-100 transition-opacity duration-500" />
     </CardAnimation>
   )
 }

@@ -4,9 +4,8 @@ import {
   motion,
   useTransform,
   useScroll,
-  useVelocity,
   useSpring,
-} from "motion/react";
+} from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const TracingBeam = ({
@@ -19,7 +18,7 @@ export const TracingBeam = ({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end start"],
+    offset: ["start center", "end center"],
   });
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -34,15 +33,15 @@ export const TracingBeam = ({
   const y1 = useSpring(
     useTransform(scrollYProgress, [0, 0.8], [50, svgHeight]),
     {
-      stiffness: 500,
-      damping: 90,
+      stiffness: 400,
+      damping: 80,
     },
   );
   const y2 = useSpring(
     useTransform(scrollYProgress, [0, 1], [50, svgHeight - 200]),
     {
-      stiffness: 500,
-      damping: 90,
+      stiffness: 400,
+      damping: 80,
     },
   );
 
@@ -51,75 +50,91 @@ export const TracingBeam = ({
       ref={ref}
       className={cn("relative mx-auto h-full w-full max-w-4xl", className)}
     >
-      <div className="absolute top-3 -left-4 md:-left-20">
+      <div className="absolute top-3 -left-4 md:-left-20 lg:-left-24">
+        {/* Punto indicador inicial */}
         <motion.div
           transition={{
-            duration: 0.2,
-            delay: 0.5,
+            duration: 0.3,
+            delay: 0.4,
           }}
           animate={{
             boxShadow:
               scrollYProgress.get() > 0
-                ? "none"
-                : "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                ? "0 0 20px hsl(var(--primary) / 0.4)"
+                : "0 0 0px hsl(var(--primary) / 0)",
           }}
-          className="border-netural-200 ml-[27px] flex h-4 w-4 items-center justify-center rounded-full border shadow-sm"
+          className="ml-[27px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-primary bg-background shadow-lg"
         >
           <motion.div
             transition={{
-              duration: 0.2,
-              delay: 0.5,
+              duration: 0.3,
+              delay: 0.4,
             }}
             animate={{
-              backgroundColor: scrollYProgress.get() > 0 ? "white" : "#10b981",
-              borderColor: scrollYProgress.get() > 0 ? "white" : "#059669",
+              backgroundColor: scrollYProgress.get() > 0 ? "hsl(var(--primary))" : "hsl(var(--background))",
+              scale: scrollYProgress.get() > 0 ? 1 : 0.8,
             }}
-            className="h-2 w-2 rounded-full border border-neutral-300 bg-white"
+            className="h-2.5 w-2.5 rounded-full bg-primary"
           />
         </motion.div>
+
+        {/* SVG con la línea trazadora */}
         <svg
           viewBox={`0 0 20 ${svgHeight}`}
           width="20"
-          height={svgHeight} // Set the SVG height
+          height={svgHeight}
           className="ml-4 block"
           aria-hidden="true"
         >
+          {/* Línea base estática (gris) */}
           <motion.path
             d={`M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`}
             fill="none"
-            stroke="#9091A0"
-            strokeOpacity="0.16"
-            transition={{
-              duration: 10,
-            }}
-          ></motion.path>
+            stroke="hsl(var(--border))"
+            strokeOpacity="0.3"
+            strokeWidth="2"
+          />
+          
+          {/* Línea animada con gradiente (color primario) */}
           <motion.path
             d={`M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`}
             fill="none"
             stroke="url(#gradient)"
-            strokeWidth="1.25"
+            strokeWidth="2.5"
             className="motion-reduce:hidden"
-            transition={{
-              duration: 10,
+            style={{
+              filter: "drop-shadow(0 0 6px hsl(var(--primary) / 0.6))",
             }}
-          ></motion.path>
+          />
+          
           <defs>
             <motion.linearGradient
               id="gradient"
               gradientUnits="userSpaceOnUse"
               x1="0"
               x2="0"
-              y1={y1} // set y1 for gradient
-              y2={y2} // set y2 for gradient
+              y1={y1}
+              y2={y2}
             >
-              <stop stopColor="#18CCFC" stopOpacity="0"></stop>
-              <stop stopColor="#18CCFC"></stop>
-              <stop offset="0.325" stopColor="#6344F5"></stop>
-              <stop offset="1" stopColor="#AE48FF" stopOpacity="0"></stop>
+              <stop stopColor="hsl(var(--primary) / 0)" stopOpacity="0" />
+              <stop stopColor="hsl(var(--primary))" stopOpacity="1" />
+              <stop offset="0.5" stopColor="hsl(var(--primary))" stopOpacity="1" />
+              <stop offset="1" stopColor="hsl(var(--primary) / 0)" stopOpacity="0" />
             </motion.linearGradient>
           </defs>
         </svg>
+
+        {/* Punto indicador final */}
+        <motion.div
+          style={{
+            opacity: useTransform(scrollYProgress, [0.8, 1], [0, 1]),
+          }}
+          className="ml-[27px] -mt-2 flex h-5 w-5 items-center justify-center rounded-full border-2 border-primary bg-background shadow-lg"
+        >
+          <div className="h-2.5 w-2.5 rounded-full bg-primary animate-pulse" />
+        </motion.div>
       </div>
+      
       <div ref={contentRef}>{children}</div>
     </motion.div>
   );

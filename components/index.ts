@@ -31,6 +31,7 @@ export * from './common/ScrollBeamOverlay'
 export { default as AnimatedSection } from './common/AnimatedSection/AnimatedSection'
 export { default as LightPassThrough } from './common/LightPassThrough/LightPassThrough'
 export { default as LightCard } from './common/LightCard/LightCard'
+export * from './common/TimelineCard'
 
 
 // Hooks
