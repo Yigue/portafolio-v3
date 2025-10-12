@@ -1,15 +1,15 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { motion } from "framer-motion"
+import { CardAnimation } from "@/components/common/SectionAnimation"
+import { ReactNode } from "react"
 
-export const BentoGrid = ({
-  className,
-  children,
-}: {
+interface BentoGridProps {
   className?: string
-  children?: React.ReactNode
-}) => {
+  children?: ReactNode
+}
+
+export const BentoGrid = ({ className, children }: BentoGridProps) => {
   return (
     <div
       className={cn(
@@ -22,6 +22,15 @@ export const BentoGrid = ({
   )
 }
 
+interface BentoGridItemProps {
+  className?: string
+  title?: string | ReactNode
+  description?: string | ReactNode
+  header?: ReactNode
+  icon?: ReactNode
+  delay?: number
+}
+
 export const BentoGridItem = ({
   className,
   title,
@@ -29,32 +38,13 @@ export const BentoGridItem = ({
   header,
   icon,
   delay = 0,
-}: {
-  className?: string
-  title?: string | React.ReactNode
-  description?: string | React.ReactNode
-  header?: React.ReactNode
-  icon?: React.ReactNode
-  delay?: number
-}) => {
+}: BentoGridItemProps) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{
-        duration: 0.6,
-        delay: delay,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
-      whileHover={{
-        y: -5,
-        transition: { duration: 0.2 },
-      }}
+    <CardAnimation
+      delay={delay}
+      enableBeam={true}
       className={cn(
-        "group/bento relative overflow-hidden rounded-[20px] glass border border-border/50",
-        "hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500 cursor-pointer",
-        "row-span-1 flex flex-col justify-between space-y-4 p-6",
+        "group/bento row-span-1 flex flex-col justify-between space-y-4 p-6",
         className
       )}
     >
@@ -87,7 +77,7 @@ export const BentoGridItem = ({
 
       {/* Efecto de glow decorativo */}
       <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-primary/15 rounded-full blur-3xl opacity-0 group-hover/bento:opacity-100 transition-opacity duration-500" />
-    </motion.div>
+    </CardAnimation>
   )
 }
 

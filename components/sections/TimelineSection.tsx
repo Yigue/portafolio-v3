@@ -1,7 +1,6 @@
 "use client"
 
 import { CardAnimation, TextAnimation } from "@/components/common/SectionAnimation"
-import { TracingBeam } from "@/components/ui/TracingBeam"
 
 interface TimelineItem {
   year: string
@@ -122,14 +121,12 @@ export default function TimelineSection() {
           </div>
         </TextAnimation>
 
-        {/* TracingBeam con la línea animada */}
-        <TracingBeam className="px-6">
-          <div className="space-y-12 md:space-y-16">
-            {timelineItems.map((item, index) => (
-              <TimelineCard key={index} item={item} index={index} />
-            ))}
-          </div>
-        </TracingBeam>
+        {/* Timeline items (TracingBeam ahora es global) */}
+        <div className="space-y-12 md:space-y-16">
+          {timelineItems.map((item, index) => (
+            <TimelineCard key={index} item={item} index={index} />
+          ))}
+        </div>
       </div>
     </section>
   )
