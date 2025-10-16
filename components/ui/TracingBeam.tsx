@@ -11,9 +11,11 @@ import { cn } from "@/lib/utils";
 export const TracingBeam = ({
   children,
   className,
+  position = "left",
 }: {
   children: React.ReactNode;
   className?: string;
+  position?: "left" | "right";
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -45,12 +47,17 @@ export const TracingBeam = ({
     },
   );
 
+  const isLeft = position === "left"
+  const positionClasses = isLeft 
+    ? "-left-4 md:-left-20 lg:-left-24" 
+    : "-right-4 md:-right-20 lg:-right-24"
+
   return (
     <motion.div
       ref={ref}
       className={cn("relative mx-auto h-full w-full max-w-4xl", className)}
     >
-      <div className="absolute top-3 -left-4 md:-left-20 lg:-left-24">
+      <div className={cn("absolute top-3", positionClasses)}>
         {/* Punto indicador inicial */}
         <motion.div
           transition={{
@@ -88,7 +95,10 @@ export const TracingBeam = ({
         >
           {/* Línea base estática (gris) */}
           <motion.path
-            d={`M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`}
+            d={isLeft 
+              ? `M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`
+              : `M 19 0V -36 l -18 24 V ${svgHeight * 0.8} l 18 24V ${svgHeight}`
+            }
             fill="none"
             stroke="hsl(var(--border))"
             strokeOpacity="0.3"
@@ -97,7 +107,10 @@ export const TracingBeam = ({
           
           {/* Línea animada con gradiente (color primario) */}
           <motion.path
-            d={`M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`}
+            d={isLeft 
+              ? `M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`
+              : `M 19 0V -36 l -18 24 V ${svgHeight * 0.8} l 18 24V ${svgHeight}`
+            }
             fill="none"
             stroke="url(#gradient)"
             strokeWidth="2.5"

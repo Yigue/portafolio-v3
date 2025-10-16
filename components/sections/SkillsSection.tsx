@@ -2,6 +2,9 @@
 
 import { TextAnimation } from "@/components/common/SectionAnimation"
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid"
+import { TechImage } from "@/components/ui/TechImage"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { useRef } from "react"
 
 // ===== ICONOS SVG PERSONALIZADOS =====
 const CodeIcon = () => (
@@ -41,9 +44,27 @@ const DatabaseIcon = () => (
 )
 
 export default function SkillsSection() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  })
+  
+  // Parallax sutil para el fondo
+  const y = useTransform(scrollYProgress, [0, 1], [0, -50])
+
   return (
-    <section id="habilidades" className="py-32 relative">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} id="habilidades" className="py-32 relative">
+      {/* Efecto parallax de fondo */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none opacity-30"
+        style={{ y }}
+      >
+        <div className="absolute top-20 right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+      </motion.div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* ===== TÍTULO DE LA SECCIÓN ===== */}
         <TextAnimation delay={0.2}>
           <div className="text-center mb-24 space-y-4">
@@ -73,6 +94,11 @@ export default function SkillsSection() {
                 </div>
               </div>
             }
+            header={
+              <div className="w-full h-32 rounded-xl overflow-hidden">
+                <TechImage category="frontend" pattern="mesh" />
+              </div>
+            }
             icon={<CodeIcon />}
             className="md:col-span-2 md:row-span-2"
             delay={0.1}
@@ -92,6 +118,11 @@ export default function SkillsSection() {
                 </div>
               </div>
             }
+            header={
+              <div className="w-full h-24 rounded-xl overflow-hidden">
+                <TechImage category="backend" pattern="waves" />
+              </div>
+            }
             icon={<ServerIcon />}
             className="md:col-span-1"
             delay={0.2}
@@ -109,6 +140,11 @@ export default function SkillsSection() {
                     </span>
                   ))}
                 </div>
+              </div>
+            }
+            header={
+              <div className="w-full h-24 rounded-xl overflow-hidden">
+                <TechImage category="database" pattern="grid" />
               </div>
             }
             icon={<DatabaseIcon />}
@@ -131,6 +167,11 @@ export default function SkillsSection() {
                 </div>
               </div>
             }
+            header={
+              <div className="w-full h-28 rounded-xl overflow-hidden">
+                <TechImage category="devops" pattern="dots" />
+              </div>
+            }
             icon={<CloudIcon />}
             className="md:col-span-2"
             delay={0.3}
@@ -150,6 +191,11 @@ export default function SkillsSection() {
                 </div>
               </div>
             }
+            header={
+              <div className="w-full h-24 rounded-xl overflow-hidden">
+                <TechImage category="ai" pattern="mesh" />
+              </div>
+            }
             icon={<SparklesIcon />}
             className="md:col-span-1"
             delay={0.35}
@@ -167,6 +213,11 @@ export default function SkillsSection() {
                     </span>
                   ))}
                 </div>
+              </div>
+            }
+            header={
+              <div className="w-full h-28 rounded-xl overflow-hidden">
+                <TechImage category="design" pattern="waves" />
               </div>
             }
             icon={<DesignIcon />}

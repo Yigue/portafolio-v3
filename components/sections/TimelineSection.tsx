@@ -1,6 +1,7 @@
 "use client"
 
 import { CardAnimation, TextAnimation } from "@/components/common/SectionAnimation"
+import { TimelineLine } from "@/components/common/TimelineLine"
 
 interface TimelineItem {
   year: string
@@ -109,7 +110,7 @@ export default function TimelineSection() {
 
   return (
     <section id="timeline" className="py-32 relative">
-      <div className="max-w-5xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6">
         <TextAnimation delay={0.2}>
           <div className="text-center mb-24 space-y-4">
             <h2 className="text-5xl md:text-6xl font-light">
@@ -121,8 +122,34 @@ export default function TimelineSection() {
           </div>
         </TextAnimation>
 
-        {/* Timeline items (TracingBeam ahora es global) */}
-        <div className="space-y-12 md:space-y-16">
+        {/* Timeline con línea central - Solo en desktop */}
+        <div className="hidden md:block relative min-h-[800px]">
+          <TimelineLine items={timelineItems.map(item => ({ type: item.type, year: item.year }))} />
+          
+          {/* Items alternados */}
+          <div className="relative">
+            {timelineItems.map((item, index) => {
+              const progress = (index + 1) / (timelineItems.length + 1)
+              const isLeft = item.type === "experience"
+              
+              return (
+                <div
+                  key={index}
+                  className="absolute w-[45%]"
+                  style={{
+                    top: `${progress * 100}%`,
+                    [isLeft ? "right" : "left"]: "52.5%",
+                  }}
+                >
+                  <TimelineCard item={item} index={index} />
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Timeline en mobile - stack vertical sin línea */}
+        <div className="block md:hidden space-y-12">
           {timelineItems.map((item, index) => (
             <TimelineCard key={index} item={item} index={index} />
           ))}

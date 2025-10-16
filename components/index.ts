@@ -16,6 +16,10 @@ export { BackgroundEffects } from './common/BackgroundEffects'
 export { LightRails } from './common/LightRails'
 export { PerformanceOptimizer } from './common/PerformanceOptimizer'
 export { ClientOnly } from './common/ClientOnly'
+export { GlobalSpotlight } from './common/GlobalSpotlight'
+export { CustomCursor } from './common/CustomCursor'
+export { TimelineLine } from './common/TimelineLine'
+export { AlternatingLayout } from './common/AlternatingLayout'
 
 // Subcomponent exports
 export * from './common/LightRails'

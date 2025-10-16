@@ -2,6 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
 
 // Configuración de variantes del botón con estilos mejorados
 const buttonVariants = cva(
@@ -70,6 +71,8 @@ interface ButtonProps extends React.ComponentProps<"button">, VariantProps<typeo
   loading?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
+  shimmer?: boolean
+  glow?: boolean
 }
 
 function Button({
@@ -80,19 +83,47 @@ function Button({
   loading = false,
   leftIcon,
   rightIcon,
+  shimmer = false,
+  glow = false,
   children,
   disabled,
   ...props
 }: ButtonProps) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : motion.button
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(
+        buttonVariants({ variant, size }),
+        shimmer && "relative overflow-hidden",
+        glow && "glow-primary",
+        className
+      )}
       disabled={disabled || loading}
-      {...props}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2 }}
+      {...(props as any)}
     >
+      {/* Shimmer effect */}
+      {shimmer && !disabled && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          initial={{ x: "-100%" }}
+          animate={{ x: "200%" }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatDelay: 1,
+            ease: "linear",
+          }}
+          style={{
+            background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)",
+          }}
+        />
+      )}
+      
       {/* Icono de carga */}
       {loading && (
         <svg
@@ -121,7 +152,7 @@ function Button({
       {!loading && leftIcon && leftIcon}
       
       {/* Contenido del botón */}
-      {children}
+      <span className="relative z-10">{children}</span>
       
       {/* Icono derecho */}
       {!loading && rightIcon && rightIcon}

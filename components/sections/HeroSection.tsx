@@ -1,25 +1,37 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { TextAnimation } from "@/components/common/SectionAnimation"
 import { Spotlight } from "@/components/ui/spotlight"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
 
 export default function HeroSection() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  })
+  
+  // Parallax effect
+  const y = useTransform(scrollYProgress, [0, 1], [0, 200])
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+
   return (
-    <section className="min-h-screen flex items-center justify-center relative pt-20 overflow-hidden">
+    <section ref={ref} className="min-h-screen flex items-center justify-center relative pt-20 overflow-hidden">
       {/* Gradiente de fondo */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background" />
 
       {/* Spotlight interactivo que sigue el mouse */}
       <Spotlight className="absolute inset-0 z-0" fill="hsl(var(--primary) / 0.25)" />
 
-      {/* Glow central estático */}
+      {/* Glow central con parallax */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 0.25, scale: 1 }}
         transition={{ duration: 1.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{ y }}
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
       >
         <div className="w-[800px] h-[800px] rounded-full bg-primary/15 blur-[140px] animate-pulse" 
@@ -27,17 +39,25 @@ export default function HeroSection() {
         />
       </motion.div>
 
-      {/* Grid de fondo sutil */}
-      <div 
+      {/* Grid de fondo sutil con parallax */}
+      <motion.div 
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 100]) }}
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(circle at center, hsl(var(--primary)) 1px, transparent 1px)`,
-          backgroundSize: "50px 50px",
-        }}
-      />
+      >
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `radial-gradient(circle at center, hsl(var(--primary)) 1px, transparent 1px)`,
+            backgroundSize: "50px 50px",
+          }}
+        />
+      </motion.div>
 
-      {/* Contenido principal */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-10">
+      {/* Contenido principal con fade */}
+      <motion.div 
+        style={{ opacity }}
+        className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-10"
+      >
         {/* Título principal con Text Generate Effect */}
         <div className="space-y-6">
           <motion.div
@@ -81,7 +101,9 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
             <Button
               size="lg"
-              className="rounded-full px-10 shadow-card hover:shadow-primary-lg hover:scale-105 transition-all duration-300 group"
+              shimmer={true}
+              glow={true}
+              className="rounded-full px-10 shadow-card hover:shadow-primary-lg transition-all duration-300 group"
               onClick={() => document.getElementById("proyectos")?.scrollIntoView({ behavior: "smooth" })}
             >
               Ver proyectos
@@ -96,7 +118,7 @@ export default function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full px-10 glass bg-transparent hover:border-primary/50 hover:shadow-primary hover:scale-105 transition-all duration-300"
+              className="rounded-full px-10 glass bg-transparent hover:border-primary/50 hover:shadow-primary transition-all duration-300"
               onClick={() => document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" })}
             >
               Contactar
@@ -132,7 +154,7 @@ export default function HeroSection() {
             </motion.div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }

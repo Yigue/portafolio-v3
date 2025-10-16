@@ -2,12 +2,14 @@
 
 import { TextAnimation } from "@/components/common/SectionAnimation"
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid"
+import { ProjectPlaceholder } from "@/components/ui/ProjectPlaceholder"
+import type { ProjectType } from "@/lib/gradients"
 
 interface Project {
   title: string
   description: string
   stack: string[]
-  image: string
+  type: ProjectType
   featured?: boolean
 }
 
@@ -17,39 +19,39 @@ export default function ProjectsSection() {
       title: "Sistema de Tracking",
       description: "Plataforma de seguimiento en tiempo real para logística con React, .NET y microservicios en AWS. Manejo de datos en tiempo real y visualización de rutas.",
       stack: ["React", "Node.js", "PostgreSQL", "AWS"],
-      image: "/modern-ecommerce-website.png",
+      type: "web",
       featured: true
     },
     {
       title: "SaaS de Gestión",
       description: "Herramienta de gestión empresarial potenciada con IA para automatización de tareas",
       stack: ["Next.js", "Supabase", "OpenAI"],
-      image: "/task-management-dashboard.png",
+      type: "saas",
       featured: true
     },
     {
       title: "E-commerce Platform",
       description: "Tienda online moderna con pagos integrados y gestión de inventario",
       stack: ["React", "Stripe", "Tailwind"],
-      image: "/modern-ecommerce-website.png",
+      type: "ecommerce",
     },
     {
       title: "Analytics Dashboard",
       description: "Dashboard interactivo de métricas con visualización de datos en tiempo real",
       stack: ["Next.js", "D3.js", "Redis"],
-      image: "/analytics-dashboard-charts.png",
+      type: "analytics",
     },
     {
       title: "Mobile App",
       description: "Aplicación móvil para gestión de tareas con sincronización en la nube",
       stack: ["React Native", "Firebase"],
-      image: "/task-management-dashboard.png",
+      type: "mobile",
     },
     {
       title: "API Gateway",
       description: "Arquitectura de microservicios escalable con Docker y Kubernetes",
       stack: [".NET", "Docker", "AWS"],
-      image: "/social-media-feed-interface.jpg",
+      type: "api",
     },
   ]
 
@@ -99,11 +101,11 @@ export default function ProjectsSection() {
                 </div>
               }
               header={
-                <div className="w-full h-full min-h-[200px] overflow-hidden bg-muted rounded-xl relative group-hover/bento:scale-105 transition-transform duration-500">
-                  <img
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
+                <div className="w-full h-full min-h-[200px] overflow-hidden rounded-xl relative group-hover/bento:scale-105 transition-transform duration-500">
+                  <ProjectPlaceholder 
+                    type={project.type} 
+                    title={project.title}
+                    pattern="geometric"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent opacity-0 group-hover/bento:opacity-100 transition-opacity duration-500" />
                 </div>

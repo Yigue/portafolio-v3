@@ -30,7 +30,9 @@ import ContactSection from "@/components/sections/ContactSection"
 import { BackgroundEffects } from "@/components/common/BackgroundEffects"
 import { LightRails } from "@/components/common/LightRails"
 import { PerformanceOptimizer } from "@/components/common/PerformanceOptimizer"
-import { TracingBeam } from "@/components/ui/TracingBeam"
+import { GlobalSpotlight } from "@/components/common/GlobalSpotlight"
+import { CustomCursor } from "@/components/common/CustomCursor"
+import { AlternatingLayout } from "@/components/common/AlternatingLayout"
 
 // Configuración de secciones
 const sections = [
@@ -52,6 +54,8 @@ export default function Home() {
         className="min-h-screen bg-background text-foreground relative overflow-x-hidden"
       >
         <PerformanceOptimizer />
+        <GlobalSpotlight intensity={0.15} />
+        <CustomCursor />
         <Header />
         <ProgressBar />
         <LightRails sections={sections} debug={false} />
@@ -59,14 +63,23 @@ export default function Home() {
         <main className="relative">
           <HeroSection />
           
-          {/* TracingBeam envuelve todas las secciones principales */}
-          <TracingBeam>
+          {/* Secciones con AlternatingLayout */}
+          <AlternatingLayout position="left" enableBeam={true}>
             <AboutSection />
+          </AlternatingLayout>
+          
+          <AlternatingLayout position="right" enableBeam={true}>
             <TimelineSection />
+          </AlternatingLayout>
+          
+          <AlternatingLayout position="left" enableBeam={true}>
             <SkillsSection />
+          </AlternatingLayout>
+          
+          <AlternatingLayout position="right" enableBeam={true}>
             <ProjectsSection />
-           
-          </TracingBeam>
+          </AlternatingLayout>
+          
           <ContactSection />
           <Footer />
         </main>

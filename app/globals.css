@@ -67,17 +67,71 @@ body {
   line-height: 1.5;
 }
 
-/* Efectos de glassmorphism */
+/* Efectos de glassmorphism mejorados */
 .glass {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dark .glass {
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glass con más blur */
+.glass-strong {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dark .glass-strong {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Bordes con gradiente */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid transparent;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.dark .gradient-border {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
 }
 
 /* Sombras suaves estilo Apple */
@@ -137,13 +191,39 @@ body {
     0 4px 8px rgba(59, 130, 246, 0.15);
 }
 
-/* Efectos de glow */
+/* Efectos de glow mejorados */
 .glow-blue {
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 .glow-blue-strong {
   box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+}
+
+.glow-primary {
+  box-shadow: 
+    0 0 20px hsl(var(--primary) / 0.4),
+    0 0 40px hsl(var(--primary) / 0.2);
+}
+
+.glow-primary-strong {
+  box-shadow: 
+    0 0 30px hsl(var(--primary) / 0.6),
+    0 0 60px hsl(var(--primary) / 0.3),
+    0 0 90px hsl(var(--primary) / 0.1);
+}
+
+/* Inner glow para cards */
+.inner-glow {
+  box-shadow: 
+    inset 0 1px 3px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dark .inner-glow {
+  box-shadow: 
+    inset 0 1px 3px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* Rail de progreso */
@@ -251,5 +331,130 @@ button,
   background: linear-gradient(135deg, 
     rgba(0, 0, 0, 0.2) 0%, 
     rgba(0, 0, 0, 0.1) 100%
+  );
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Magnetic button effect */
+.magnetic {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Ripple effect */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+/* Cursor hover effects */
+.cursor-hover {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cursor-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* Smooth scroll con easing personalizado */
+html.smooth-scroll {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* Hide default cursor on elements with custom cursor */
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* Parallax container */
+.parallax {
+  transform-style: preserve-3d;
+}
+
+/* Variables CSS para primary RGB (útil para efectos con alpha) */
+:root {
+  --primary-rgb: 67, 132, 246;
+}
+
+.dark {
+  --primary-rgb: 99, 164, 255;
+}
+
+/* Efecto de ambient occlusion simulado en cards */
+.ambient-shadow {
+  position: relative;
+}
+
+.ambient-shadow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 120%,
+    rgba(0, 0, 0, 0.1) 0%,
+    transparent 60%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dark .ambient-shadow::after {
+  background: radial-gradient(
+    circle at 50% 120%,
+    rgba(0, 0, 0, 0.3) 0%,
+    transparent 60%
   );
 }
