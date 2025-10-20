@@ -34,11 +34,10 @@ export default function AboutSection() {
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse" />
               <div className="relative w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mx-auto shadow-primary">
-                <img
-                  src="/professional-developer-portrait.png"
-                  alt="Profile"
-                  className="w-36 h-36 rounded-full object-cover"
-                />
+                {/* Placeholder con iniciales */}
+                <div className="w-36 h-36 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
+                  <span className="text-5xl font-bold text-white">GS</span>
+                </div>
               </div>
             </div>
 

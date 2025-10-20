@@ -1,2 +1,3 @@
-export { AlternatingLayout, default } from './AlternatingLayout'
+export { AlternatingLayout } from './AlternatingLayout'
+export { default } from './AlternatingLayout'
 

@@ -32,7 +32,9 @@ import { LightRails } from "@/components/common/LightRails"
 import { PerformanceOptimizer } from "@/components/common/PerformanceOptimizer"
 import { GlobalSpotlight } from "@/components/common/GlobalSpotlight"
 import { CustomCursor } from "@/components/common/CustomCursor"
+import { ConnectedTracingBeam } from "@/components/common/ConnectedTracingBeam"
 import { AlternatingLayout } from "@/components/common/AlternatingLayout"
+import { TracingBeam } from "@/components/ui/tracingBeam/TracingBeam"
 
 // Configuración de secciones
 const sections = [
@@ -54,32 +56,26 @@ export default function Home() {
         className="min-h-screen bg-background text-foreground relative overflow-x-hidden"
       >
         <PerformanceOptimizer />
-        <GlobalSpotlight intensity={0.15} />
+        <GlobalSpotlight intensity={0.08} />
         <CustomCursor />
+
         <Header />
         <ProgressBar />
         <LightRails sections={sections} debug={false} />
 
         <main className="relative">
           <HeroSection />
-          
-          {/* Secciones con AlternatingLayout */}
-          <AlternatingLayout position="left" enableBeam={true}>
-            <AboutSection />
-          </AlternatingLayout>
-          
-          <AlternatingLayout position="right" enableBeam={true}>
-            <TimelineSection />
-          </AlternatingLayout>
-          
-          <AlternatingLayout position="left" enableBeam={true}>
-            <SkillsSection />
-          </AlternatingLayout>
-          
-          <AlternatingLayout position="right" enableBeam={true}>
-            <ProjectsSection />
-          </AlternatingLayout>
-          
+
+          {/* Secciones con TracingBeam simplificado */}
+          <TracingBeam 
+            indicatorVariant="outline"
+            animationSpeed={1.2}
+            xOffset={0}
+          >
+            <section id="about" className="h-[600vh] p-8">
+            
+            </section>
+          </TracingBeam>
           <ContactSection />
           <Footer />
         </main>

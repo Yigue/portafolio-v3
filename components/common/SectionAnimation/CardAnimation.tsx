@@ -41,7 +41,7 @@ export default function CardAnimation({
   enableBeam = true,
   beamHeight = 60,
   influenceRadius = 200,
-  maxIntensity = 1,
+  maxIntensity = 0.3,
   traceDuration = 2.5,
 }: CardAnimationProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -105,16 +105,16 @@ export default function CardAnimation({
   // ===== TRANSFORMACIONES VISUALES =====
   // Opacidad del borde basada en scroll progress
   // Se ilumina gradualmente y permanece iluminado
-  const borderOpacity = useTransform(smoothProgress, [0, 0.3, 0.6, 1], [0, 1, 1, 1])
+  const borderOpacity = useTransform(smoothProgress, [0, 0.3, 0.6, 1], [0, 0.8, 0.8, 0.8])
   
   // Opacidad del glow ambiental aumenta cuando está cerca del centro
-  const ambientOpacity = useTransform(glowIntensity, [0, 1], [0, 0.6])
+  const ambientOpacity = useTransform(glowIntensity, [0, 1], [0, 0.2])
   
   // Escala sutil en el centro
-  const scale = useTransform(glowIntensity, [0, 1], [1, 1.02])
+  const scale = useTransform(glowIntensity, [0, 1], [1, 1.01])
   
   // Brightness aumenta cuando pasa por el centro
-  const brightness = useTransform(glowIntensity, [0, 1], [1, 1.15])
+  const brightness = useTransform(glowIntensity, [0, 1], [1, 1.05])
 
   // ===== CALCULAR PATH PARA TRAZADO PROGRESIVO =====
   // El trazado recorre todo el perímetro desde arriba hacia abajo
@@ -208,7 +208,7 @@ export default function CardAnimation({
                 L ${w / 2},${h - 1}
               `}
               stroke="hsl(var(--primary))"
-              strokeWidth="2.5"
+              strokeWidth="1.5"
               strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
               filter="url(#card-glow-filter)"
@@ -230,7 +230,7 @@ export default function CardAnimation({
                 L ${w / 2},${h - 1}
               `}
               stroke="hsl(var(--primary))"
-              strokeWidth="2.5"
+              strokeWidth="1.5"
               strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
               filter="url(#card-glow-filter)"
@@ -251,8 +251,8 @@ export default function CardAnimation({
                 A ${r} ${r} 0 0 0 ${r},${h - 1}
                 L ${w / 2},${h - 1}
               `}
-              stroke="hsl(var(--primary) / 0.25)"
-              strokeWidth="6"
+              stroke="hsl(var(--primary) / 0.15)"
+              strokeWidth="4"
               strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
               filter="url(#card-glow-filter)"
@@ -273,8 +273,8 @@ export default function CardAnimation({
                 A ${r} ${r} 0 0 1 ${w - r},${h - 1}
                 L ${w / 2},${h - 1}
               `}
-              stroke="hsl(var(--primary) / 0.25)"
-              strokeWidth="6"
+              stroke="hsl(var(--primary) / 0.15)"
+              strokeWidth="4"
               strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
               filter="url(#card-glow-filter)"
@@ -290,11 +290,11 @@ export default function CardAnimation({
           <motion.div
             style={{
               position: "absolute",
-              inset: "-20px",
+              inset: "-10px",
               borderRadius: "24px",
               background:
-                "radial-gradient(circle at center, hsl(var(--primary) / 0.2) 0%, transparent 70%)",
-              filter: "blur(32px)",
+                "radial-gradient(circle at center, hsl(var(--primary) / 0.1) 0%, transparent 70%)",
+              filter: "blur(20px)",
               opacity: ambientOpacity,
               pointerEvents: "none",
             }}

@@ -92,7 +92,11 @@ export default function ContactSection() {
                 />
               </div>
 
-              <Button className="w-full rounded-xl">
+              <Button 
+                className="w-full rounded-xl"
+                shimmer={true}
+                glow={true}
+              >
                 Enviar mensaje
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -125,6 +129,7 @@ export default function ContactSection() {
                     variant="outline"
                     size="sm"
                     className="rounded-full"
+                    shimmer={true}
                   >
                     Descargar
                   </Button>

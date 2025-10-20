@@ -66,10 +66,16 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <TextGenerateEffect
-              words="Desarrollador Full Stack"
+              words="Guillermo Sosa"
               className="text-6xl md:text-8xl font-light tracking-tight"
               duration={0.8}
               delay={0.5}
+            />
+            <TextGenerateEffect
+              words="Desarrollador Full Stack"
+              className="text-4xl md:text-5xl font-light tracking-tight text-primary/80"
+              duration={0.8}
+              delay={1.2}
             />
           </motion.div>
 
@@ -126,7 +132,7 @@ export default function HeroSection() {
           </div>
         </TextAnimation>
 
-        {/* Indicador de scroll */}
+        {/* Indicador de scroll con flecha */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -137,20 +143,34 @@ export default function HeroSection() {
             repeatType: "reverse",
             repeatDelay: 0.5
           }}
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
-          <div className="flex flex-col items-center gap-2 text-muted-foreground text-sm">
-            <span className="opacity-60">Scroll</span>
+          <div className="flex flex-col items-center gap-3 text-muted-foreground text-sm">
+            <span className="opacity-60 text-xs tracking-wider">SCROLL</span>
             <motion.div
-              animate={{ y: [0, 8, 0] }}
+              animate={{ y: [0, 6, 0] }}
               transition={{ 
-                duration: 1.5, 
+                duration: 1.2, 
                 repeat: Infinity, 
                 ease: "easeInOut" 
               }}
-              className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full p-1"
+              className="w-8 h-8 border border-primary/40 rounded-full flex items-center justify-center group hover:border-primary/60 transition-colors cursor-pointer"
+              onClick={() => document.getElementById("sobre-mí")?.scrollIntoView({ behavior: "smooth" })}
             >
-              <div className="w-1.5 h-3 bg-primary rounded-full mx-auto" />
+              <motion.svg
+                className="w-4 h-4 text-primary/60 group-hover:text-primary transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                animate={{ y: [0, 2, 0] }}
+                transition={{ 
+                  duration: 1.2, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </motion.svg>
             </motion.div>
           </div>
         </motion.div>

@@ -31,9 +31,9 @@ export function GlobalSpotlight({
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   
-  // Spring para suavizar el movimiento
-  const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20 })
-  const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20 })
+  // Spring para suavizar el movimiento - más lento y suave
+  const smoothX = useSpring(mouseX, { stiffness: 30, damping: 25, restDelta: 0.001 })
+  const smoothY = useSpring(mouseY, { stiffness: 30, damping: 25, restDelta: 0.001 })
 
   useEffect(() => {
     // Detectar si es mobile
@@ -81,24 +81,24 @@ export function GlobalSpotlight({
       )}
     >
       <motion.div
-        className="absolute"
+        className="absolute pointer-events-none"
         style={{
           width: `${size}px`,
           height: `${size}px`,
-          left: smoothX,
-          top: smoothY,
-          x: "-50%",
-          y: "-50%",
+          x: smoothX,
+          y: smoothY,
+          translateX: "-50%",
+          translateY: "-50%",
           background: `radial-gradient(circle at center, ${fill} 0%, transparent 70%)`,
           filter: `blur(${blur}px)`,
         }}
         animate={{
           opacity: isActive ? intensity : 0,
-          scale: isActive ? 1.2 : 0.8,
+          scale: isActive ? 1 : 0.9,
         }}
         transition={{
           opacity: { duration: 0.3 },
-          scale: { duration: 0.5, ease: "easeOut" },
+          scale: { duration: 0.4, ease: "easeOut" },
         }}
       />
     </div>

@@ -30,7 +30,9 @@ export default function Header() {
       className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50"
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="text-sm font-medium tracking-tight">Tu Nombre</div>
+        <div className="text-sm font-medium tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          Guillermo Sosa
+        </div>
         
         <nav className="hidden md:flex items-center gap-8 text-sm">
           {navigationItems.map((item, index) => (
