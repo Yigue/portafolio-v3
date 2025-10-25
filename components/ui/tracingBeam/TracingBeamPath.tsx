@@ -12,7 +12,7 @@
 
 "use client";
 import { motion, useMotionValueEvent } from "framer-motion";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { TracingBeamGradient } from "./TracingBeamGradient";
 import { MotionValue } from "framer-motion";
 
@@ -99,7 +99,7 @@ export function TracingBeamPath({
     { id: 'final3', from: 'split2', to: 'circle3', type: 'curve', curveControl: { x: 58, y: 0.975 } },
   ];
 
-  // Función para obtener caminos visibles según el scroll
+  // Función para obtener caminos visibles según el scroll - SOLO para iluminación
   const getVisiblePaths = useCallback((progress: number): PathWithNodes[] => {
     const nodeMap = new Map(nodes.map(node => [node.id, node]));
     return paths
@@ -113,12 +113,12 @@ export function TracingBeamPath({
         const toTrigger = pathWithNodes.toNode.scrollTrigger;
         const pathStart = pathWithNodes.scrollStart ?? fromTrigger;
         const pathEnd = pathWithNodes.scrollEnd ?? toTrigger;
-        // Mostrar path si el scroll ha llegado al inicio del path
+        // Solo iluminar si el scroll ha llegado al inicio del path
         return progress >= pathStart;
       });
   }, [nodes, paths]);
 
-  // Función para generar path SVG de un camino
+  // Función para generar path SVG de un camino - SOLO para iluminación
   const generatePathString = useCallback((path: PathWithNodes, progress: number) => {
     const fromPos = getNodePosition(path.fromNode);
     const toPos = getNodePosition(path.toNode);
@@ -128,6 +128,7 @@ export function TracingBeamPath({
     const pathStart = path.scrollStart ?? fromTrigger;
     const pathEnd = path.scrollEnd ?? toTrigger;
 
+    // Calcular cuánto del path debe estar iluminado
     let pathProgress = 1;
     if (progress < pathEnd) {
       pathProgress = Math.max(0, (progress - pathStart) / (pathEnd - pathStart));
@@ -191,18 +192,63 @@ export function TracingBeamPath({
   }, [getVisiblePaths, generatePathString]);
 
   // Estado para paths base (estático - siempre visible)
-  const [basePaths] = useState<Array<{id: string; d: string}>>(() => 
-    generateBasePaths()
-  );
+  const [basePaths, setBasePaths] = useState<Array<{id: string; d: string}>>([]);
 
   // Estado para paths iluminados (dinámico - aparece con scroll)
-  const [illuminatedPaths, setIlluminatedPaths] = useState<Array<{id: string; d: string}>>(() => 
-    generateIlluminatedPaths(0)
-  );
+  const [illuminatedPaths, setIlluminatedPaths] = useState<Array<{id: string; d: string}>>([]);
+
+  // Regenerar basePaths cuando svgHeight cambie
+  useEffect(() => {
+    if (svgHeight > 0) {
+      // Generar basePaths directamente aquí para evitar dependencias que cambian
+      const nodeMap = new Map(nodes.map(node => [node.id, node]));
+      const newBasePaths = paths.map(path => {
+        const fromNode = nodeMap.get(path.from)!;
+        const toNode = nodeMap.get(path.to)!;
+        const fromPos = getNodePosition(fromNode);
+        const toPos = getNodePosition(toNode);
+        
+        if (path.type === 'straight') {
+          return {
+            id: path.id,
+            d: `M ${fromPos.x} ${fromPos.y} L ${toPos.x} ${toPos.y}`
+          };
+        } else if (path.type === 'curve' && path.curveControl) {
+          const controlX = path.curveControl.x;
+          const controlY = path.curveControl.y * svgHeight;
+          return {
+            id: path.id,
+            d: `M ${fromPos.x} ${fromPos.y} Q ${controlX} ${controlY} ${toPos.x} ${toPos.y}`
+          };
+        }
+        
+        return {
+          id: path.id,
+          d: `M ${fromPos.x} ${fromPos.y} L ${toPos.x} ${toPos.y}`
+        };
+      });
+
+      // Generar illuminatedPaths iniciales
+      const visiblePaths = getVisiblePaths(0);
+      const newIlluminatedPaths = visiblePaths.map(path => ({
+        id: path.id,
+        d: generatePathString(path, 0)
+      }));
+
+      setBasePaths(newBasePaths);
+      setIlluminatedPaths(newIlluminatedPaths);
+    }
+  }, [svgHeight]);
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
-    setIlluminatedPaths(generateIlluminatedPaths(value));
+    const newIlluminatedPaths = generateIlluminatedPaths(value);
+    setIlluminatedPaths(newIlluminatedPaths);
   });
+
+  // No renderizar hasta que tengamos la altura correcta
+  if (svgHeight === 0) {
+    return null;
+  }
 
   return (
     <svg
@@ -217,11 +263,11 @@ export function TracingBeamPath({
         <path
           key={`base-${path.id}`}
           d={path.d}
-        fill="none"
-        stroke="hsl(var(--border))"
-        strokeOpacity="0.3"
-        strokeWidth="2"
-      />
+          fill="none"
+          stroke="hsl(var(--border))"
+          strokeOpacity="0.3"
+          strokeWidth="2"
+        />
       ))}
 
       {/* Haces iluminados - aparecen progresivamente con scroll */}
