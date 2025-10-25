@@ -109,11 +109,11 @@ export default function TimelineSection() {
   ]
 
   return (
-    <section id="timeline" className="py-32 relative">
+    <section id="timeline" className="py-24 md:py-32 relative">
       <div className="max-w-7xl mx-auto px-6">
         <TextAnimation delay={0.2}>
-          <div className="text-center mb-24 space-y-4">
-            <h2 className="text-5xl md:text-6xl font-light">
+          <div className="text-center mb-16 md:mb-24 space-y-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light">
               Trayectoria
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -123,7 +123,7 @@ export default function TimelineSection() {
         </TextAnimation>
 
         {/* Timeline con línea central - Solo en desktop */}
-        <div className="hidden md:block relative min-h-[800px]">
+        <div className="hidden md:block relative min-h-[900px]">
           <TimelineLine items={timelineItems.map(item => ({ type: item.type, year: item.year }))} />
           
           {/* Items alternados */}
@@ -135,7 +135,7 @@ export default function TimelineSection() {
               return (
                 <div
                   key={index}
-                  className="absolute w-[45%]"
+                  className="absolute w-[45%] z-10"
                   style={{
                     top: `${progress * 100}%`,
                     [isLeft ? "right" : "left"]: "52.5%",
@@ -149,7 +149,7 @@ export default function TimelineSection() {
         </div>
 
         {/* Timeline en mobile - stack vertical sin línea */}
-        <div className="block md:hidden space-y-12">
+        <div className="block md:hidden space-y-8">
           {timelineItems.map((item, index) => (
             <TimelineCard key={index} item={item} index={index} />
           ))}

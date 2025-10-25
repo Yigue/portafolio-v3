@@ -54,7 +54,7 @@ export default function SkillsSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, -50])
 
   return (
-    <section ref={ref} id="habilidades" className="py-32 relative">
+    <section ref={ref} id="habilidades" className="py-24 md:py-32 relative">
       {/* Efecto parallax de fondo */}
       <motion.div 
         className="absolute inset-0 pointer-events-none opacity-30"
@@ -67,8 +67,8 @@ export default function SkillsSection() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* ===== TÍTULO DE LA SECCIÓN ===== */}
         <TextAnimation delay={0.2}>
-          <div className="text-center mb-24 space-y-4">
-            <h2 className="text-5xl md:text-6xl font-light">
+          <div className="text-center mb-16 md:mb-24 space-y-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light">
               Stack Tecnológico
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">

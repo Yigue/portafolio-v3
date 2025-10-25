@@ -48,16 +48,16 @@ export default function ContactSection() {
           </div>
         </TextAnimation>
 
-        <div className="grid md:grid-cols-5 gap-6">
-          {/* Contact Form - Ocupa más espacio */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Contact Form */}
           <CardAnimation
             delay={0.3}
-            className="md:col-span-3"
+            className="glass rounded-[20px] p-8 shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500"
           >
             <form className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium">
+                  <label htmlFor="name" className="text-sm font-medium text-foreground">
                     Nombre
                   </label>
                   <Input
@@ -68,7 +68,7 @@ export default function ContactSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium">
+                  <label htmlFor="email" className="text-sm font-medium text-foreground">
                     Email
                   </label>
                   <Input
@@ -81,7 +81,7 @@ export default function ContactSection() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium">
+                <label htmlFor="message" className="text-sm font-medium text-foreground">
                   Mensaje
                 </label>
                 <Textarea
@@ -105,12 +105,12 @@ export default function ContactSection() {
             </form>
           </CardAnimation>
 
-          {/* Info Cards - Columna lateral */}
-          <div className="md:col-span-2 space-y-6">
+          {/* Info Cards */}
+          <div className="space-y-6">
             {/* CV Download */}
             <CardAnimation delay={0.4}>
-              <div className="text-center space-y-4">
-                <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center group-hover/bento:bg-primary/20 transition-colors">
+              <div className="glass rounded-[20px] p-6 shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500 text-center space-y-4">
+                <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                   <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -121,7 +121,7 @@ export default function ContactSection() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium mb-2">Descarga mi CV</h3>
+                  <h3 className="text-lg font-medium mb-2 text-foreground">Descarga mi CV</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Conoce más sobre mi experiencia
                   </p>
@@ -139,8 +139,8 @@ export default function ContactSection() {
 
             {/* Social Links */}
             <CardAnimation delay={0.5}>
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-center mb-4">Conéctate conmigo</h3>
+              <div className="glass rounded-[20px] p-6 shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500 space-y-4">
+                <h3 className="text-lg font-medium text-center mb-4 text-foreground">Conéctate conmigo</h3>
                 <div className="space-y-3">
                   {socialLinks.map((social, index) => (
                     <a
@@ -152,7 +152,7 @@ export default function ContactSection() {
                         {social.icon}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium">{social.name}</div>
+                        <div className="text-sm font-medium text-foreground">{social.name}</div>
                         <div className="text-xs text-muted-foreground truncate">{social.handle}</div>
                       </div>
                       <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">

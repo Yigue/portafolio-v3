@@ -15,7 +15,7 @@ export default function AboutSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, -30])
 
   return (
-    <section ref={ref} id="sobre-mí" className="py-32 relative">
+    <section ref={ref} id="sobre-mí" className="py-24 md:py-32 relative">
       {/* Efecto parallax de fondo */}
       <motion.div 
         className="absolute inset-0 pointer-events-none opacity-20"
@@ -28,9 +28,9 @@ export default function AboutSection() {
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         <CardAnimation
           delay={0.2}
-          className="glass rounded-[20px] p-8 md:p-12 shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500"
+          className="glass rounded-[20px] p-6 md:p-8 lg:p-12 shadow-card border border-border/50 hover:shadow-primary-lg hover:border-primary/30 transition-all duration-500"
         >
-          <div className="grid md:grid-cols-[200px_1fr] gap-8 items-center">
+          <div className="grid md:grid-cols-[180px_1fr] lg:grid-cols-[200px_1fr] gap-6 md:gap-8 items-center">
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse" />
               <div className="relative w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mx-auto shadow-primary">

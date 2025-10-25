@@ -56,11 +56,11 @@ export default function ProjectsSection() {
   ]
 
   return (
-    <section id="proyectos" className="py-32">
+    <section id="proyectos" className="py-24 md:py-32">
       <div className="max-w-7xl mx-auto px-6">
         <TextAnimation delay={0.2}>
-          <div className="text-center mb-24 space-y-4">
-            <h2 className="text-5xl md:text-6xl font-light">
+          <div className="text-center mb-16 md:mb-24 space-y-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light">
               Proyectos Destacados
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">

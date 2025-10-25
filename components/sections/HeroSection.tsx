@@ -104,7 +104,7 @@ export default function HeroSection() {
 
         {/* Botones de acción */}
         <TextAnimation delay={1}>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 pb-16">
             <Button
               size="lg"
               shimmer={true}
@@ -143,7 +143,7 @@ export default function HeroSection() {
             repeatType: "reverse",
             repeatDelay: 0.5
           }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-0"
         >
           <div className="flex flex-col items-center gap-3 text-muted-foreground text-sm">
             <span className="opacity-60 text-xs tracking-wider">SCROLL</span>
