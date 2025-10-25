@@ -61,46 +61,75 @@ export function TracingBeamPath({
   }, [svgHeight]);
 
 
-  // 🎨 CONFIGURACIÓN DE NODOS Y CAMINOS - EDITA AQUÍ
-  // Coordenadas X: 0=izquierda, 50=centro, 100=derecha
-  const nodes: Node[] = [
+  // 🎨 CONFIGURACIÓN UNIFICADA - SOLO EDITA ESTO
+  // Define los nodos en orden y el sistema genera los paths automáticamente
+  const tracingConfig = [
+    // Nodo inicial
     { id: 'start', x: 50, y: 0, scrollTrigger: 0 },
+    
+    // Sección banner con zigzag
     { id: 'banner', x: 50, y: 0.1, scrollTrigger: 0.1 },
-    { id: 'descripcion', x: 50, y: 0.25, scrollTrigger: 0.25 },
-    { id: 'contenido', x: 50, y: 0.4, scrollTrigger: 0.4 },
-    { id: 'split1', x: 50, y: 0.5, scrollTrigger: 0.5 },
-    { id: 'left1', x: 30, y: 0.6, scrollTrigger: 0.6 },
-    { id: 'right1', x: 70, y: 0.6, scrollTrigger: 0.6 },
-    { id: 'left2', x: 30, y: 0.75, scrollTrigger: 0.75 },
-    { id: 'right2', x: 70, y: 0.75, scrollTrigger: 0.75 },
-    { id: 'merge1', x: 50, y: 0.85, scrollTrigger: 0.85 },
-    { id: 'skills', x: 50, y: 0.9, scrollTrigger: 0.9 },
-    { id: 'split2', x: 50, y: 0.95, scrollTrigger: 0.95 },
+    { id: 'banner1', x: -500, y: 0.11, scrollTrigger: 0.11 },
+    { id: 'descripcion', x: -500, y: 0.2, scrollTrigger: 0.2},
+    { id: 'descripcion1', x: 50, y: 0.55, scrollTrigger: 0.51 },
+    { id: 'contenido', x: 50, y: 0.6, scrollTrigger: 0.5 },
+
+    // Sección de ramificación
+    { id: 'split1', x: 50, y: 0.8, scrollTrigger: 0.5 },
+    { id: 'left1', x: 30, y: 0.8, scrollTrigger: 0.6 },
+    { id: 'right1', x: 70, y: 0.8, scrollTrigger: 0.6 },
+    { id: 'left2', x: 30, y: 0.85, scrollTrigger: 0.75 },
+    { id: 'right2', x: 70, y: 0.85, scrollTrigger: 0.75 },
+    { id: 'merge1', x: 50, y: 0.9, scrollTrigger: 0.85 },
+    { id: 'skills', x: 50, y: 0.95, scrollTrigger: 0.9 },
+    { id: 'split2', x: 50, y: 0.97, scrollTrigger: 0.95 },
+    
+    // Nodos finales
     { id: 'circle1', x: 35, y: 1, scrollTrigger: 1 },
     { id: 'circle2', x: 50, y: 1, scrollTrigger: 1 },
     { id: 'circle3', x: 65, y: 1, scrollTrigger: 1 },
   ];
 
-  const paths: Path[] = [
-    { id: 'main1', from: 'start', to: 'banner', type: 'straight' },
-    { id: 'main2', from: 'banner', to: 'descripcion', type: 'straight' },
-    { id: 'main3', from: 'descripcion', to: 'contenido', type: 'straight' },
-    { id: 'main4', from: 'contenido', to: 'split1', type: 'straight' },
-    { id: 'branch1', from: 'split1', to: 'left1', type: 'curve', curveControl: { x: 40, y: 0.55 } },
-    { id: 'branch2', from: 'split1', to: 'right1', type: 'curve', curveControl: { x: 60, y: 0.55 } },
-    { id: 'left_conn', from: 'left1', to: 'left2', type: 'straight' },
-    { id: 'right_conn', from: 'right1', to: 'right2', type: 'straight' },
-    { id: 'merge_left', from: 'left2', to: 'merge1', type: 'curve', curveControl: { x: 45, y: 0.8 } },
-    { id: 'merge_right', from: 'right2', to: 'merge1', type: 'curve', curveControl: { x: 55, y: 0.8 } },
-    { id: 'main5', from: 'merge1', to: 'skills', type: 'straight' },
-    { id: 'main6', from: 'skills', to: 'split2', type: 'straight' },
-    { id: 'final1', from: 'split2', to: 'circle1', type: 'curve', curveControl: { x: 42, y: 0.975 } },
-    { id: 'final2', from: 'split2', to: 'circle2', type: 'straight' },
-    { id: 'final3', from: 'split2', to: 'circle3', type: 'curve', curveControl: { x: 58, y: 0.975 } },
-  ];
+  // Función para generar paths automáticamente basado en la configuración
+  const generatePathsFromConfig = useCallback((config: typeof tracingConfig): { nodes: Node[], paths: Path[] } => {
+    const nodes: Node[] = config;
+    const paths: Path[] = [];
+
+    // Generar paths automáticamente conectando nodos consecutivos
+    for (let i = 0; i < config.length - 1; i++) {
+      const currentNode = config[i];
+      const nextNode = config[i + 1];
+      
+      // Determinar el tipo de path basado en la distancia y posición
+      const deltaX = Math.abs(nextNode.x - currentNode.x);
+      const deltaY = nextNode.y - currentNode.y;
+      
+      let pathType: 'straight' | 'curve' = 'straight';
+      let curveControl: { x: number; y: number } | undefined;
+
+      // Si hay un cambio significativo en X, usar curva
+      if (deltaX > 50) {
+        pathType = 'curve';
+        // Calcular punto de control para la curva
+        const midX = (currentNode.x + nextNode.x) / 2;
+        const midY = currentNode.y + deltaY * 0.5;
+        curveControl = { x: midX, y: midY };
+      }
+
+      paths.push({
+        id: `path_${currentNode.id}_to_${nextNode.id}`,
+        from: currentNode.id,
+        to: nextNode.id,
+        type: pathType,
+        curveControl
+      });
+    }
+
+    return { nodes, paths };
+  }, []);
 
   // Función para obtener caminos visibles según el scroll - SOLO para iluminación
-  const getVisiblePaths = useCallback((progress: number): PathWithNodes[] => {
+  const getVisiblePaths = useCallback((progress: number, nodes: Node[], paths: Path[]): PathWithNodes[] => {
     const nodeMap = new Map(nodes.map(node => [node.id, node]));
     return paths
       .map(path => ({
@@ -116,7 +145,7 @@ export function TracingBeamPath({
         // Solo iluminar si el scroll ha llegado al inicio del path
         return progress >= pathStart;
       });
-  }, [nodes, paths]);
+  }, []);
 
   // Función para generar path SVG de un camino - SOLO para iluminación
   const generatePathString = useCallback((path: PathWithNodes, progress: number) => {
@@ -151,45 +180,16 @@ export function TracingBeamPath({
     return `M ${fromPos.x} ${fromPos.y} L ${currentX} ${currentY}`;
   }, [getNodePosition, svgHeight]);
 
-  // Función para generar paths base completos (sin interpolación)
-  const generateBasePaths = useCallback(() => {
-    const nodeMap = new Map(nodes.map(node => [node.id, node]));
-    
-    return paths.map(path => {
-      const fromNode = nodeMap.get(path.from)!;
-      const toNode = nodeMap.get(path.to)!;
-      const fromPos = getNodePosition(fromNode);
-      const toPos = getNodePosition(toNode);
-      
-      if (path.type === 'straight') {
-        return {
-          id: path.id,
-          d: `M ${fromPos.x} ${fromPos.y} L ${toPos.x} ${toPos.y}`
-        };
-      } else if (path.type === 'curve' && path.curveControl) {
-        const controlX = path.curveControl.x;
-        const controlY = path.curveControl.y * svgHeight;
-        return {
-          id: path.id,
-          d: `M ${fromPos.x} ${fromPos.y} Q ${controlX} ${controlY} ${toPos.x} ${toPos.y}`
-        };
-      }
-      
-      return {
-        id: path.id,
-        d: `M ${fromPos.x} ${fromPos.y} L ${toPos.x} ${toPos.y}`
-      };
-    });
-  }, [nodes, paths, getNodePosition, svgHeight]);
 
   // Función para generar paths iluminados (con interpolación según scroll)
   const generateIlluminatedPaths = useCallback((progress: number) => {
-    const visiblePaths = getVisiblePaths(progress);
+    const { nodes, paths } = generatePathsFromConfig(tracingConfig);
+    const visiblePaths = getVisiblePaths(progress, nodes, paths);
     return visiblePaths.map(path => ({
       id: path.id,
       d: generatePathString(path, progress)
     }));
-  }, [getVisiblePaths, generatePathString]);
+  }, [generatePathsFromConfig, getVisiblePaths, generatePathString]);
 
   // Estado para paths base (estático - siempre visible)
   const [basePaths, setBasePaths] = useState<Array<{id: string; d: string}>>([]);
@@ -200,6 +200,9 @@ export function TracingBeamPath({
   // Regenerar basePaths cuando svgHeight cambie
   useEffect(() => {
     if (svgHeight > 0) {
+      // Generar configuración internamente para evitar bucles
+      const { nodes, paths } = generatePathsFromConfig(tracingConfig);
+      
       // Generar basePaths directamente aquí para evitar dependencias que cambian
       const nodeMap = new Map(nodes.map(node => [node.id, node]));
       const newBasePaths = paths.map(path => {
@@ -229,7 +232,7 @@ export function TracingBeamPath({
       });
 
       // Generar illuminatedPaths iniciales
-      const visiblePaths = getVisiblePaths(0);
+      const visiblePaths = getVisiblePaths(0, nodes, paths);
       const newIlluminatedPaths = visiblePaths.map(path => ({
         id: path.id,
         d: generatePathString(path, 0)
