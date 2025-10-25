@@ -69,8 +69,7 @@ export const TracingBeam = ({
       className={cn("relative mx-auto h-full w-full max-w-4xl", className)}
     >
       {/* CONTENEDOR DE LA LÍNEA TRACING BEAM */}
-      <div className={cn("absolute top-3", positionClasses)}>
-        
+      <div className={cn("absolute top-0 left-0 h-full w-full", positionClasses)}>
         {/* PUNTO INDICADOR INICIAL */}
         <TracingBeamIndicator 
           type="start" 
@@ -81,14 +80,10 @@ export const TracingBeam = ({
         {/* SVG CON LA LÍNEA TRAZADORA CON CONTROL POR SCROLL */}
         <TracingBeamPath
           svgHeight={svgHeight}
-          isLeft={isLeft}
-          xOffset={xOffset.toString()}
           y1={y1}
           y2={y2}
           scrollYProgress={scrollYProgress}
         />
-        
-
 
         {/* PUNTO INDICADOR FINAL */}
         <TracingBeamIndicator 
@@ -97,7 +92,6 @@ export const TracingBeam = ({
           variant={indicatorVariant}
         />
       </div>
-      
       {/* CONTENIDO DEL COMPONENTE */}
       {/* Aquí va el contenido que envuelve el TracingBeam */}
       <div ref={contentRef}>{children}</div>

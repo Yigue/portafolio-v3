@@ -1,3 +1,15 @@
+/**
+ * TRACING BEAM PATH - Control Manual Total
+ * 
+ * 🎯 CARACTERÍSTICAS:
+ * - Control manual total desde el array 'nodes' con coordenadas absolutas
+ * - Línea gris base visible desde el inicio (basePaths)
+ * - Efecto de iluminación aparece progresivamente con scroll (illuminatedPaths)
+ * - Coordenadas X: 0-100 (0=izquierda, 50=centro, 100=derecha)
+ * - Coordenadas Y: 0-1 (0=arriba, 1=abajo)
+ * - Sin lógica de isLeft - control directo de posiciones
+ */
+
 "use client";
 import { motion, useMotionValueEvent } from "framer-motion";
 import { useState, useCallback } from "react";
@@ -12,21 +24,21 @@ interface TracingBeamPathProps {
   gradientId?: string;
 }
 
-// 🎯 Sistema de Nodos y Caminos Simplificado
 interface Node {
   id: string;
-  x: number;        // Posición horizontal (0-100, donde 50 = centro)
-  y: number;        // Posición vertical (0-100, donde 0 = arriba)
+  x: number;
+  y: number;
+  scrollTrigger: number;
 }
 
 interface Path {
   id: string;
-  from: string;     // ID del nodo origen
-  to: string;       // ID del nodo destino
+  from: string;
+  to: string;
   type: 'straight' | 'curve';
-  curveControl?: { x: number; y: number }; // Para curvas
-  scrollStart: number;  // Cuándo empieza este camino (0-1)
-  scrollEnd: number;    // Cuándo termina este camino (0-1)
+  curveControl?: { x: number; y: number };
+  scrollStart?: number;
+  scrollEnd?: number;
 }
 
 interface PathWithNodes extends Path {
@@ -34,16 +46,6 @@ interface PathWithNodes extends Path {
   toNode: Node;
 }
 
-/**
- * TRACING BEAM PATH - Control Manual Total
- * 
- * 🎯 CARACTERÍSTICAS:
- * - Control total manual desde los arrays 'nodes' y 'paths'
- * - Línea gris base visible desde el principio
- * - Solo el efecto de iluminación aparece con el scroll
- * - Coordenadas simples: X (0-100), Y (0-100)
- * - Sin lógica de isLeft - control directo de posiciones
- */
 export function TracingBeamPath({
   svgHeight,
   y1,
@@ -51,70 +53,55 @@ export function TracingBeamPath({
   scrollYProgress,
   gradientId = "gradient",
 }: TracingBeamPathProps) {
-
-  // 🎨 CONFIGURACIÓN DE NODOS Y CAMINOS - EDITA AQUÍ
-  // Coordenadas: X (0-100 donde 50=centro), Y (0-100 donde 0=arriba)
-  const nodes: Node[] = [
-    // Línea principal vertical
-    { id: 'start', x: 50, y: 0 },
-    { id: 'banner', x: 50, y: 10 },
-    { id: 'descripcion', x: 50, y: 25 },
-    { id: 'contenido', x: 50, y: 40 },
-    
-    // Primera división - dos columnas
-    { id: 'split1', x: 50, y: 50 },
-    { id: 'left1', x: 30, y: 60 },
-    { id: 'right1', x: 70, y: 60 },
-    { id: 'left2', x: 30, y: 75 },
-    { id: 'right2', x: 70, y: 75 },
-    
-    // Reunión y segunda división
-    { id: 'merge1', x: 50, y: 85 },
-    { id: 'skills', x: 50, y: 90 },
-    { id: 'split2', x: 50, y: 95 },
-    
-    // División final - tres círculos
-    { id: 'circle1', x: 35, y: 100 },
-    { id: 'circle2', x: 50, y: 100 },
-    { id: 'circle3', x: 65, y: 100 },
-  ];
-
-  const paths: Path[] = [
-    // Línea principal vertical
-    { id: 'main1', from: 'start', to: 'banner', type: 'straight', scrollStart: 0, scrollEnd: 0.1 },
-    { id: 'main2', from: 'banner', to: 'descripcion', type: 'straight', scrollStart: 0.1, scrollEnd: 0.25 },
-    { id: 'main3', from: 'descripcion', to: 'contenido', type: 'straight', scrollStart: 0.25, scrollEnd: 0.4 },
-    { id: 'main4', from: 'contenido', to: 'split1', type: 'straight', scrollStart: 0.4, scrollEnd: 0.5 },
-    
-    // Primera división
-    { id: 'branch1', from: 'split1', to: 'left1', type: 'curve', curveControl: { x: 40, y: 55 }, scrollStart: 0.5, scrollEnd: 0.6 },
-    { id: 'branch2', from: 'split1', to: 'right1', type: 'curve', curveControl: { x: 60, y: 55 }, scrollStart: 0.5, scrollEnd: 0.6 },
-    { id: 'left_conn', from: 'left1', to: 'left2', type: 'straight', scrollStart: 0.6, scrollEnd: 0.75 },
-    { id: 'right_conn', from: 'right1', to: 'right2', type: 'straight', scrollStart: 0.6, scrollEnd: 0.75 },
-    
-    // Reunión
-    { id: 'merge_left', from: 'left2', to: 'merge1', type: 'curve', curveControl: { x: 45, y: 80 }, scrollStart: 0.75, scrollEnd: 0.85 },
-    { id: 'merge_right', from: 'right2', to: 'merge1', type: 'curve', curveControl: { x: 55, y: 80 }, scrollStart: 0.75, scrollEnd: 0.85 },
-    { id: 'main5', from: 'merge1', to: 'skills', type: 'straight', scrollStart: 0.85, scrollEnd: 0.9 },
-    { id: 'main6', from: 'skills', to: 'split2', type: 'straight', scrollStart: 0.9, scrollEnd: 0.95 },
-    
-    // División final
-    { id: 'final1', from: 'split2', to: 'circle1', type: 'curve', curveControl: { x: 42, y: 97.5 }, scrollStart: 0.95, scrollEnd: 1 },
-    { id: 'final2', from: 'split2', to: 'circle2', type: 'straight', scrollStart: 0.95, scrollEnd: 1 },
-    { id: 'final3', from: 'split2', to: 'circle3', type: 'curve', curveControl: { x: 58, y: 97.5 }, scrollStart: 0.95, scrollEnd: 1 },
-  ];
-
-  // 🔧 Función para convertir coordenadas a píxeles SVG
+  // Función simplificada para obtener posición de nodos - coordenadas absolutas
   const getNodePosition = useCallback((node: Node) => {
-    const x = node.x; // Ya está en coordenadas 0-100
-    const y = (node.y / 100) * svgHeight; // Convertir Y a píxeles
+    const x = node.x; // Directo: 0-100 (0=izquierda, 50=centro, 100=derecha)
+    const y = node.y * svgHeight; // 0-1 convertido a píxeles
     return { x, y };
   }, [svgHeight]);
 
-  // 🔧 Función para obtener caminos visibles según el scroll
+
+  // 🎨 CONFIGURACIÓN DE NODOS Y CAMINOS - EDITA AQUÍ
+  // Coordenadas X: 0=izquierda, 50=centro, 100=derecha
+  const nodes: Node[] = [
+    { id: 'start', x: 50, y: 0, scrollTrigger: 0 },
+    { id: 'banner', x: 50, y: 0.1, scrollTrigger: 0.1 },
+    { id: 'descripcion', x: 50, y: 0.25, scrollTrigger: 0.25 },
+    { id: 'contenido', x: 50, y: 0.4, scrollTrigger: 0.4 },
+    { id: 'split1', x: 50, y: 0.5, scrollTrigger: 0.5 },
+    { id: 'left1', x: 30, y: 0.6, scrollTrigger: 0.6 },
+    { id: 'right1', x: 70, y: 0.6, scrollTrigger: 0.6 },
+    { id: 'left2', x: 30, y: 0.75, scrollTrigger: 0.75 },
+    { id: 'right2', x: 70, y: 0.75, scrollTrigger: 0.75 },
+    { id: 'merge1', x: 50, y: 0.85, scrollTrigger: 0.85 },
+    { id: 'skills', x: 50, y: 0.9, scrollTrigger: 0.9 },
+    { id: 'split2', x: 50, y: 0.95, scrollTrigger: 0.95 },
+    { id: 'circle1', x: 35, y: 1, scrollTrigger: 1 },
+    { id: 'circle2', x: 50, y: 1, scrollTrigger: 1 },
+    { id: 'circle3', x: 65, y: 1, scrollTrigger: 1 },
+  ];
+
+  const paths: Path[] = [
+    { id: 'main1', from: 'start', to: 'banner', type: 'straight' },
+    { id: 'main2', from: 'banner', to: 'descripcion', type: 'straight' },
+    { id: 'main3', from: 'descripcion', to: 'contenido', type: 'straight' },
+    { id: 'main4', from: 'contenido', to: 'split1', type: 'straight' },
+    { id: 'branch1', from: 'split1', to: 'left1', type: 'curve', curveControl: { x: 40, y: 0.55 } },
+    { id: 'branch2', from: 'split1', to: 'right1', type: 'curve', curveControl: { x: 60, y: 0.55 } },
+    { id: 'left_conn', from: 'left1', to: 'left2', type: 'straight' },
+    { id: 'right_conn', from: 'right1', to: 'right2', type: 'straight' },
+    { id: 'merge_left', from: 'left2', to: 'merge1', type: 'curve', curveControl: { x: 45, y: 0.8 } },
+    { id: 'merge_right', from: 'right2', to: 'merge1', type: 'curve', curveControl: { x: 55, y: 0.8 } },
+    { id: 'main5', from: 'merge1', to: 'skills', type: 'straight' },
+    { id: 'main6', from: 'skills', to: 'split2', type: 'straight' },
+    { id: 'final1', from: 'split2', to: 'circle1', type: 'curve', curveControl: { x: 42, y: 0.975 } },
+    { id: 'final2', from: 'split2', to: 'circle2', type: 'straight' },
+    { id: 'final3', from: 'split2', to: 'circle3', type: 'curve', curveControl: { x: 58, y: 0.975 } },
+  ];
+
+  // Función para obtener caminos visibles según el scroll
   const getVisiblePaths = useCallback((progress: number): PathWithNodes[] => {
     const nodeMap = new Map(nodes.map(node => [node.id, node]));
-    
     return paths
       .map(path => ({
         ...path,
@@ -122,46 +109,48 @@ export function TracingBeamPath({
         toNode: nodeMap.get(path.to)!
       }))
       .filter(pathWithNodes => {
-        return progress >= pathWithNodes.scrollStart && progress <= pathWithNodes.scrollEnd;
+        const fromTrigger = pathWithNodes.fromNode.scrollTrigger;
+        const toTrigger = pathWithNodes.toNode.scrollTrigger;
+        const pathStart = pathWithNodes.scrollStart ?? fromTrigger;
+        const pathEnd = pathWithNodes.scrollEnd ?? toTrigger;
+        // Mostrar path si el scroll ha llegado al inicio del path
+        return progress >= pathStart;
       });
   }, [nodes, paths]);
 
-  // 🔧 Función para generar path SVG de un camino
+  // Función para generar path SVG de un camino
   const generatePathString = useCallback((path: PathWithNodes, progress: number) => {
     const fromPos = getNodePosition(path.fromNode);
     const toPos = getNodePosition(path.toNode);
-    
-    // Calcular progreso del camino específico
-    const pathProgress = Math.max(0, Math.min(1, (progress - path.scrollStart) / (path.scrollEnd - path.scrollStart)));
-    
-    // Interpolar posiciones
+
+    const fromTrigger = path.fromNode.scrollTrigger;
+    const toTrigger = path.toNode.scrollTrigger;
+    const pathStart = path.scrollStart ?? fromTrigger;
+    const pathEnd = path.scrollEnd ?? toTrigger;
+
+    let pathProgress = 1;
+    if (progress < pathEnd) {
+      pathProgress = Math.max(0, (progress - pathStart) / (pathEnd - pathStart));
+    }
+
     const currentX = fromPos.x + (toPos.x - fromPos.x) * pathProgress;
     const currentY = fromPos.y + (toPos.y - fromPos.y) * pathProgress;
-    
+
     if (path.type === 'straight') {
       return `M ${fromPos.x} ${fromPos.y} L ${currentX} ${currentY}`;
     } else if (path.type === 'curve' && path.curveControl) {
+      // Usar coordenadas absolutas directamente
       const controlX = path.curveControl.x;
-      const controlY = (path.curveControl.y / 100) * svgHeight;
+      const controlY = path.curveControl.y * svgHeight;
       const currentControlX = fromPos.x + (controlX - fromPos.x) * pathProgress;
       const currentControlY = fromPos.y + (controlY - fromPos.y) * pathProgress;
-      
       return `M ${fromPos.x} ${fromPos.y} Q ${currentControlX} ${currentControlY} ${currentX} ${currentY}`;
     }
-    
+
     return `M ${fromPos.x} ${fromPos.y} L ${currentX} ${currentY}`;
   }, [getNodePosition, svgHeight]);
 
-  // 🔧 Función para generar todos los paths visibles (solo para iluminación)
-  const generateIlluminatedPaths = useCallback((progress: number) => {
-    const visiblePaths = getVisiblePaths(progress);
-    return visiblePaths.map(path => ({
-      id: path.id,
-      d: generatePathString(path, progress)
-    }));
-  }, [getVisiblePaths, generatePathString]);
-
-  // 🔧 Función para generar todos los paths base (línea gris completa)
+  // Función para generar paths base completos (sin interpolación)
   const generateBasePaths = useCallback(() => {
     const nodeMap = new Map(nodes.map(node => [node.id, node]));
     
@@ -178,7 +167,7 @@ export function TracingBeamPath({
         };
       } else if (path.type === 'curve' && path.curveControl) {
         const controlX = path.curveControl.x;
-        const controlY = (path.curveControl.y / 100) * svgHeight;
+        const controlY = path.curveControl.y * svgHeight;
         return {
           id: path.id,
           d: `M ${fromPos.x} ${fromPos.y} Q ${controlX} ${controlY} ${toPos.x} ${toPos.y}`
@@ -190,12 +179,27 @@ export function TracingBeamPath({
         d: `M ${fromPos.x} ${fromPos.y} L ${toPos.x} ${toPos.y}`
       };
     });
-  }, [nodes, paths, getNodePosition]);
+  }, [nodes, paths, getNodePosition, svgHeight]);
 
-  const [illuminatedPaths, setIlluminatedPaths] = useState<Array<{id: string; d: string}>>([]);
-  const [basePaths] = useState<Array<{id: string; d: string}>>(() => generateBasePaths());
+  // Función para generar paths iluminados (con interpolación según scroll)
+  const generateIlluminatedPaths = useCallback((progress: number) => {
+    const visiblePaths = getVisiblePaths(progress);
+    return visiblePaths.map(path => ({
+      id: path.id,
+      d: generatePathString(path, progress)
+    }));
+  }, [getVisiblePaths, generatePathString]);
 
-  // 🔁 Escuchar scroll y actualizar solo los paths iluminados
+  // Estado para paths base (estático - siempre visible)
+  const [basePaths] = useState<Array<{id: string; d: string}>>(() => 
+    generateBasePaths()
+  );
+
+  // Estado para paths iluminados (dinámico - aparece con scroll)
+  const [illuminatedPaths, setIlluminatedPaths] = useState<Array<{id: string; d: string}>>(() => 
+    generateIlluminatedPaths(0)
+  );
+
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     setIlluminatedPaths(generateIlluminatedPaths(value));
   });
@@ -205,12 +209,12 @@ export function TracingBeamPath({
       viewBox={`0 0 100 ${svgHeight}`}
       width="100%"
       height={svgHeight}
-      className="block"
+      className="absolute top-0 left-0 w-full h-full"
       aria-hidden="true"
     >
-      {/* Líneas base grises - siempre visibles */}
+      {/* Líneas base grises - siempre visibles, paths completos */}
       {basePaths.map((path) => (
-      <motion.path
+        <path
           key={`base-${path.id}`}
           d={path.d}
         fill="none"
@@ -220,7 +224,7 @@ export function TracingBeamPath({
       />
       ))}
 
-      {/* Haces iluminados - aparecen con el scroll */}
+      {/* Haces iluminados - aparecen progresivamente con scroll */}
       {illuminatedPaths.map((path) => (
       <motion.path
           key={`illuminated-${path.id}`}
@@ -243,3 +247,23 @@ export function TracingBeamPath({
     </svg>
   );
 }
+
+/**
+ * RESUMEN PARA USO Y PERSONALIZACIÓN:
+ * 
+ * 🎯 CONTROL MANUAL TOTAL:
+ * - Edita el array 'nodes' para cambiar la forma de la línea
+ * - Coordenadas X: 0=izquierda, 50=centro, 100=derecha
+ * - Coordenadas Y: 0=arriba, 1=abajo (porcentaje de altura)
+ * - scrollTrigger: cuándo aparece cada nodo (0-1)
+ * 
+ * 🎨 EFECTOS VISUALES:
+ * - Línea gris base: siempre visible desde el inicio (basePaths)
+ * - Efecto de iluminación: aparece progresivamente con scroll (illuminatedPaths)
+ * 
+ * 🔧 MODIFICAR FORMAS:
+ * - Cambia 'x' en nodes para mover horizontalmente
+ * - Cambia 'y' en nodes para mover verticalmente  
+ * - Agrega/elimina nodos y paths según necesites
+ * - Usa 'curve' con curveControl para curvas suaves
+ */
