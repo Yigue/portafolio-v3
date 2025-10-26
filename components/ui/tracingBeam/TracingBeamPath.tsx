@@ -53,41 +53,55 @@ export function TracingBeamPath({
   scrollYProgress,
   gradientId = "gradient",
 }: TracingBeamPathProps) {
-  // Función simplificada para obtener posición de nodos - coordenadas absolutas
+  // Función para obtener posición de nodos - sistema responsive
   const getNodePosition = useCallback((node: Node) => {
-    const x = node.x; // Directo: 0-100 (0=izquierda, 50=centro, 100=derecha)
+    // Sistema responsive: 
+    // - Coordenadas X: -600 a 600 (centro en 0)
+    // - Coordenadas Y: 0-1 (porcentaje de altura)
+    const x = node.x; // Usar directamente las coordenadas del nodo
     const y = node.y * svgHeight; // 0-1 convertido a píxeles
     return { x, y };
   }, [svgHeight]);
 
 
   // 🎨 CONFIGURACIÓN UNIFICADA - SOLO EDITA ESTO
-  // Define los nodos en orden y el sistema genera los paths automáticamente
+  // 
+  // SISTEMA DE COORDENADAS RESPONSIVE:
+  // - X: -600 (izquierda extrema) a 600 (derecha extrema), 0 = centro
+  // - Y: 0 (arriba) a 1 (abajo) - porcentaje de altura
+  // - scrollTrigger: 0-1 - cuándo aparece el nodo
+  //
   const tracingConfig = [
     // Nodo inicial
     { id: 'start', x: 50, y: 0, scrollTrigger: 0 },
     
     // Sección banner con zigzag
-    { id: 'banner', x: 50, y: 0.1, scrollTrigger: 0.1 },
-    { id: 'banner1', x: -500, y: 0.11, scrollTrigger: 0.11 },
-    { id: 'descripcion', x: -500, y: 0.2, scrollTrigger: 0.2},
-    { id: 'descripcion1', x: 50, y: 0.55, scrollTrigger: 0.51 },
-    { id: 'contenido', x: 50, y: 0.6, scrollTrigger: 0.5 },
+    { id: 'banner', x:  50, y: 0.1, scrollTrigger: 0.1 },
+    // aca quiero que se despliegue otra rama que haga ki nmusmi qe banner 1 pero en x-200 no sino x 200
+    { id: 'banner1', x: -200, y: 0.165, scrollTrigger: 0.11 },
+    // { id: 'banner2', x: 200, y: 0.165, scrollTrigger: 0.11 },
+// la rama generada por abmmer 2 se une con el banner fiun 2
+    { id: 'bannerFin1', x: -200, y: 0.2, scrollTrigger: 0.2},
+    // { id: 'bannerFin2', x: 200, y: 0.2, scrollTrigger: 0.2 },
 
-    // Sección de ramificación
-    { id: 'split1', x: 50, y: 0.8, scrollTrigger: 0.5 },
-    { id: 'left1', x: 30, y: 0.8, scrollTrigger: 0.6 },
-    { id: 'right1', x: 70, y: 0.8, scrollTrigger: 0.6 },
-    { id: 'left2', x: 30, y: 0.85, scrollTrigger: 0.75 },
-    { id: 'right2', x: 70, y: 0.85, scrollTrigger: 0.75 },
-    { id: 'merge1', x: 50, y: 0.9, scrollTrigger: 0.85 },
-    { id: 'skills', x: 50, y: 0.95, scrollTrigger: 0.9 },
-    { id: 'split2', x: 50, y: 0.97, scrollTrigger: 0.95 },
+  // aca se encuentran las 2 ramas1
+    { id: 'trayeFin', x: 50, y: 0.3, scrollTrigger: 0.3},
+
+    { id: 'Fin', x: 50, y: 1, scrollTrigger: 1},
+    // // Sección de ramificación
+    // { id: 'split1', x: 50, y: 0.8, scrollTrigger: 0.5 },
+    // { id: 'left1', x: -200, y: 0.8, scrollTrigger: 0.6 },
+    // { id: 'right1', x: 200, y: 0.8, scrollTrigger: 0.6 },
+    // { id: 'left2', x: -200, y: 0.85, scrollTrigger: 0.75 },
+    // { id: 'right2', x: 200, y: 0.85, scrollTrigger: 0.75 },
+    // { id: 'merge1', x: 0, y: 0.9, scrollTrigger: 0.85 },
+    // { id: 'skills', x: 0, y: 0.95, scrollTrigger: 0.9 },
+    // { id: 'split2', x: 0, y: 0.97, scrollTrigger: 0.95 },
     
-    // Nodos finales
-    { id: 'circle1', x: 35, y: 1, scrollTrigger: 1 },
-    { id: 'circle2', x: 50, y: 1, scrollTrigger: 1 },
-    { id: 'circle3', x: 65, y: 1, scrollTrigger: 1 },
+    // // Nodos finales
+    // { id: 'circle1', x: -150, y: 1, scrollTrigger: 1 },
+    // { id: 'circle2', x: 0, y: 1, scrollTrigger: 1 },
+    // { id: 'circle3', x: 150, y: 1, scrollTrigger: 1 },
   ];
 
   // Función para generar paths automáticamente basado en la configuración
@@ -256,7 +270,7 @@ export function TracingBeamPath({
   return (
     <svg
       viewBox={`0 0 100 ${svgHeight}`}
-      width="100%"
+      width="100vw"
       height={svgHeight}
       className="absolute top-0 left-0 w-full h-full"
       aria-hidden="true"

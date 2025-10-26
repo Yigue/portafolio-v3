@@ -66,7 +66,7 @@ export const TracingBeam = ({
   return (
     <motion.div
       ref={ref}
-      className={cn("relative mx-auto h-full w-full max-w-4xl", className)}
+      className={cn("relative mx-auto h-full w-full", className)}
     >
       {/* CONTENEDOR DE LA LÍNEA TRACING BEAM */}
 

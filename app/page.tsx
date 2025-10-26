@@ -72,9 +72,10 @@ export default function Home() {
             animationSpeed={1.2}
             xOffset={0}
           >
-            <section id="about" className="h-[600vh] p-8">
-            
-            </section>
+            <AboutSection />
+            <TimelineSection />
+            <SkillsSection />
+            <ProjectsSection />
           </TracingBeam>
           <ContactSection />
           <Footer />
