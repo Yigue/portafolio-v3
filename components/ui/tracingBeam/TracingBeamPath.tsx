@@ -75,48 +75,61 @@ export function TracingBeamPath({
     // Nodo inicial
     { id: 'start', x: 50, y: 0, scrollTrigger: 0 },
     
-    // Sección banner con zigzag
-    { id: 'banner', x:  50, y: 0.1, scrollTrigger: 0.1 },
-    // aca quiero que se despliegue otra rama que haga ki nmusmi qe banner 1 pero en x-200 no sino x 200
+    // Punto de inicio de ramificación
+    { id: 'banner', x: 50, y: 0.1, scrollTrigger: 0.1 },
+    
+    // Rama izquierda (ya no se conecta secuencialmente, se conecta manualmente)
     { id: 'banner1', x: -200, y: 0.165, scrollTrigger: 0.11 },
-    // { id: 'banner2', x: 200, y: 0.165, scrollTrigger: 0.11 },
-// la rama generada por abmmer 2 se une con el banner fiun 2
     { id: 'bannerFin1', x: -200, y: 0.2, scrollTrigger: 0.2},
-    // { id: 'bannerFin2', x: 200, y: 0.2, scrollTrigger: 0.2 },
-
-  // aca se encuentran las 2 ramas1
+    
+    // Rama derecha (ya no se conecta secuencialmente, se conecta manualmente)
+    { id: 'banner2', x: 200, y: 0.165, scrollTrigger: 0.11 },
+    { id: 'bannerFin2', x: 200, y: 0.2, scrollTrigger: 0.2 },
+    
+    // Punto de reunión de las dos ramas
     { id: 'trayeFin', x: 50, y: 0.3, scrollTrigger: 0.3},
 
+    // Nodo final
     { id: 'Fin', x: 50, y: 1, scrollTrigger: 1},
-    // // Sección de ramificación
-    // { id: 'split1', x: 50, y: 0.8, scrollTrigger: 0.5 },
-    // { id: 'left1', x: -200, y: 0.8, scrollTrigger: 0.6 },
-    // { id: 'right1', x: 200, y: 0.8, scrollTrigger: 0.6 },
-    // { id: 'left2', x: -200, y: 0.85, scrollTrigger: 0.75 },
-    // { id: 'right2', x: 200, y: 0.85, scrollTrigger: 0.75 },
-    // { id: 'merge1', x: 0, y: 0.9, scrollTrigger: 0.85 },
-    // { id: 'skills', x: 0, y: 0.95, scrollTrigger: 0.9 },
-    // { id: 'split2', x: 0, y: 0.97, scrollTrigger: 0.95 },
+  ];
+
+  // Configuración de ramificaciones manuales
+  const branchingConfig = [
+    // Secuencia principal
+    ['start', 'banner'],
     
-    // // Nodos finales
-    // { id: 'circle1', x: -150, y: 1, scrollTrigger: 1 },
-    // { id: 'circle2', x: 0, y: 1, scrollTrigger: 1 },
-    // { id: 'circle3', x: 150, y: 1, scrollTrigger: 1 },
+    // Rama izquierda desde banner
+    ['banner', 'banner1'],
+    ['banner1', 'bannerFin1'],
+    ['bannerFin1', 'trayeFin'],
+    
+    // Rama derecha desde banner
+    ['banner', 'banner2'],
+    ['banner2', 'bannerFin2'],
+    ['bannerFin2', 'trayeFin'],
+    
+    // Continuación principal
+    ['trayeFin', 'Fin'],
   ];
 
   // Función para generar paths automáticamente basado en la configuración
-  const generatePathsFromConfig = useCallback((config: typeof tracingConfig): { nodes: Node[], paths: Path[] } => {
+  const generatePathsFromConfig = useCallback((config: typeof tracingConfig, branches: typeof branchingConfig): { nodes: Node[], paths: Path[] } => {
     const nodes: Node[] = config;
     const paths: Path[] = [];
+    
+    // Crear mapa de nodos para acceso rápido
+    const nodeMap = new Map(nodes.map(node => [node.id, node]));
 
-    // Generar paths automáticamente conectando nodos consecutivos
-    for (let i = 0; i < config.length - 1; i++) {
-      const currentNode = config[i];
-      const nextNode = config[i + 1];
+    // Generar paths basado en branchingConfig
+    for (const [fromId, toId] of branches) {
+      const fromNode = nodeMap.get(fromId);
+      const toNode = nodeMap.get(toId);
+      
+      if (!fromNode || !toNode) continue;
       
       // Determinar el tipo de path basado en la distancia y posición
-      const deltaX = Math.abs(nextNode.x - currentNode.x);
-      const deltaY = nextNode.y - currentNode.y;
+      const deltaX = Math.abs(toNode.x - fromNode.x);
+      const deltaY = toNode.y - fromNode.y;
       
       let pathType: 'straight' | 'curve' = 'straight';
       let curveControl: { x: number; y: number } | undefined;
@@ -125,15 +138,15 @@ export function TracingBeamPath({
       if (deltaX > 50) {
         pathType = 'curve';
         // Calcular punto de control para la curva
-        const midX = (currentNode.x + nextNode.x) / 2;
-        const midY = currentNode.y + deltaY * 0.5;
+        const midX = (fromNode.x + toNode.x) / 2;
+        const midY = fromNode.y + deltaY * 0.5;
         curveControl = { x: midX, y: midY };
       }
 
       paths.push({
-        id: `path_${currentNode.id}_to_${nextNode.id}`,
-        from: currentNode.id,
-        to: nextNode.id,
+        id: `path_${fromId}_to_${toId}`,
+        from: fromId,
+        to: toId,
         type: pathType,
         curveControl
       });
@@ -197,7 +210,7 @@ export function TracingBeamPath({
 
   // Función para generar paths iluminados (con interpolación según scroll)
   const generateIlluminatedPaths = useCallback((progress: number) => {
-    const { nodes, paths } = generatePathsFromConfig(tracingConfig);
+    const { nodes, paths } = generatePathsFromConfig(tracingConfig, branchingConfig);
     const visiblePaths = getVisiblePaths(progress, nodes, paths);
     return visiblePaths.map(path => ({
       id: path.id,
@@ -215,7 +228,7 @@ export function TracingBeamPath({
   useEffect(() => {
     if (svgHeight > 0) {
       // Generar configuración internamente para evitar bucles
-      const { nodes, paths } = generatePathsFromConfig(tracingConfig);
+      const { nodes, paths } = generatePathsFromConfig(tracingConfig, branchingConfig);
       
       // Generar basePaths directamente aquí para evitar dependencias que cambian
       const nodeMap = new Map(nodes.map(node => [node.id, node]));
@@ -255,7 +268,7 @@ export function TracingBeamPath({
       setBasePaths(newBasePaths);
       setIlluminatedPaths(newIlluminatedPaths);
     }
-  }, [svgHeight]);
+  }, [svgHeight, generatePathsFromConfig, getNodePosition, getVisiblePaths, generatePathString]);
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     const newIlluminatedPaths = generateIlluminatedPaths(value);
