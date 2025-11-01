@@ -21,9 +21,13 @@ const getCircleConfig = (): CircleData[] => {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
   const isTablet = typeof window !== 'undefined' && window.innerWidth < 1024 && window.innerWidth >= 768
   
-  const radius = isMobile ? 180 : isTablet ? 220 : 280  // Aumentado para más espacio
-  const offsetY = isMobile ? 140 : isTablet ? 180 : 240 // Aumentado para más separación
-  const offsetX = isMobile ? 140 : isTablet ? 180 : 240 // Aumentado para más separación
+  // Radios en rem
+  const radius = isMobile ? 12 : isTablet ? 14 : 17.5  // ~280px en rem (17.5rem)
+  
+  // Separación más amplia para hacer el centro más grande
+  // Los dos círculos superiores estarán más arriba y separados
+  const offsetY = isMobile ? 10 : isTablet ? 11.5 : 14  // rem
+  const offsetX = isMobile ? 11 : isTablet ? 12.5 : 15  // rem - más separación horizontal
   
   return [
     {
@@ -53,7 +57,7 @@ const getCircleConfig = (): CircleData[] => {
       glowColor: "hsl(340, 70%, 50%)",
       skills: ["Pentesting", "Networking", "Firewalls", "Vulnerability Analysis", "ISO 27001", "SIEM"],
       x: 0,
-      y: offsetY,
+      y: offsetY * 1.2, // Más abajo para dejar más espacio en el centro
       radius,
     },
   ]
@@ -99,7 +103,9 @@ export default function SkillsSectionVenn() {
 
         {/* Diagrama de Venn */}
         {circleConfig.length > 0 && (
-          <VennDiagram circleConfig={circleConfig} windowSize={windowSize} />
+          <div className="relative" style={{ aspectRatio: '1/1', maxWidth: 'min(100%, 90vw)', margin: '0 auto' }}>
+            <VennDiagram circleConfig={circleConfig} windowSize={windowSize} />
+          </div>
         )}
       </div>
     </section>

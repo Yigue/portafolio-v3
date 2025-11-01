@@ -61,15 +61,14 @@ export default function SkillCircle({ circle, index, mouseX, mouseY }: SkillCirc
     const angleStep = 360 / total
     
     // SOLO usar anillos externos para evitar el centro por completo
-    const outerRadius = circle.radius * 0.92  // Anillo exterior (92% del radio)
-    const middleRadius = circle.radius * 0.75 // Anillo medio (75% del radio)
-    // NO usar anillo interno para evitar completamente el centro
+    const outerRadius = circle.radius * 0.9   // Anillo exterior (90% del radio)
+    const middleRadius = circle.radius * 0.7  // Anillo medio (70% del radio)
     
-    // Área libre alrededor del centro (40% del radio central)
-    const minRadius = circle.radius * 0.40
+    // Área libre alrededor del centro (30% del radio central)
+    const minRadius = circle.radius * 0.3
     
     skills.forEach((skill, idx) => {
-      // Solo usar 2 anillos exteriores
+      // Alternar entre anillos exteriores
       let radius = idx % 2 === 0 ? outerRadius : middleRadius
       
       // Asegurar que NUNCA entre en el área central
@@ -98,10 +97,10 @@ export default function SkillCircle({ circle, index, mouseX, mouseY }: SkillCirc
       ref={ref}
       className="absolute"
       style={{
-        width: `${circle.radius * 2}px`,
-        height: `${circle.radius * 2}px`,
-        left: `calc(50% + ${circle.x}px - ${circle.radius}px)`,
-        top: `calc(50% + ${circle.y}px - ${circle.radius}px)`,
+        width: `${circle.radius * 2}rem`,
+        height: `${circle.radius * 2}rem`,
+        left: `calc(50% + ${circle.x}rem - ${circle.radius}rem)`,
+        top: `calc(50% + ${circle.y}rem - ${circle.radius}rem)`,
       }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
@@ -165,7 +164,10 @@ export default function SkillCircle({ circle, index, mouseX, mouseY }: SkillCirc
 
       {/* Título del círculo */}
       <motion.div
-        className="absolute top-[-25px] md:top-[-30px] left-1/2 -translate-x-1/2 text-center px-2 pointer-events-none"
+        className="absolute left-1/2 -translate-x-1/2 text-center px-2 pointer-events-none"
+        style={{
+          top: '-1.875rem'
+        }}
         animate={{
           opacity: isHovered ? 1 : 0.9,
           y: isHovered ? -2 : 0,

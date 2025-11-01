@@ -27,15 +27,14 @@ export default function SkillTag({ label, angle, distance, delay }: SkillTagProp
       style={{
         left: `50%`,
         top: `50%`,
-        x: x,
-        y: y,
+        transform: `translate(calc(-50% + ${x}rem), calc(-50% + ${y}rem))`,
       }}
       initial={{ opacity: 0, scale: 0 }}
       animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
       transition={{ duration: 0.5, delay: delay / 1000 }}
     >
       <motion.div
-        className="px-2 md:px-2.5 py-0.5 md:py-1 bg-background/95 backdrop-blur-md border border-foreground/30 rounded-full text-[8px] md:text-[10px] font-medium text-foreground shadow-xl whitespace-nowrap"
+        className="px-2.5 md:px-3.5 py-1 md:py-1.5 bg-background/95 backdrop-blur-md border border-foreground/30 rounded-full text-[0.625rem] md:text-[0.75rem] lg:text-[0.875rem] font-medium text-foreground shadow-xl whitespace-nowrap"
         style={{ zIndex: 10 }}
         animate={{
           y: [0, -8, 0],

@@ -55,8 +55,8 @@ export default function VennDiagram({ circleConfig, windowSize }: VennDiagramPro
       ref={containerRef}
       className="relative w-full my-12 md:my-16"
       style={{ 
-        height: windowSize.width < 768 ? "1000px" : windowSize.width < 1024 ? "1300px" : "1500px",
-        minHeight: windowSize.width < 768 ? "900px" : "1200px"
+        height: windowSize.width < 768 ? "62.5rem" : windowSize.width < 1024 ? "81.25rem" : "93.75rem",
+        minHeight: windowSize.width < 768 ? "56.25rem" : "75rem"
       }}
       onMouseMove={handleMouseMove}
     >
@@ -87,10 +87,10 @@ export default function VennDiagram({ circleConfig, windowSize }: VennDiagramPro
             background: "linear-gradient(135deg, #6b5bff, #18b2f0, #f05b8e)",
             opacity: 0.25,
             borderRadius: "50%",
-            width: windowSize.width < 768 ? "250px" : "350px",
-            height: windowSize.width < 768 ? "250px" : "350px",
-            marginLeft: windowSize.width < 768 ? "-125px" : "-175px",
-            marginTop: windowSize.width < 768 ? "-125px" : "-175px",
+            width: windowSize.width < 768 ? "15.625rem" : "21.875rem",
+            height: windowSize.width < 768 ? "15.625rem" : "21.875rem",
+            marginLeft: windowSize.width < 768 ? "-7.8125rem" : "-10.9375rem",
+            marginTop: windowSize.width < 768 ? "-7.8125rem" : "-10.9375rem",
           }}
           animate={{
             scale: [1, 1.1, 1],
