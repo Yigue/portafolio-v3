@@ -1,7 +1,6 @@
 "use client"
 
 import { CardAnimation, TextAnimation } from "@/components/common/SectionAnimation"
-import { TimelineLine } from "@/components/common/TimelineLine"
 
 interface TimelineItem {
   year: string
@@ -58,6 +57,28 @@ function TimelineCard({ item, index }: TimelineCardProps) {
       <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl opacity-0 
       group-hover:opacity-100 transition-opacity duration-500" />
     </CardAnimation>
+  )
+}
+
+function TimelineMarker({ item }: { item: TimelineItem }) {
+  const isExperience = item.type === "experience"
+  return (
+    <div className="relative flex flex-col items-center gap-3 text-center">
+      <span className="text-[11px] tracking-[0.35em] uppercase text-foreground/50">
+        {item.year}
+      </span>
+      <div
+        className={`relative flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+          isExperience ? "border-primary/50 bg-primary/10" : "border-blue-500/50 bg-blue-500/5"
+        }`}
+      >
+        <div
+          className={`h-3 w-3 rounded-full ${
+            isExperience ? "bg-primary" : "bg-blue-400"
+          } shadow-[0_0_12px_rgba(59,130,246,0.45)]`}
+        />
+      </div>
+    </div>
   )
 }
 
@@ -122,30 +143,45 @@ export default function TimelineSection() {
           </div>
         </TextAnimation>
 
-        {/* Timeline con línea central - Solo en desktop */}
-        <div className="hidden md:block relative min-h-[900px]">
-          <TimelineLine items={timelineItems.map(item => ({ type: item.type, year: item.year }))} />
-          
-          {/* Items alternados */}
-          <div className="relative">
-            {timelineItems.map((item, index) => {
-              const progress = (index + 1) / (timelineItems.length + 1)
-              const isLeft = item.type === "experience"
-              
-              return (
-                <div
-                  key={index}
-                  className="absolute w-[45%] z-10"
-                  style={{
-                    top: `${progress * 100}%`,
-                    [isLeft ? "right" : "left"]: "52.5%",
-                  }}
-                >
-                  <TimelineCard item={item} index={index} />
-                </div>
-              )
-            })}
+        {/* Timeline con línea central */}
+        <div className="relative hidden md:flex flex-col gap-12">
+          <div className="pointer-events-none absolute left-1/2 top-0 bottom-0 hidden md:block">
+            <div className="h-full w-[2px] -translate-x-1/2 bg-gradient-to-b from-transparent via-white/15 to-transparent" />
           </div>
+
+          {timelineItems.map((item, index) => {
+            const isLeft = index % 2 === 0
+            return (
+              <div
+                key={`${item.title}-${index}`}
+                className="grid grid-cols-[minmax(0,1fr)_80px_minmax(0,1fr)] items-center gap-6 lg:gap-10"
+              >
+                <div className={`flex justify-end ${isLeft ? "" : "opacity-0 md:pointer-events-none"}`}>
+                  <div className={`w-full max-w-xl ${isLeft ? "relative" : ""}`}>
+                    {isLeft && (
+                      <>
+                        <TimelineCard item={item} index={index} />
+                        <span className="absolute right-[-36px] top-1/2 hidden h-px w-9 -translate-y-1/2 bg-gradient-to-r from-primary/60 to-transparent lg:block" />
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <TimelineMarker item={item} />
+
+                <div className={`flex justify-start ${!isLeft ? "" : "opacity-0 md:pointer-events-none"}`}>
+                  <div className={`w-full max-w-xl ${!isLeft ? "relative" : ""}`}>
+                    {!isLeft && (
+                      <>
+                        <TimelineCard item={item} index={index} />
+                        <span className="absolute left-[-36px] top-1/2 hidden h-px w-9 -translate-y-1/2 bg-gradient-to-l from-blue-400/60 to-transparent lg:block" />
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
         </div>
 
         {/* Timeline en mobile - stack vertical sin línea */}
