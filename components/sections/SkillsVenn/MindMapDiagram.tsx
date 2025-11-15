@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { MindMapNode } from "./MindMapTypes";
+import { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MindMapNode, Skill, SubNode } from "./MindMapTypes";
 
 type Central = {
   title: string;
@@ -23,109 +24,405 @@ export default function MindMapDiagram({
   onCategorySelect,
 }: Props) {
   const { central, categories } = data;
+  const [isMobile, setIsMobile] = useState(false);
+  const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(null);
 
-  return (
-    <div className="relative w-full aspect-[16/10] md:aspect-[16/7] overflow-hidden rounded-3xl bg-[#020617]/70 backdrop-blur-xl">
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Sistema de opacidad dinámica
+  const getOpacity = useMemo(() => {
+    return (categoryId: string, elementType: 'category' | 'subnode' | 'skill' | 'line-main' | 'line-secondary' | 'line-tertiary') => {
+      const isActive = categoryId === activeCategoryId;
+      const isHovered = categoryId === hoveredCategoryId;
       
-      {/* BACKGROUND DECORATION */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 30%, rgba(59,130,246,0.25), transparent 60%), radial-gradient(circle at 15% 75%, rgba(244,114,182,0.25), transparent 60%), radial-gradient(circle at 85% 75%, rgba(16,185,129,0.25), transparent 60%)",
-        }}
-      />
+      if (isActive) {
+        switch (elementType) {
+          case 'category': return 1;
+          case 'subnode': return 1;
+          case 'skill': return 1;
+          case 'line-main': return 0.6;
+          case 'line-secondary': return 0.5;
+          case 'line-tertiary': return 0.4;
+        }
+      } else if (isHovered) {
+        switch (elementType) {
+          case 'category': return 0.9;
+          case 'subnode': return 0.7;
+          case 'skill': return 0.6;
+          case 'line-main': return 0.45;
+          case 'line-secondary': return 0.4;
+          case 'line-tertiary': return 0.3;
+        }
+      } else {
+        switch (elementType) {
+          case 'category': return 0.7;
+          case 'subnode': return 0.4;
+          case 'skill': return 0.4;
+          case 'line-main': return 0.3;
+          case 'line-secondary': return 0.25;
+          case 'line-tertiary': return 0.2;
+        }
+      }
+    };
+  }, [activeCategoryId, hoveredCategoryId]);
 
-      {/* LINES */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <g stroke="rgba(148,163,184,0.25)" strokeWidth="0.35">
-          {categories.map((cat) => (
-            <line key={cat.id} x1="50" y1="50" x2={cat.x} y2={cat.y} />
-          ))}
-        </g>
-      </svg>
+  // Calcular posición absoluta
+  const getAbsolutePosition = (x: number, y: number, parentX?: number, parentY?: number) => {
+    if (parentX !== undefined && parentY !== undefined) {
+      return { x: parentX + x, y: parentY + y };
+    }
+    return { x, y };
+  };
 
-      {/* CENTRAL NODE */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="relative">
-          <div
-            className="absolute inset-0 blur-2xl"
+  // Renderizar skill pequeño
+  const renderSkill = (
+    skill: Skill,
+    categoryX: number,
+    categoryY: number,
+    angle: number,
+    distance: number,
+    color: string,
+    index: number,
+    categoryId: string,
+    baseDelay: number = 0.5
+  ) => {
+    const rad = (angle * Math.PI) / 180;
+    const skillX = categoryX + Math.cos(rad) * distance;
+    const skillY = categoryY + Math.sin(rad) * distance;
+    const skillOpacity = getOpacity(categoryId, 'skill');
+    const lineOpacity = getOpacity(categoryId, 'line-tertiary');
+
+    return (
+      <g key={`${skill.id}-${index}`}>
+        {/* Línea de conexión terciaria */}
+        <motion.line
+          x1={categoryX}
+          y1={categoryY}
+          x2={skillX}
+          y2={skillY}
+          stroke={color}
+          strokeWidth={isMobile ? "0.6" : "0.8"}
+          strokeOpacity={lineOpacity}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: lineOpacity }}
+          transition={{ 
+            delay: baseDelay + index * 0.03 + 0.05, 
+            duration: 0.4,
+            opacity: { duration: 0.3 }
+          }}
+          style={{
+            filter: `drop-shadow(0 0 1px ${color})`,
+          }}
+        />
+        {/* Nodo pequeño del skill */}
+        <motion.g
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ 
+            opacity: skillOpacity, 
+            scale: 1 
+          }}
+          transition={{ 
+            delay: baseDelay + index * 0.03 + 0.1, 
+            duration: 0.3, 
+            type: "spring", 
+            stiffness: 200 
+          }}
+        >
+          <circle
+            cx={skillX}
+            cy={skillY}
+            r={isMobile ? "2.2" : "2.8"}
+            fill={color}
+            className="cursor-pointer"
             style={{
-              background: "radial-gradient(circle, rgba(96,165,250,0.6), transparent 70%)",
+              filter: `drop-shadow(0 0 ${isMobile ? "4" : "5"}px ${color})`,
             }}
           />
-          <div className="relative rounded-full border border-white/20 bg-black/40 backdrop-blur-2xl px-8 py-4 shadow-[0_0_55px_rgba(59,130,246,0.4)]">
-            <p className="text-xs tracking-[0.35em] text-slate-300/70 uppercase mb-1">
-              Rol principal
-            </p>
-            <p className="text-xl md:text-3xl font-semibold text-white">
-              {central.title}
-            </p>
-            {central.subtitle && (
-              <p className="mt-1 text-xs md:text-sm text-slate-200/70">
-                {central.subtitle}
-              </p>
-            )}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* CATEGORY NODES */}
-      {categories.map((cat) => {
-        const active = cat.id === activeCategoryId;
-
-        return (
-          <motion.button
-            key={cat.id}
-            onClick={() => onCategorySelect(cat.id)}
-            className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1"
+          <text
+            x={skillX}
+            y={skillY + (isMobile ? 4 : 4.5)}
+            fontSize={isMobile ? "9px" : "10px"}
+            fill="white"
+            textAnchor="middle"
+            className="pointer-events-none select-none"
             style={{
-              left: `${cat.x}%`,
-              top: `${cat.y}%`,
+              filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.95)) drop-shadow(0 0 2px ${color})`,
+              fontWeight: "500",
             }}
-            whileHover={{ scale: 1.07 }}
-            transition={{ type: "spring", stiffness: 240, damping: 18 }}
           >
-            {/* OUTER CIRCLE */}
-            <div
-              className="flex items-center justify-center rounded-full backdrop-blur-md border border-white/20"
+            {skill.name}
+          </text>
+        </motion.g>
+      </g>
+    );
+  };
+
+  // Renderizar sub-nodo
+  const renderSubNode = (
+    subNode: SubNode,
+    categoryX: number,
+    categoryY: number,
+    categoryColor: string,
+    categoryId: string
+  ) => {
+    const { x, y } = getAbsolutePosition(subNode.x, subNode.y, categoryX, categoryY);
+    const subNodeOpacity = getOpacity(categoryId, 'subnode');
+    const lineOpacity = getOpacity(categoryId, 'line-secondary');
+
+    return (
+      <g key={subNode.id}>
+        {/* Línea de conexión secundaria */}
+        <motion.line
+          x1={categoryX}
+          y1={categoryY}
+          x2={x}
+          y2={y}
+          stroke={categoryColor}
+          strokeWidth={isMobile ? "1" : "1.3"}
+          strokeOpacity={lineOpacity}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: lineOpacity }}
+          transition={{ 
+            duration: 0.4,
+            delay: 0.45,
+            opacity: { duration: 0.3 }
+          }}
+          style={{
+            filter: `drop-shadow(0 0 2px ${categoryColor})`,
+          }}
+        />
+        {/* Círculo del sub-nodo */}
+        <motion.g
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ 
+            opacity: subNodeOpacity, 
+            scale: 1 
+          }}
+          transition={{ 
+            duration: 0.4, 
+            delay: 0.4,
+            type: "spring", 
+            stiffness: 200 
+          }}
+        >
+          <circle
+            cx={x}
+            cy={y}
+            r={isMobile ? "4" : "5"}
+            fill={subNode.color}
+            fillOpacity={0.3}
+            stroke={subNode.color}
+            strokeWidth={isMobile ? "1.5" : "2"}
+            style={{
+              filter: `drop-shadow(0 0 ${isMobile ? "5" : "6"}px ${subNode.color})`,
+            }}
+          />
+          <text
+            x={x}
+            y={y - (isMobile ? 3.5 : 4)}
+            fontSize={isMobile ? "11px" : "12px"}
+            fill="white"
+            fontWeight="600"
+            textAnchor="middle"
+            className="pointer-events-none select-none"
+            style={{
+              filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.95)) drop-shadow(0 0 2px ${subNode.color})`,
+            }}
+          >
+            {subNode.title}
+          </text>
+          {/* Skills del sub-nodo */}
+          {subNode.skills.map((skill, index) => {
+            const angle = (360 / subNode.skills.length) * index;
+            const distance = isMobile ? 9 : 10;
+            return renderSkill(skill, x, y, angle, distance, subNode.color, index, categoryId, 0.5);
+          })}
+        </motion.g>
+      </g>
+    );
+  };
+
+  return (
+    <div className="relative w-full aspect-[16/9] md:aspect-[16/8] overflow-hidden rounded-3xl bg-[#0a0f1c] border border-white/10 shadow-2xl backdrop-blur-xl">
+      {/* Fondo glassmorphism */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.06),transparent_60%)]" />
+
+      {/* SVG Container completo */}
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        {/* Líneas de conexión principales (Nivel 1: Centro → Categorías) */}
+        {categories.map((cat, idx) => {
+          const lineOpacity = getOpacity(cat.id, 'line-main');
+          return (
+            <motion.line
+              key={`line-${cat.id}`}
+              x1="50"
+              y1="50"
+              x2={cat.x}
+              y2={cat.y}
+              stroke={cat.color}
+              strokeWidth={isMobile ? "1.2" : "1.8"}
+              strokeOpacity={lineOpacity}
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: lineOpacity }}
+              transition={{ 
+                delay: 0.1 + idx * 0.1, 
+                duration: 0.6,
+                opacity: { duration: 0.3 }
+              }}
               style={{
-                height: "56px",
-                width: "56px",
-                backgroundColor: "rgba(0,0,0,0.5)",
-                boxShadow: active
-                  ? `0 0 28px ${cat.glowColor ?? cat.color}70`
-                  : "0 0 15px rgba(0,0,0,0.6)",
+                filter: `drop-shadow(0 0 2px ${cat.color})`,
+              }}
+            />
+          );
+        })}
+
+        {/* Nodo central (Nivel 1: Rol Principal) */}
+        <motion.g
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
+        >
+          <circle
+            cx="50"
+            cy="50"
+            r={isMobile ? "7" : "8"}
+            fill="#1e3a8a"
+            fillOpacity={0.3}
+            stroke="#3b82f6"
+            strokeWidth={isMobile ? "2.5" : "3"}
+            style={{
+              filter: `drop-shadow(0 0 ${isMobile ? "10" : "12"}px #3b82f6)`,
+            }}
+          />
+          <text
+            x="50"
+            y={isMobile ? "47" : "47"}
+            fontSize={isMobile ? "13px" : "15px"}
+            fill="white"
+            fontWeight="800"
+            textAnchor="middle"
+            className="pointer-events-none select-none"
+            style={{
+              filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.95)) drop-shadow(0 0 3px #3b82f6)`,
+            }}
+          >
+            {central.title}
+          </text>
+          {central.subtitle && (
+            <text
+              x="50"
+              y={isMobile ? "53" : "53"}
+              fontSize={isMobile ? "9px" : "10px"}
+              fill="white"
+              fillOpacity={0.9}
+              textAnchor="middle"
+              className="pointer-events-none select-none"
+              style={{
+                filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.95)) drop-shadow(0 0 2px #3b82f6)`,
               }}
             >
-              {/* INNER CIRCLE */}
-              <div
-                className="h-7 w-7 rounded-full border border-white/50"
-                style={{ backgroundColor: cat.bgColor }}
-              />
-            </div>
+              {central.subtitle}
+            </text>
+          )}
+        </motion.g>
 
-            {/* TITLE */}
-            <span
-              className={`text-[10px] md:text-xs whitespace-nowrap font-medium ${
-                active ? "text-white" : "text-slate-300/80"
-              }`}
-            >
-              {cat.title}
-            </span>
-          </motion.button>
-        );
-      })}
+        {/* Categorías y sus elementos (Nivel 2 y 3) */}
+        {categories.map((cat, index) => {
+          const isActive = cat.id === activeCategoryId;
+          const isHovered = cat.id === hoveredCategoryId;
+          const categoryOpacity = getOpacity(cat.id, 'category');
+          const glowIntensity = isActive ? (isMobile ? 15 : 18) : isHovered ? (isMobile ? 10 : 12) : (isMobile ? 6 : 8);
 
+          return (
+            <g key={cat.id}>
+              {/* Círculo de categoría (Nivel 2: Área) */}
+              <motion.g
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: categoryOpacity, scale: 1 }}
+                transition={{ delay: 0.3 + index * 0.1, duration: 0.5, type: "spring", stiffness: 150 }}
+              >
+                <motion.circle
+                  cx={cat.x}
+                  cy={cat.y}
+                  r={isActive ? (isMobile ? "6" : "7") : isMobile ? "5" : "6"}
+                  fill={cat.bgColor}
+                  stroke={cat.color}
+                  strokeWidth={isMobile ? "2" : "2.5"}
+                  className="cursor-pointer"
+                  onClick={() => onCategorySelect(cat.id)}
+                  onMouseEnter={() => setHoveredCategoryId(cat.id)}
+                  onMouseLeave={() => setHoveredCategoryId(null)}
+                  whileHover={{ scale: 1.15 }}
+                  animate={{
+                    filter: [
+                      `drop-shadow(0 0 ${glowIntensity}px ${cat.glowColor})`,
+                    ],
+                  }}
+                />
+                {/* Título de categoría */}
+                <text
+                  x={cat.x}
+                  y={cat.y - (isMobile ? 3.5 : 4)}
+                  fontSize={isMobile ? "10px" : "11px"}
+                  fill="white"
+                  fontWeight="700"
+                  textAnchor="middle"
+                  className="pointer-events-none select-none"
+                  style={{
+                    filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.95)) drop-shadow(0 0 2px ${cat.glowColor})`,
+                  }}
+                >
+                  {cat.title}
+                </text>
+              </motion.g>
+
+              {/* Sub-nodos y skills (Nivel 3: Habilidades) */}
+              <AnimatePresence>
+                <motion.g
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* Sub-nodos */}
+                  {cat.subNodes?.map((subNode) =>
+                    renderSubNode(subNode, cat.x, cat.y, cat.color, cat.id)
+                  )}
+
+                  {/* Skills directos de la categoría */}
+                  {cat.skills?.map((skill, skillIndex) => {
+                    const baseAngle = (360 / (cat.skills?.length || 1)) * skillIndex;
+                    const angle = skill.name === cat.skills?.[skillIndex - 1]?.name
+                      ? baseAngle + (skillIndex % 2 === 0 ? 15 : -15)
+                      : baseAngle;
+                    const distance = isMobile ? 12 : 14;
+                    return renderSkill(
+                      skill,
+                      cat.x,
+                      cat.y,
+                      angle,
+                      distance,
+                      cat.color,
+                      skillIndex,
+                      cat.id,
+                      0.5
+                    );
+                  })}
+                </motion.g>
+              </AnimatePresence>
+            </g>
+          );
+        })}
+      </svg>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import MindMapDiagram from "./SkillsVenn/MindMapDiagram";
 import { MindMapNode, Skill, SubNode } from "./SkillsVenn/MindMapTypes";
 
 export default function SkillsSectionMindMap() {
-  const RADIUS = 36; // Porcentaje desde el centro
+  const RADIUS = 32; // Porcentaje desde el centro (reducido para dar más espacio)
   const CENTER_X = 50;
   const CENTER_Y = 50;
 
