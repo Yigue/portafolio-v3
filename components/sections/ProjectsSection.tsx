@@ -1,91 +1,80 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import { TextAnimation } from "@/components/common/SectionAnimation"
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid"
 import { ProjectPlaceholder } from "@/components/ui/ProjectPlaceholder"
+import { Button } from "@/components/ui/button"
+import { projects as projectData } from "@/lib/data/portfolio"
 import type { ProjectType } from "@/lib/gradients"
 
-interface Project {
-  title: string
-  description: string
-  stack: string[]
-  type: ProjectType
-  featured?: boolean
+const filterLabels: Record<string, string> = {
+  todos: "Todos",
+  enterprise: "Enterprise",
+  saas: "SaaS",
+  commerce: "E-commerce",
+  data: "Data",
+  mobile: "Mobile",
+  platform: "Platform",
 }
 
 export default function ProjectsSection() {
-  const projects: Project[] = [
-    {
-      title: "Sistema de Tracking",
-      description: "Plataforma de seguimiento en tiempo real para logística con React, .NET y microservicios en AWS. Manejo de datos en tiempo real y visualización de rutas.",
-      stack: ["React", "Node.js", "PostgreSQL", "AWS"],
-      type: "web",
-      featured: true
-    },
-    {
-      title: "SaaS de Gestión",
-      description: "Herramienta de gestión empresarial potenciada con IA para automatización de tareas",
-      stack: ["Next.js", "Supabase", "OpenAI"],
-      type: "saas",
-      featured: true
-    },
-    {
-      title: "E-commerce Platform",
-      description: "Tienda online moderna con pagos integrados y gestión de inventario",
-      stack: ["React", "Stripe", "Tailwind"],
-      type: "ecommerce",
-    },
-    {
-      title: "Analytics Dashboard",
-      description: "Dashboard interactivo de métricas con visualización de datos en tiempo real",
-      stack: ["Next.js", "D3.js", "Redis"],
-      type: "analytics",
-    },
-    {
-      title: "Mobile App",
-      description: "Aplicación móvil para gestión de tareas con sincronización en la nube",
-      stack: ["React Native", "Firebase"],
-      type: "mobile",
-    },
-    {
-      title: "API Gateway",
-      description: "Arquitectura de microservicios escalable con Docker y Kubernetes",
-      stack: [".NET", "Docker", "AWS"],
-      type: "api",
-    },
-  ]
+  const [activeFilter, setActiveFilter] = useState<string>("todos")
+
+  const filters = useMemo(() => {
+    const uniqueCategories = Array.from(new Set(projectData.map((project) => project.category)))
+    return ["todos", ...uniqueCategories]
+  }, [])
+
+  const filteredProjects = useMemo(() => {
+    if (activeFilter === "todos") return projectData
+    return projectData.filter((project) => project.category === activeFilter)
+  }, [activeFilter])
 
   return (
     <section id="proyectos" className="py-24 md:py-32">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6 space-y-12">
         <TextAnimation delay={0.2}>
-          <div className="text-center mb-16 md:mb-24 space-y-4">
+          <div className="text-center space-y-4">
+            <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">Casos reales</p>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-light">
-              Proyectos Destacados
+              Sistemas que mueven negocio
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Soluciones innovadoras desarrolladas con las últimas tecnologías
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Productos SaaS, plataformas enterprise y experiencias móviles diseñadas para escalar sin sacrificar calidad
             </p>
           </div>
         </TextAnimation>
 
-        {/* BentoGrid estilo Apple con layout asimétrico */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {filters.map((filter) => (
+            <Button
+              key={filter}
+              variant={activeFilter === filter ? "default" : "glass"}
+              size="sm"
+              aria-pressed={activeFilter === filter}
+              onClick={() => setActiveFilter(filter)}
+            >
+              {filterLabels[filter] ?? filter}
+            </Button>
+          ))}
+        </div>
+
         <BentoGrid className="max-w-7xl mx-auto">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <BentoGridItem
-              key={index}
+              key={project.title}
               title={project.title}
               description={
                 <div className="space-y-4">
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {project.description}
                   </p>
-                  
-                  {/* Stack tecnológico */}
+
                   <div className="flex flex-wrap gap-2">
-                    {project.stack.map((tech, techIndex) => (
-                      <span 
-                        key={techIndex} 
+                    {project.stack.map((tech) => (
+                      <span
+                        key={tech}
                         className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/20 font-medium"
                       >
                         {tech}
@@ -93,17 +82,31 @@ export default function ProjectsSection() {
                     ))}
                   </div>
 
-                  {/* Call to action */}
-                  <div className="flex items-center gap-2 text-sm text-primary font-medium pt-2 group-hover/bento:gap-3 transition-all">
-                    Ver proyecto 
-                    <span>→</span>
+                  <div className="flex flex-wrap gap-3">
+                    {project.metrics.map((metric) => (
+                      <div key={metric.label} className="rounded-2xl border border-white/10 px-3 py-2 text-left">
+                        <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">{metric.label}</p>
+                        <p className="text-base font-semibold text-foreground">{metric.value}</p>
+                      </div>
+                    ))}
                   </div>
+
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 text-sm text-primary font-medium pt-2 group-hover/bento:gap-3 transition-all"
+                    aria-label={`Ver caso ${project.title}`}
+                  >
+                    Ver caso
+                    <span>→</span>
+                  </a>
                 </div>
               }
               header={
-                <div className="w-full h-full min-h-[200px] overflow-hidden rounded-xl relative group-hover/bento:scale-105 transition-transform duration-500">
-                  <ProjectPlaceholder 
-                    type={project.type} 
+                <div className="w-full h-full min-h-[220px] overflow-hidden rounded-xl relative group-hover/bento:scale-105 transition-transform duration-500">
+                  <ProjectPlaceholder
+                    type={project.type as ProjectType}
                     title={project.title}
                     pattern="geometric"
                   />
@@ -111,8 +114,8 @@ export default function ProjectsSection() {
                 </div>
               }
               className={`${
-                project.featured 
-                  ? "md:col-span-2 md:row-span-2" 
+                project.featured
+                  ? "md:col-span-2 md:row-span-2"
                   : "md:col-span-1"
               }`}
               delay={index * 0.1}

@@ -10,13 +10,25 @@ export default function SkillsSectionMindMap() {
   const CENTER_X = 50;
   const CENTER_Y = 50;
 
-  const calculateRadialPosition = (angle: number) => {
+  const calculateRadialPosition = (angle: number, orbitScale: number = 1) => {
     const rad = (angle * Math.PI) / 180;
+    const radius = RADIUS * orbitScale;
     return {
-      x: CENTER_X + Math.cos(rad) * RADIUS,
-      y: CENTER_Y + Math.sin(rad) * RADIUS,
+      x: CENTER_X + Math.cos(rad) * radius,
+      y: CENTER_Y + Math.sin(rad) * radius,
+      angle,
+      orbitScale,
     };
   };
+
+  const createCategory = <T extends Omit<MindMapNode, "x" | "y">>(
+    angle: number,
+    orbitScale: number,
+    config: T,
+  ) => ({
+    ...calculateRadialPosition(angle, orbitScale),
+    ...config,
+  });
 
   const createSkill = (name: string, description?: string): Skill => ({
     id: name.toLowerCase().replace(/\s+/g, "-"),
@@ -30,10 +42,9 @@ export default function SkillsSectionMindMap() {
       subtitle: "Backend / Cloud / Security",
     },
     categories: [
-      {
+      createCategory(150, 1, {
         id: "desarrollo",
         title: "Desarrollo",
-        ...calculateRadialPosition(150),
         color: "#6b5bff",
         bgColor: "rgba(107, 91, 255, 0.25)",
         glowColor: "#6b5bff",
@@ -41,68 +52,71 @@ export default function SkillsSectionMindMap() {
         description: "Desarrollo de software y programación",
         subNodes: [
           {
-            id: "oop",
-            title: "OOP",
-            x: 5,
-            y: 10,
-            color: "#6b5bff",
+            id: "frontend",
+            title: "Frontend",
+            x: 4,
+            y: 9,
+            color: "#7c6dff",
             skills: [
-              createSkill("OOP", "Programación Orientada a Objetos"),
-              createSkill(".NET", "Framework .NET para desarrollo backend"),
-              createSkill("React", "Biblioteca de JavaScript para UI"),
-              createSkill("APIs", "Diseño e implementación de APIs REST"),
+              createSkill("React"),
+              createSkill("Next.js"),
+              createSkill("Tailwind"),
             ],
           } as SubNode,
         ],
         skills: [
-          createSkill("SQL", "Structured Query Language para bases de datos"),
-          { ...createSkill("SQL", "Structured Query Language para bases de datos"), id: "sql-2" },
+          createSkill("TypeScript"),
+          createSkill(".NET"),
+          createSkill("APIs"),
+          createSkill("SQL"),
         ],
-      },
-      {
+      }),
+      createCategory(95, 1.05, {
         id: "cloud-infra",
         title: "Cloud / Infraestructura",
-        ...calculateRadialPosition(90),
         color: "#18b2f0",
         bgColor: "rgba(24, 178, 240, 0.25)",
         glowColor: "#18b2f0",
         glowIntensity: 0.6,
         description: "Cloud computing e infraestructura como código",
         skills: [
-          createSkill("AWS", "Amazon Web Services - servicios cloud"),
-          createSkill("Terraform", "Infrastructure as Code (IaC)"),
-          createSkill("Ansible", "Automatización de configuración"),
+          createSkill("AWS"),
+          createSkill("Terraform"),
+          createSkill("Docker"),
+          createSkill("Kubernetes"),
         ],
-      },
-      {
+      }),
+      createCategory(40, 0.9, {
         id: "cicd",
-        title: "CICD",
-        ...calculateRadialPosition(45),
+        title: "CI / CD",
         color: "#1e40af",
         bgColor: "rgba(30, 64, 175, 0.25)",
         glowColor: "#1e40af",
         glowIntensity: 0.6,
-        description: "Continuous Integration / Continuous Delivery",
-        skills: [createSkill("CI/CD", "Integración y despliegue continuo")],
-      },
-      {
+        description: "Integración y entrega continua",
+        skills: [
+          createSkill("GitHub Actions"),
+          createSkill("Jenkins"),
+          createSkill("Testing"),
+        ],
+      }),
+      createCategory(0, 1, {
         id: "datos-auto-rosa",
         title: "Automatización de Datos",
-        ...calculateRadialPosition(0),
         color: "#f472b6",
         bgColor: "rgba(244, 114, 182, 0.25)",
         glowColor: "#f472b6",
         glowIntensity: 0.6,
         description: "Procesamiento de datos y automatización",
         skills: [
-          createSkill("Python", "Lenguaje de programación para automatización"),
-          createSkill("Bash", "Scripting en bash para automatización"),
+          createSkill("Python"),
+          createSkill("Bash"),
+          createSkill("ETL"),
         ],
-      },
-      {
-        id: "datos-auto-verde",
+      }),
+      createCategory(-75, 1.05, {
+        id: "observabilidad",
         title: "Observabilidad",
-        ...calculateRadialPosition(-90),
         color: "#10b981",
         bgColor: "rgba(16, 185, 129, 0.25)",
         glowColor: "#10b981",
@@ -110,35 +124,35 @@ export default function SkillsSectionMindMap() {
         description: "Monitoreo y automatización de datos",
         subNodes: [
           {
-            id: "python-monitoring",
-            title: "Python",
-            x: -5,
-            y: 10,
-            color: "#10b981",
+            id: "monitoring",
+            title: "Monitoring",
+            x: -4,
+            y: 9,
+            color: "#0fb38b",
             skills: [
-              createSkill("Grafana", "Plataforma de visualización y monitoreo"),
-              createSkill("Monitoring", "Monitoreo de sistemas y aplicaciones"),
-              createSkill("PowerShell", "Automatización con PowerShell"),
+              createSkill("Grafana"),
+              createSkill("Prometheus"),
+              createSkill("PowerShell"),
             ],
           } as SubNode,
         ],
-      },
-      {
+        skills: [createSkill("Alerting"), createSkill("Logging")],
+      }),
+      createCategory(-150, 0.95, {
         id: "security",
         title: "Security",
-        ...calculateRadialPosition(-150),
         color: "#059669",
         bgColor: "rgba(5, 150, 105, 0.25)",
         glowColor: "#059669",
         glowIntensity: 0.6,
         description: "Seguridad informática y análisis de vulnerabilidades",
         skills: [
-          createSkill("Hardening", "Fortificación de sistemas"),
-          createSkill("SIEM", "Security Information and Event Management"),
-          createSkill("Análisis de Vulnerabilidades", "Evaluación de seguridad"),
-          createSkill("Firewalls", "Configuración y gestión de firewalls"),
+          createSkill("Hardening"),
+          createSkill("SIEM"),
+          createSkill("Firewalls"),
+          createSkill("Threat Modeling"),
         ],
-      },
+      }),
     ] as MindMapNode[],
   };
 
@@ -168,6 +182,24 @@ export default function SkillsSectionMindMap() {
     return Array.from(unique.values());
   }, [activeCategory]);
 
+  const highlightCards = [
+    {
+      label: "Años de experiencia",
+      value: "> 7",
+      detail: "Construyendo y desplegando productos digitales",
+    },
+    {
+      label: "Stack principal",
+      value: "DevOps / Backend",
+      detail: "Automatización, infraestructura y performance",
+    },
+    {
+      label: "Certificaciones",
+      value: "AWS & Azure",
+      detail: "Cloud Practitioner + Security Fundamentals",
+    },
+  ];
+
   return (
     <section id="habilidades" className="relative py-24 md:py-40 overflow-hidden">
       <div className="container mx-auto px-4">
@@ -191,6 +223,27 @@ export default function SkillsSectionMindMap() {
             Áreas de expertise y tecnologías que domino
           </motion.p>
         </div>
+
+        <motion.div
+          className="grid gap-4 md:grid-cols-3 mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {highlightCards.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-white/5 p-5 shadow-lg"
+            >
+              <p className="text-xs uppercase tracking-[0.4em] text-foreground/60">
+                {item.label}
+              </p>
+              <p className="mt-2 text-3xl font-semibold text-white">{item.value}</p>
+              <p className="mt-1 text-sm text-foreground/70">{item.detail}</p>
+            </div>
+          ))}
+        </motion.div>
 
         <div className="relative max-w-6xl mx-auto rounded-[32px] border border-white/5 bg-gradient-to-br from-white/5 via-background/40 to-background/80 backdrop-blur-2xl shadow-[0_10px_80px_rgba(0,0,0,0.35)] px-6 py-8 md:px-10 md:py-12">
           <div className="absolute inset-0 rounded-[32px] border border-white/10 pointer-events-none" />

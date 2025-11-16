@@ -27,6 +27,22 @@ export default function MindMapDiagram({
   const [isMobile, setIsMobile] = useState(false);
   const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(null);
 
+  const responsiveCategories = useMemo(() => {
+    const baseRadius = isMobile ? 28 : 32;
+    return categories.map((category) => {
+      if (typeof category.angle === "number") {
+        const rad = (category.angle * Math.PI) / 180;
+        const dynamicRadius = baseRadius * (category.orbitScale ?? 1);
+        return {
+          ...category,
+          x: 50 + Math.cos(rad) * dynamicRadius,
+          y: 50 + Math.sin(rad) * dynamicRadius,
+        };
+      }
+      return category;
+    });
+  }, [categories, isMobile]);
+
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -122,21 +138,21 @@ export default function MindMapDiagram({
         {/* Nodo pequeño del skill */}
         <motion.g
           initial={{ opacity: 0, scale: 0 }}
-          animate={{ 
-            opacity: skillOpacity, 
-            scale: 1 
+          animate={{
+            opacity: skillOpacity,
+            scale: 1
           }}
-          transition={{ 
-            delay: baseDelay + index * 0.03 + 0.1, 
-            duration: 0.3, 
-            type: "spring", 
-            stiffness: 200 
+          transition={{
+            delay: baseDelay + index * 0.03 + 0.1,
+            duration: 0.3,
+            type: "spring",
+            stiffness: 200
           }}
         >
           <circle
             cx={skillX}
             cy={skillY}
-            r={isMobile ? "2.2" : "2.8"}
+            r={isMobile ? "1.8" : "2.3"}
             fill={color}
             className="cursor-pointer"
             style={{
@@ -145,8 +161,8 @@ export default function MindMapDiagram({
           />
           <text
             x={skillX}
-            y={skillY + (isMobile ? 4 : 4.5)}
-            fontSize={isMobile ? "9px" : "10px"}
+            y={skillY + (isMobile ? 3.2 : 3.6)}
+            fontSize={isMobile ? "8px" : "9px"}
             fill="white"
             textAnchor="middle"
             className="pointer-events-none select-none"
@@ -248,7 +264,7 @@ export default function MindMapDiagram({
   };
 
   return (
-    <div className="relative w-full aspect-[16/9] md:aspect-[16/8] overflow-hidden rounded-3xl bg-[#0a0f1c] border border-white/10 shadow-2xl backdrop-blur-xl">
+    <div className="relative w-full aspect-[4/5] sm:aspect-[16/10] lg:aspect-[16/8] overflow-hidden rounded-3xl bg-[#0a0f1c] border border-white/10 shadow-2xl backdrop-blur-xl">
       {/* Fondo glassmorphism */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.06),transparent_60%)]" />
 
@@ -259,7 +275,7 @@ export default function MindMapDiagram({
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Líneas de conexión principales (Nivel 1: Centro → Categorías) */}
-        {categories.map((cat, idx) => {
+        {responsiveCategories.map((cat, idx) => {
           const lineOpacity = getOpacity(cat.id, 'line-main');
           return (
             <motion.line
@@ -294,19 +310,19 @@ export default function MindMapDiagram({
           <circle
             cx="50"
             cy="50"
-            r={isMobile ? "7" : "8"}
+            r={isMobile ? "6" : "7"}
             fill="#1e3a8a"
-            fillOpacity={0.3}
+            fillOpacity={0.25}
             stroke="#3b82f6"
-            strokeWidth={isMobile ? "2.5" : "3"}
+            strokeWidth={isMobile ? "2" : "2.4"}
             style={{
-              filter: `drop-shadow(0 0 ${isMobile ? "10" : "12"}px #3b82f6)`,
+              filter: `drop-shadow(0 0 ${isMobile ? "8" : "10"}px #3b82f6)`,
             }}
           />
           <text
             x="50"
             y={isMobile ? "47" : "47"}
-            fontSize={isMobile ? "13px" : "15px"}
+            fontSize={isMobile ? "15px" : "18px"}
             fill="white"
             fontWeight="800"
             textAnchor="middle"
@@ -321,7 +337,7 @@ export default function MindMapDiagram({
             <text
               x="50"
               y={isMobile ? "53" : "53"}
-              fontSize={isMobile ? "9px" : "10px"}
+              fontSize={isMobile ? "9.5px" : "11px"}
               fill="white"
               fillOpacity={0.9}
               textAnchor="middle"
@@ -336,7 +352,7 @@ export default function MindMapDiagram({
         </motion.g>
 
         {/* Categorías y sus elementos (Nivel 2 y 3) */}
-        {categories.map((cat, index) => {
+        {responsiveCategories.map((cat, index) => {
           const isActive = cat.id === activeCategoryId;
           const isHovered = cat.id === hoveredCategoryId;
           const categoryOpacity = getOpacity(cat.id, 'category');
@@ -400,11 +416,16 @@ export default function MindMapDiagram({
 
                   {/* Skills directos de la categoría */}
                   {cat.skills?.map((skill, skillIndex) => {
-                    const baseAngle = (360 / (cat.skills?.length || 1)) * skillIndex;
-                    const angle = skill.name === cat.skills?.[skillIndex - 1]?.name
-                      ? baseAngle + (skillIndex % 2 === 0 ? 15 : -15)
-                      : baseAngle;
-                    const distance = isMobile ? 12 : 14;
+                    const totalSkills = cat.skills?.length || 1;
+                    const angleStep = 360 / totalSkills;
+                    const ringIndex = skillIndex % 3;
+                    const baseDistance = isMobile ? 10 : 12.5;
+                    const ringMultipliers = isMobile ? [1.2, 0.95, 0.78] : [1.3, 1.05, 0.82];
+                    const distance = baseDistance * ringMultipliers[ringIndex];
+                    const categoryAngleOffset = index * 25 + (index % 2) * 10;
+                    const ringAngleOffset = ringIndex * 6;
+                    const angle = skillIndex * angleStep + categoryAngleOffset + ringAngleOffset;
+
                     return renderSkill(
                       skill,
                       cat.x,

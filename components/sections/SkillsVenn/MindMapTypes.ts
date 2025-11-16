@@ -22,6 +22,8 @@ export interface MindMapNode {
   title: string;
   x: number; // Porcentaje desde el centro (50%, 50%)
   y: number; // Porcentaje desde el centro (50%, 50%)
+  angle?: number; // Ángulo polar para recalcular posiciones responsivas
+  orbitScale?: number; // Multiplicador de radio para distribuir anillos
   color: string;
   bgColor: string;
   glowColor: string;
