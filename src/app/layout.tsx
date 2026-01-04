@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/ui/Navbar";
+// import Navbar from "@/components/ui/Navbar";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 
 const inter = Inter({
