@@ -1,0 +1,257 @@
+'use client';
+
+import { useEffect, useRef, useState, useCallback } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { skillNodes, connections } from '@/data/skills';
+
+interface InfoState {
+    title: string;
+    desc: string;
+    color: string;
+}
+
+const defaultInfo: InfoState = {
+    title: 'Selecciona un Nodo',
+    desc: 'Interactúa con el grafo de la izquierda para ver detalles de cada tecnología y su rol en la arquitectura.',
+    color: '#ffffff',
+};
+
+export default function Skills() {
+    const sectionRef = useRef<HTMLElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const svgRef = useRef<SVGSVGElement>(null);
+    const nodesRef = useRef<(HTMLDivElement | null)[]>([]);
+    const panelRef = useRef<HTMLDivElement>(null);
+    const [activeInfo, setActiveInfo] = useState<InfoState>(defaultInfo);
+
+    // Draw SVG lines between connected nodes
+    const drawLines = useCallback(() => {
+        const container = containerRef.current;
+        const svg = svgRef.current;
+        if (!container || !svg) return;
+
+        // Clear existing lines
+        while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+        }
+
+        const rectContainer = container.getBoundingClientRect();
+
+        connections.forEach(([fromIdx, toIdx]) => {
+            const n1 = nodesRef.current[fromIdx];
+            const n2 = nodesRef.current[toIdx];
+            if (!n1 || !n2) return;
+
+            const r1 = n1.getBoundingClientRect();
+            const r2 = n2.getBoundingClientRect();
+
+            const x1 = r1.left + r1.width / 2 - rectContainer.left;
+            const y1 = r1.top + r1.height / 2 - rectContainer.top;
+            const x2 = r2.left + r2.width / 2 - rectContainer.left;
+            const y2 = r2.top + r2.height / 2 - rectContainer.top;
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', String(x1));
+            line.setAttribute('y1', String(y1));
+            line.setAttribute('x2', String(x2));
+            line.setAttribute('y2', String(y2));
+            line.classList.add('network-line');
+            line.dataset.from = String(fromIdx);
+            line.dataset.to = String(toIdx);
+            svg.appendChild(line);
+        });
+    }, []);
+
+    useEffect(() => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const ctx = gsap.context(() => {
+            // Entry animation for nodes
+            gsap.from('.tech-node', {
+                scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
+                opacity: 0,
+                scale: 0.5,
+                duration: 0.6,
+                stagger: 0.08,
+                ease: 'back.out(1.7)',
+                onComplete: drawLines,
+            });
+        }, sectionRef);
+
+        // Draw lines on mount and resize
+        const handleResize = () => drawLines();
+        window.addEventListener('resize', handleResize);
+        setTimeout(drawLines, 100);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            ctx.revert();
+        };
+    }, [drawLines]);
+
+    const handleNodeEnter = (index: number) => {
+        const node = skillNodes[index];
+        setActiveInfo({
+            title: node.title,
+            desc: node.desc,
+            color: node.color,
+        });
+
+        // Update panel border
+        if (panelRef.current) {
+            panelRef.current.style.borderColor = node.color;
+        }
+
+        // Highlight connected lines
+        const lines = svgRef.current?.querySelectorAll('line');
+        lines?.forEach((line) => {
+            if (line.dataset.from === String(index) || line.dataset.to === String(index)) {
+                line.classList.add('active');
+                line.style.setProperty('--active-color', node.color);
+            } else {
+                line.style.opacity = '0.05';
+            }
+        });
+
+        // Dim other nodes
+        nodesRef.current.forEach((n, i) => {
+            if (n && i !== index) {
+                n.style.opacity = '0.25';
+            }
+        });
+    };
+
+    const handleNodeLeave = () => {
+        setActiveInfo(defaultInfo);
+
+        if (panelRef.current) {
+            panelRef.current.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
+
+        // Reset lines
+        const lines = svgRef.current?.querySelectorAll('line');
+        lines?.forEach((line) => {
+            line.classList.remove('active');
+            line.style.opacity = '1';
+        });
+
+        // Reset nodes
+        nodesRef.current.forEach((n) => {
+            if (n) n.style.opacity = '1';
+        });
+    };
+
+    return (
+        <section
+            ref={sectionRef}
+            id="skills"
+            className="min-h-screen w-full relative bg-black flex items-center justify-center py-16 md:py-24 overflow-hidden"
+        >
+            {/* Background Dot Grid */}
+            <div
+                className="absolute inset-0 z-0 opacity-30 pointer-events-none"
+                style={{
+                    backgroundImage: 'radial-gradient(rgba(41, 151, 255, 0.3) 1px, transparent 1px)',
+                    backgroundSize: '40px 40px',
+                    maskImage: 'radial-gradient(circle at center, black 30%, transparent 75%)',
+                }}
+            />
+
+            <div className="container mx-auto px-4 sm:px-6 relative z-10 w-full max-w-7xl">
+                {/* Header */}
+                <div className="text-center mb-10 md:mb-16">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-900/10 mb-4">
+                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        <span className="text-[10px] font-mono text-blue-300 tracking-widest uppercase">
+                            System Online
+                        </span>
+                    </div>
+                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
+                        Ecosistema Técnico
+                    </h2>
+                    <p className="text-gray-500 mt-4 max-w-lg mx-auto text-sm md:text-base">
+                        Una arquitectura DevSecOps integrada. Pasa el cursor sobre los nodos para explorar.
+                    </p>
+                </div>
+
+                {/* Main Content: Network + Panel */}
+                <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center">
+                    {/* Network Container */}
+                    <div ref={containerRef} className="network-container glass-panel rounded-3xl p-4 sm:p-6">
+                        <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
+
+                        {skillNodes.map((node, index) => (
+                            <div
+                                key={index}
+                                ref={(el) => { nodesRef.current[index] = el; }}
+                                className={`tech-node ${node.type === 'core' ? 'core-node' : ''}`}
+                                style={{ top: node.position.top, left: node.position.left }}
+                                onMouseEnter={() => handleNodeEnter(index)}
+                                onMouseLeave={handleNodeLeave}
+                            >
+                                <div
+                                    className="node-icon"
+                                    style={{
+                                        borderColor: node.borderColor,
+                                        color: node.textColor,
+                                        ...(node.type === 'tool' ? { fontSize: '1.2rem' } : {}),
+                                    }}
+                                >
+                                    {node.icon}
+                                </div>
+                                <span className="node-label">{node.label}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Info Panel */}
+                    <div className="w-full lg:w-[420px] self-stretch">
+                        <div
+                            ref={panelRef}
+                            className="h-full glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden flex flex-col transition-all duration-300"
+                            style={{ borderColor: 'rgba(255,255,255,0.1)' }}
+                        >
+                            <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                                <span className="font-mono text-[10px] text-gray-500 tracking-widest">
+                                    NODE INSPECTOR
+                                </span>
+                                <div className="flex gap-2">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                                </div>
+                            </div>
+
+                            <div className="flex-1 flex flex-col justify-center relative z-10">
+                                <h3
+                                    className="text-2xl sm:text-3xl font-bold text-white mb-4 transition-colors duration-300"
+                                    style={{ color: activeInfo.color }}
+                                >
+                                    {activeInfo.title}
+                                </h3>
+                                <div
+                                    className="w-16 h-1.5 mb-6 rounded-full transition-colors duration-300"
+                                    style={{ backgroundColor: activeInfo.color === '#ffffff' ? '#374151' : activeInfo.color }}
+                                />
+                                <p className="text-gray-400 leading-relaxed text-sm transition-all duration-300">
+                                    {activeInfo.desc}
+                                </p>
+                            </div>
+
+                            <div
+                                className="panel-glow"
+                                style={{ backgroundColor: activeInfo.color === '#ffffff' ? 'rgba(31, 41, 55, 0.2)' : activeInfo.color }}
+                            />
+
+                            <div className="mt-auto pt-4 border-t border-white/5 flex justify-between text-[10px] font-mono text-gray-600">
+                                <span>STATUS: ACTIVE</span>
+                                <span>LATENCY: 12ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
