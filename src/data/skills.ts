@@ -249,3 +249,18 @@ export const connections: [number, number][] = [
     // Sec Area (3) -> Tools
     [3, 15], [3, 16], [3, 17], [3, 18], [3, 19],
 ];
+
+/**
+ * Retorna los títulos de las herramientas conectadas a un área
+ * @param areaIndex Índice del nodo de área (1 = Programación, 2 = Infraestructura, 3 = Ciberseguridad)
+ * @returns Array de títulos de herramientas
+ */
+export function getToolsForArea(areaIndex: number): string[] {
+    const toolIndices = connections
+        .filter(([fromIdx]) => fromIdx === areaIndex)
+        .map(([, toIdx]) => toIdx);
+    
+    return toolIndices
+        .map((idx) => skillNodes[idx]?.title)
+        .filter((title): title is string => Boolean(title));
+}

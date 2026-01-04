@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="es" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className={inter.className}>
         <SmoothScroll>
-          <Navbar />
+          {/* <Navbar /> */}
           {children}
         </SmoothScroll>
       </body>

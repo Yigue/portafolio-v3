@@ -3,27 +3,106 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { skillNodes, connections } from '@/data/skills';
+import { skillNodes, connections, getToolsForArea } from '@/data/skills';
 
 interface InfoState {
     title: string;
     desc: string;
     color: string;
+    tools: string[];
 }
 
 const defaultInfo: InfoState = {
     title: 'Selecciona un Nodo',
     desc: 'Interactúa con el grafo de la izquierda para ver detalles de cada tecnología y su rol en la arquitectura.',
     color: '#ffffff',
+    tools: [],
 };
 
 export default function Skills() {
     const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const networkContainerRef = useRef<HTMLDivElement>(null);
+    const panelContainerRef = useRef<HTMLDivElement>(null);
     const svgRef = useRef<SVGSVGElement>(null);
     const nodesRef = useRef<(HTMLDivElement | null)[]>([]);
     const panelRef = useRef<HTMLDivElement>(null);
     const [activeInfo, setActiveInfo] = useState<InfoState>(defaultInfo);
+    const autoSelectingRef = useRef(false);
+
+    // Helper function to select a node (used by both hover and auto-tour)
+    const selectNode = useCallback((index: number) => {
+        const node = skillNodes[index];
+        const tools = node.type === 'area' ? getToolsForArea(index) : [];
+        setActiveInfo({
+            title: node.title,
+            desc: node.desc,
+            color: node.color,
+            tools,
+        });
+
+        // Update panel border
+        if (panelRef.current) {
+            panelRef.current.style.borderColor = node.color;
+        }
+
+        // Highlight connected lines with animation
+        const lines = svgRef.current?.querySelectorAll('line');
+        lines?.forEach((line) => {
+            if (line.dataset.from === String(index) || line.dataset.to === String(index)) {
+                line.classList.add('active');
+                line.style.setProperty('--active-color', node.color);
+                // Animate line activation - slower
+                gsap.to(line, {
+                    opacity: 0.7,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                });
+            } else {
+                line.classList.remove('active');
+                // Animate line dimming - slower
+                gsap.to(line, {
+                    opacity: 0.05,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                });
+            }
+        });
+
+        // Highlight active node and dim other nodes with animations
+        nodesRef.current.forEach((n, i) => {
+            if (n) {
+                if (i === index) {
+                    // Animate active node with hover effect (scale 1.15) - slower transition
+                    gsap.to(n, {
+                        opacity: 1,
+                        scale: 1.15,
+                        zIndex: 50,
+                        duration: 0.8,
+                        ease: 'power2.out',
+                    });
+                    // Also animate the icon for glow effect
+                    const icon = n.querySelector('.node-icon') as HTMLElement;
+                    if (icon) {
+                        gsap.to(icon, {
+                            boxShadow: '0 0 25px currentColor',
+                            backgroundColor: '#111',
+                            duration: 0.8,
+                            ease: 'power2.out',
+                        });
+                    }
+                } else {
+                    // Dim other nodes - slower transition
+                    gsap.to(n, {
+                        opacity: 0.25,
+                        scale: 1,
+                        duration: 0.8,
+                        ease: 'power2.out',
+                    });
+                }
+            }
+        });
+    }, []);
 
     // Draw SVG lines between connected nodes
     const drawLines = useCallback(() => {
@@ -67,79 +146,135 @@ export default function Skills() {
         gsap.registerPlugin(ScrollTrigger);
 
         const ctx = gsap.context(() => {
-            // Entry animation for nodes
-            gsap.from('.tech-node', {
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
-                opacity: 0,
-                scale: 0.5,
-                duration: 0.6,
-                stagger: 0.08,
-                ease: 'back.out(1.7)',
-                onComplete: drawLines,
+            // Draw lines immediately - nodes are already visible (fast load)
+            setTimeout(drawLines, 100);
+
+            // Animation timeline with pin and scrub - activates when panel is visible
+            let lastActiveArea = -1; // Track which area is currently active
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: '55% center',
+                    end: '+=500%',
+                    pin: true,
+                    scrub: 1,
+                    pinSpacing: true,
+                    onUpdate: (self) => {
+                        // Auto-tour: Sequential area selection based on scroll progress
+                        const progress = self.progress;
+                        const areaIndices = [1, 2, 3]; // Programación, Infraestructura, Ciberseguridad
+                        let targetAreaIndex = -1;
+
+                        // Start auto-tour after animation completes (around 30% progress) - earlier start
+                        if (progress > 0.3) {
+                            const tourProgress = (progress - 0.3) / 0.7; // 0 to 1 range over 70% of scroll
+                            if (tourProgress < 0.33) {
+                                targetAreaIndex = areaIndices[0]; // Programación
+                            } else if (tourProgress < 0.66) {
+                                targetAreaIndex = areaIndices[1]; // Infraestructura
+                            } else {
+                                targetAreaIndex = areaIndices[2]; // Ciberseguridad
+                            }
+
+                            // Only call selectNode if the target area changed
+                            if (targetAreaIndex !== -1 && targetAreaIndex !== lastActiveArea) {
+                                lastActiveArea = targetAreaIndex;
+                                autoSelectingRef.current = true;
+                                selectNode(targetAreaIndex);
+                            }
+                        }
+                    },
+                    onLeave: () => {
+                        autoSelectingRef.current = false;
+                    },
+                    onLeaveBack: () => {
+                        autoSelectingRef.current = false;
+                        setActiveInfo(defaultInfo);
+                        if (panelRef.current) {
+                            panelRef.current.style.borderColor = 'rgba(255,255,255,0.1)';
+                        }
+                        const lines = svgRef.current?.querySelectorAll('line');
+                        lines?.forEach((line) => {
+                            line.classList.remove('active');
+                            line.style.opacity = '1';
+                        });
+                        nodesRef.current.forEach((n) => {
+                            if (n) n.style.opacity = '1';
+                        });
+                    },
+                },
             });
+
+            // Animate network container (where nodes are) - faster entry
+            tl.to(networkContainerRef.current, {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.out',
+            })
+            // Animate panel container (node inspector) - faster entry
+            .to(panelContainerRef.current, {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.out',
+            }, '-=0.3');
         }, sectionRef);
 
-        // Draw lines on mount and resize
+        // Draw lines on resize
         const handleResize = () => drawLines();
         window.addEventListener('resize', handleResize);
-        setTimeout(drawLines, 100);
 
         return () => {
             window.removeEventListener('resize', handleResize);
             ctx.revert();
         };
-    }, [drawLines]);
+    }, [drawLines, selectNode]);
 
     const handleNodeEnter = (index: number) => {
-        const node = skillNodes[index];
-        setActiveInfo({
-            title: node.title,
-            desc: node.desc,
-            color: node.color,
-        });
-
-        // Update panel border
-        if (panelRef.current) {
-            panelRef.current.style.borderColor = node.color;
-        }
-
-        // Highlight connected lines
-        const lines = svgRef.current?.querySelectorAll('line');
-        lines?.forEach((line) => {
-            if (line.dataset.from === String(index) || line.dataset.to === String(index)) {
-                line.classList.add('active');
-                line.style.setProperty('--active-color', node.color);
-            } else {
-                line.style.opacity = '0.05';
-            }
-        });
-
-        // Dim other nodes
-        nodesRef.current.forEach((n, i) => {
-            if (n && i !== index) {
-                n.style.opacity = '0.25';
-            }
-        });
+        autoSelectingRef.current = false;
+        selectNode(index);
     };
 
     const handleNodeLeave = () => {
-        setActiveInfo(defaultInfo);
+        if (!autoSelectingRef.current) {
+            setActiveInfo(defaultInfo);
 
-        if (panelRef.current) {
-            panelRef.current.style.borderColor = 'rgba(255,255,255,0.1)';
+            if (panelRef.current) {
+                panelRef.current.style.borderColor = 'rgba(255,255,255,0.1)';
+            }
+
+            // Reset lines with animation
+            const lines = svgRef.current?.querySelectorAll('line');
+            lines?.forEach((line) => {
+                line.classList.remove('active');
+                gsap.to(line, {
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                });
+            });
+
+            // Reset nodes with animation
+            nodesRef.current.forEach((n) => {
+                if (n) {
+                    gsap.to(n, {
+                        opacity: 1,
+                        scale: 1,
+                        zIndex: 20,
+                        duration: 0.8,
+                        ease: 'power2.out',
+                    });
+                    const icon = n.querySelector('.node-icon') as HTMLElement;
+                    if (icon) {
+                        gsap.to(icon, {
+                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)',
+                            backgroundColor: 'rgba(10, 10, 10, 0.5)',
+                            duration: 0.8,
+                            ease: 'power2.out',
+                        });
+                    }
+                }
+            });
         }
-
-        // Reset lines
-        const lines = svgRef.current?.querySelectorAll('line');
-        lines?.forEach((line) => {
-            line.classList.remove('active');
-            line.style.opacity = '1';
-        });
-
-        // Reset nodes
-        nodesRef.current.forEach((n) => {
-            if (n) n.style.opacity = '1';
-        });
     };
 
     return (
@@ -178,7 +313,13 @@ export default function Skills() {
                 {/* Main Content: Network + Panel */}
                 <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center">
                     {/* Network Container */}
-                    <div ref={containerRef} className="network-container glass-panel rounded-3xl p-4 sm:p-6">
+                    <div 
+                        ref={(el) => {
+                            containerRef.current = el;
+                            networkContainerRef.current = el;
+                        }} 
+                        className="network-container glass-panel rounded-3xl p-4 sm:p-6 opacity-0"
+                    >
                         <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
 
                         {skillNodes.map((node, index) => (
@@ -186,6 +327,7 @@ export default function Skills() {
                                 key={index}
                                 ref={(el) => { nodesRef.current[index] = el; }}
                                 className={`tech-node ${node.type === 'core' ? 'core-node' : ''}`}
+                                data-node-type={node.type}
                                 style={{ top: node.position.top, left: node.position.left }}
                                 onMouseEnter={() => handleNodeEnter(index)}
                                 onMouseLeave={handleNodeLeave}
@@ -206,7 +348,10 @@ export default function Skills() {
                     </div>
 
                     {/* Info Panel */}
-                    <div className="w-full lg:w-[420px] self-stretch">
+                    <div 
+                        ref={panelContainerRef}
+                        className="w-full lg:w-[420px] self-stretch opacity-0"
+                    >
                         <div
                             ref={panelRef}
                             className="h-full glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden flex flex-col transition-all duration-300"
@@ -237,6 +382,34 @@ export default function Skills() {
                                 <p className="text-gray-400 leading-relaxed text-sm transition-all duration-300">
                                     {activeInfo.desc}
                                 </p>
+                                {activeInfo.tools.length > 0 && (
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                        {activeInfo.tools.map((tool) => {
+                                            // Convert hex to rgb for opacity
+                                            const hex = activeInfo.color.replace('#', '');
+                                            const r = parseInt(hex.substring(0, 2), 16);
+                                            const g = parseInt(hex.substring(2, 4), 16);
+                                            const b = parseInt(hex.substring(4, 6), 16);
+                                            const bgColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+                                            const borderColor = `rgba(${r}, ${g}, ${b}, 0.2)`;
+                                            const textColor = activeInfo.color;
+                                            
+                                            return (
+                                                <span
+                                                    key={tool}
+                                                    className="text-[10px] px-2 py-1 rounded border font-mono"
+                                                    style={{
+                                                        backgroundColor: bgColor,
+                                                        borderColor: borderColor,
+                                                        color: textColor,
+                                                    }}
+                                                >
+                                                    {tool}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
 
                             <div
