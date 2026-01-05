@@ -5,11 +5,21 @@ export interface PortfolioData {
     metadata: {
         title: string;
         description: string;
+        locale?: string;
+        timezone?: string;
     };
     hero: {
         title: string;
         subtitle: string;
         scrollIndicator: string;
+        ctaPrimary?: {
+            label: string;
+            href: string;
+        };
+        ctaSecondary?: {
+            label: string;
+            href: string;
+        };
     };
     about: {
         badge: string;
@@ -20,6 +30,7 @@ export interface PortfolioData {
             years: string;
             label: string;
         };
+        highlights?: string[];
         image: string;
     };
     skills: {
@@ -80,14 +91,17 @@ export interface PortfolioData {
     };
 }
 
-export default portfolioData as PortfolioData;
+// Type assertion with proper handling - using unknown first to avoid type errors
+const typedPortfolioData = portfolioData as unknown as PortfolioData;
+
+export default typedPortfolioData;
 
 // Export individual sections for convenience
-export const metadata = portfolioData.metadata;
-export const heroData = portfolioData.hero;
-export const aboutData = portfolioData.about;
-export const skillsData = portfolioData.skills;
-export const timelineData = portfolioData.timeline;
-export const projectsData = portfolioData.projects;
-export const contactData = portfolioData.contact;
+export const metadata = typedPortfolioData.metadata;
+export const heroData = typedPortfolioData.hero;
+export const aboutData = typedPortfolioData.about;
+export const skillsData = typedPortfolioData.skills;
+export const timelineData = typedPortfolioData.timeline;
+export const projectsData = typedPortfolioData.projects;
+export const contactData = typedPortfolioData.contact;
 
