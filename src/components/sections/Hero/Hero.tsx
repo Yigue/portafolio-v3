@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { heroData } from '@/data/portfolio-data';
 
 export default function Hero() {
     const titleRef = useRef<HTMLHeadingElement>(null);
@@ -28,19 +29,19 @@ export default function Hero() {
                     ref={titleRef}
                     className="text-7xl md:text-9xl font-bold tracking-tighter text-gradient opacity-0 translate-y-10"
                 >
-                    Visionary.
+                    {heroData.title}
                 </h1>
                 <p
                     ref={subtitleRef}
                     className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto opacity-0 translate-y-10 font-light"
                 >
-                    DevSecOps & Arquitectura de Software.
+                    {heroData.subtitle}
                 </p>
             </div>
 
             {/* Scroll Indicator */}
             <div className="absolute bottom-10 animate-pulse text-gray-600 text-xs tracking-[0.2em]">
-                SCROLL TO EXPLORE
+                {heroData.scrollIndicator}
             </div>
         </section>
     );

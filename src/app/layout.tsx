@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 // import Navbar from "@/components/ui/Navbar";
 import SmoothScroll from "@/components/ui/SmoothScroll";
+import { metadata as portfolioMetadata } from "@/data/portfolio-data";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,8 +16,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DevSecOps Portfolio | Ultimate",
-  description: "Portfolio profesional de arquitectura de software y seguridad.",
+  title: portfolioMetadata.title,
+  description: portfolioMetadata.description,
 };
 
 export default function RootLayout({
