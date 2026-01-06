@@ -35,19 +35,19 @@ export default function About() {
         <section
             ref={sectionRef}
             id="about"
-            className="h-screen w-full relative flex items-center justify-center overflow-hidden bg-black"
+            className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-black py-20 md:py-0"
         >
-            <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 max-w-6xl">
                 {/* Text Content */}
-                <div ref={textRef} className="opacity-0 translate-y-20 space-y-6">
-                    <span className="text-blue-500 font-semibold tracking-widest uppercase text-sm">
+                <div ref={textRef} className="opacity-0 translate-y-20 space-y-4 md:space-y-6 order-1">
+                    <span className="text-blue-500 font-semibold tracking-widest uppercase text-xs sm:text-sm">
                         {aboutData.badge}
                     </span>
                     <h2 
-                        className="text-5xl font-bold text-white leading-tight"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight"
                         dangerouslySetInnerHTML={{ __html: aboutData.title }}
                     />
-                    <p className="text-gray-400 text-lg leading-relaxed">
+                    <p className="text-gray-400 text-base md:text-lg leading-relaxed">
                         {aboutData.description.split('\n').map((line, lineIndex) => (
                             <span key={lineIndex}>
                                 {line.split(' perfecto').map((part, partIndex, parts) => 
@@ -71,9 +71,9 @@ export default function About() {
                             </span>
                         ))}
                     </p>
-                    <div className="flex gap-4 pt-4">
+                    <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
                         {aboutData.tags.map((tag, index) => (
-                            <div key={index} className="px-6 py-3 glass-panel rounded-lg text-sm">
+                            <div key={index} className="px-4 py-2 md:px-6 md:py-3 glass-panel rounded-lg text-xs sm:text-sm">
                                 {tag}
                             </div>
                         ))}
@@ -81,16 +81,16 @@ export default function About() {
                 </div>
 
                 {/* Visual Content */}
-                <div ref={visualRef} className="opacity-0 scale-90 relative">
+                <div ref={visualRef} className="opacity-0 scale-90 relative order-2 max-w-md mx-auto w-full md:max-w-full">
                     <div className="w-full aspect-square rounded-3xl overflow-hidden glass-panel relative p-2">
                         <img
                             src={aboutData.image}
                             alt="Guillermo Riedel"
                             className="w-full h-full object-cover rounded-2xl opacity-80"
                         />
-                        <div className="absolute bottom-4 left-4 glass-panel p-4 sm:p-6 rounded-2xl border border-white/10">
-                            <div className="text-2xl sm:text-3xl font-bold text-white">{aboutData.experience.years}</div>
-                            <div className="text-[10px] sm:text-xs text-gray-400 uppercase mt-1">{aboutData.experience.label}</div>
+                        <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 glass-panel p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl border border-white/10">
+                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{aboutData.experience.years}</div>
+                            <div className="text-[9px] sm:text-[10px] md:text-xs text-gray-400 uppercase mt-0.5 sm:mt-1">{aboutData.experience.label}</div>
                         </div>
                     </div>
                 </div>

@@ -75,12 +75,26 @@ export default function Projects() {
         const detailsPanel = wrapper.querySelector('.project-details-panel') as HTMLElement;
         if (!detailsPanel) return;
 
-        gsap.to(detailsPanel, {
-            x: -500,
-            opacity: 1,
-            duration: 0.6,
-            ease: 'power2.out',
-        });
+        // Check if mobile
+        const isMobile = window.innerWidth < 768;
+
+        if (isMobile) {
+            // Mobile: Full-screen overlay animation
+            gsap.to(detailsPanel, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.5,
+                ease: 'power2.out',
+            });
+        } else {
+            // Desktop: Slide from right
+            gsap.to(detailsPanel, {
+                x: -500,
+                opacity: 1,
+                duration: 0.6,
+                ease: 'power2.out',
+            });
+        }
 
         // Dim other cards
         cardRefs.current.forEach((w, i) => {
@@ -105,12 +119,23 @@ export default function Projects() {
 
         const detailsPanel = wrapper.querySelector('.project-details-panel') as HTMLElement;
         if (detailsPanel) {
-            gsap.to(detailsPanel, {
-                x: 0,
-                opacity: 0,
-                duration: 0.5,
-                ease: 'power2.in',
-            });
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile) {
+                gsap.to(detailsPanel, {
+                    opacity: 0,
+                    scale: 0.95,
+                    duration: 0.4,
+                    ease: 'power2.in',
+                });
+            } else {
+                gsap.to(detailsPanel, {
+                    x: 0,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: 'power2.in',
+                });
+            }
         }
 
         // Restore all cards
@@ -151,26 +176,26 @@ export default function Projects() {
                             data-project={project.id}
                         >
                             <div
-                                className="project-card w-[80vw] md:w-[600px] h-[60vh] spotlight-card rounded-3xl relative group cursor-pointer perspective-container overflow-hidden"
+                                className="project-card w-[90vw] md:w-[600px] h-[60vh] md:h-[60vh] spotlight-card rounded-2xl md:rounded-3xl relative group cursor-pointer perspective-container overflow-hidden"
                                 onClick={() => expandProject(project)}
                             >
                                 <div className="preserve-3d w-full h-full relative">
                                     <img
                                         src={project.image}
                                         alt={project.title}
-                                        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500 rounded-3xl grayscale group-hover:grayscale-0"
+                                        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500 rounded-2xl md:rounded-3xl grayscale group-hover:grayscale-0"
                                     />
 
-                                    <div className="absolute bottom-0 left-0 w-full p-10 bg-gradient-to-t from-black via-black/80 to-transparent rounded-b-3xl project-content">
-                                        <h3 className="text-4xl font-bold text-white mb-2 leading-tight">
+                                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 bg-gradient-to-t from-black via-black/80 to-transparent rounded-b-2xl md:rounded-b-3xl project-content">
+                                        <h3 className="text-2xl md:text-4xl font-bold text-white mb-2 leading-tight">
                                             {project.title}<br />{project.subtitle}
                                         </h3>
-                                        <p className="text-gray-300 max-w-lg mb-6 opacity-0 group-hover:opacity-100 transition-opacity delay-100 transform translate-y-4 group-hover:translate-y-0">
+                                        <p className="text-gray-300 max-w-lg mb-4 md:mb-6 text-sm md:text-base opacity-0 group-hover:opacity-100 transition-opacity delay-100 transform translate-y-4 group-hover:translate-y-0">
                                             {project.desc.slice(0, 70)}...
                                         </p>
                                         <div className="flex gap-2">
                                             {project.tech.slice(0, 2).map((t) => (
-                                                <span key={t} className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs text-white">
+                                                <span key={t} className="px-2.5 py-1 md:px-3 md:py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] md:text-xs text-white">
                                                     {t}
                                                 </span>
                                             ))}
@@ -178,10 +203,10 @@ export default function Projects() {
                                     </div>
                                 </div>
 
-                                {/* Details Panel */}
-                                <div className="project-details-panel absolute top-0 left-full h-full w-[500px] bg-black/95 backdrop-blur-xl border-l border-white/10 p-8 overflow-y-auto">
+                                {/* Details Panel - Full screen on mobile, sidebar on desktop */}
+                                <div className="project-details-panel fixed md:absolute inset-0 md:top-0 md:left-full md:inset-auto md:h-full md:w-[500px] bg-black/98 md:bg-black/95 backdrop-blur-xl md:border-l border-white/10 p-6 md:p-8 overflow-y-auto z-50">
                                     <button
-                                        className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl"
+                                        className="absolute top-4 right-4 text-white/80 hover:text-white text-3xl md:text-2xl z-10 w-10 h-10 flex items-center justify-center"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             collapseProject();
@@ -189,11 +214,11 @@ export default function Projects() {
                                     >
                                         ×
                                     </button>
-                                    <div className="project-details-content">
-                                        <h2 className="text-3xl font-bold text-white mb-4">{project.title} {project.subtitle}</h2>
-                                        <p className="text-gray-300 mb-6 leading-relaxed text-sm">{project.desc}</p>
+                                    <div className="project-details-content max-w-2xl md:max-w-none mx-auto">
+                                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 pr-10">{project.title} {project.subtitle}</h2>
+                                        <p className="text-gray-300 mb-6 leading-relaxed text-sm md:text-sm">{project.desc}</p>
                                         <div className="mb-6">
-                                            <h3 className="text-lg font-bold text-white mb-3">Tecnologías</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Tecnologías</h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {project.tech.map((t) => (
                                                     <span key={t} className="px-3 py-1.5 bg-white/10 rounded-full text-xs text-white border border-white/20">
@@ -203,12 +228,12 @@ export default function Projects() {
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-bold text-white mb-3">Características</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Características</h3>
                                             <ul className="space-y-2 text-gray-300 text-sm">
                                                 {project.features.map((f) => (
-                                                    <li key={f} className="flex items-center gap-2">
-                                                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                                                        {f}
+                                                    <li key={f} className="flex items-start gap-2">
+                                                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 flex-shrink-0" />
+                                                        <span>{f}</span>
                                                     </li>
                                                 ))}
                                             </ul>

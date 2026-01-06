@@ -113,9 +113,9 @@ export default function Timeline() {
     return (
         <>
             <section ref={sectionRef} id="timeline" className="relative w-full min-h-screen bg-[#020202]">
-                <div className="text-center pt-20 pb-10">
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">Trayectoria</h2>
-                    <p className="text-gray-500 font-mono text-sm">Desliza para conectar los puntos</p>
+                <div className="text-center pt-16 sm:pt-20 pb-8 sm:pb-10 px-4">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">Trayectoria</h2>
+                    <p className="text-gray-500 font-mono text-xs sm:text-sm">Desliza para conectar los puntos</p>
                 </div>
 
                 <div ref={wrapperRef} className="timeline-wrapper relative pb-[250px]"> {/* Aumenté el padding inferior */}
@@ -159,8 +159,8 @@ export default function Timeline() {
                     ))}
 
                     {/* Branch Split Indicator */}
-                    <div className="text-center py-20 relative z-20">
-                        <div className="inline-block px-4 py-1 rounded-full bg-gray-900 border border-gray-700 text-xs font-mono text-gray-400">
+                    <div className="text-center py-12 sm:py-16 md:py-20 relative z-20">
+                        <div className="inline-block px-3 sm:px-4 py-1 rounded-full bg-gray-900 border border-gray-700 text-[10px] sm:text-xs font-mono text-gray-400">
                             AGOSTO 2025: BRANCH SPLIT
                         </div>
                     </div>
@@ -170,14 +170,14 @@ export default function Timeline() {
                         <div className="split-col">
                             {andreaniEvents.map((event, index) => (
                                 <div key={index} className="branch-card andreani" style={index > 0 ? { marginTop: '50px' } : {}}>
-                                    <div className="glass-box   ">
-                                        <span className="date-tag   text-purple-400">{event.date}</span>
-                                        <h3 className={`${index === 0 ? 'text-xl' : 'text-lg'} font-bold text-white`}>{event.title}</h3>
-                                        <p className="text-gray-400 text-sm mt-2">{event.description}</p>
+                                    <div className="glass-box">
+                                        <span className="date-tag text-purple-400">{event.date}</span>
+                                        <h3 className={`${index === 0 ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'} font-bold text-white`}>{event.title}</h3>
+                                        <p className="text-gray-400 text-xs sm:text-sm mt-2">{event.description}</p>
                                         {event.tags.length > 0 && (
-                                            <div className="mt-3 flex gap-2">
+                                            <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
                                                 {event.tags.map((tag) => (
-                                                    <span key={tag} className="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-1 rounded border border-purple-500/20">
+                                                    <span key={tag} className="text-[9px] sm:text-[10px] bg-purple-500/10 text-purple-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-purple-500/20">
                                                         {tag}
                                                     </span>
                                                 ))}
@@ -191,14 +191,14 @@ export default function Timeline() {
                         <div className="split-col">
                             {freelanceEvents.map((event, index) => (
                                 <div key={index} className="branch-card freelance" style={index > 0 ? { marginTop: '50px' } : {}}>
-                                    <div className="glass-box  ">
+                                    <div className="glass-box">
                                         <span className="date-tag text-green-400">{event.date}</span>
-                                        <h3 className={`${index === 0 ? 'text-xl' : 'text-lg'} font-bold text-white`}>{event.title}</h3>
-                                        <p className="text-gray-400 text-sm mt-2">{event.description}</p>
+                                        <h3 className={`${index === 0 ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'} font-bold text-white`}>{event.title}</h3>
+                                        <p className="text-gray-400 text-xs sm:text-sm mt-2">{event.description}</p>
                                         {event.tags.length > 0 && (
-                                            <div className="mt-3 flex gap-2 justify-end">
+                                            <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2 justify-start md:justify-end">
                                                 {event.tags.map((tag) => (
-                                                    <span key={tag} className="text-[10px] bg-green-500/10 text-green-400 px-2 py-1 rounded border border-green-500/20">
+                                                    <span key={tag} className="text-[9px] sm:text-[10px] bg-green-500/10 text-green-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-green-500/20">
                                                         {tag}
                                                     </span>
                                                 ))}
@@ -215,10 +215,10 @@ export default function Timeline() {
                     {/* Future Card - Posicionada justo donde terminan las líneas (y=1880 del viewBox = 94%) */}
                     <div className="absolute left-1/2 -translate-x-1/2 z-40" style={{ top: '95%' }}>
                         <div className="timeline-card max-w-md w-full px-4">
-                            <div className="glass-box  text-center border-2 border-blue-500/50">
+                            <div className="glass-box text-center border-2 border-blue-500/50">
                                 <span className="date-tag text-blue-400">Futuro</span>
-                                <h3 className="text-2xl font-bold text-white mb-2">La Historia Continúa...</h3>
-                                <p className="text-gray-400 text-sm">Siempre aprendiendo, siempre creciendo, siempre construyendo.</p>
+                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">La Historia Continúa...</h3>
+                                <p className="text-gray-400 text-xs sm:text-sm">Siempre aprendiendo, siempre creciendo, siempre construyendo.</p>
                             </div>
                         </div>
                     </div>

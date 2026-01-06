@@ -311,14 +311,14 @@ export default function Skills() {
                 </div>
 
                 {/* Main Content: Network + Panel */}
-                <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch justify-center">
                     {/* Network Container */}
                     <div 
                         ref={(el) => {
                             containerRef.current = el;
                             networkContainerRef.current = el;
                         }} 
-                        className="network-container glass-panel rounded-3xl p-4 sm:p-6 opacity-0"
+                        className="network-container glass-panel rounded-2xl lg:rounded-3xl p-3 sm:p-4 lg:p-6 opacity-0"
                     >
                         <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
 
@@ -354,36 +354,36 @@ export default function Skills() {
                     >
                         <div
                             ref={panelRef}
-                            className="h-full glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden flex flex-col transition-all duration-300"
+                            className="h-full glass-panel rounded-2xl lg:rounded-3xl p-5 sm:p-6 lg:p-8 relative overflow-hidden flex flex-col transition-all duration-300 min-h-[300px]"
                             style={{ borderColor: 'rgba(255,255,255,0.1)' }}
                         >
-                            <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                                <span className="font-mono text-[10px] text-gray-500 tracking-widest">
+                            <div className="flex justify-between items-center mb-4 sm:mb-5 lg:mb-6 border-b border-white/10 pb-3 sm:pb-4">
+                                <span className="font-mono text-[9px] sm:text-[10px] text-gray-500 tracking-widest">
                                     NODE INSPECTOR
                                 </span>
-                                <div className="flex gap-2">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                                <div className="flex gap-1.5 sm:gap-2">
+                                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500" />
+                                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-yellow-500" />
+                                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500" />
                                 </div>
                             </div>
 
                             <div className="flex-1 flex flex-col justify-center relative z-10">
                                 <h3
-                                    className="text-2xl sm:text-3xl font-bold text-white mb-4 transition-colors duration-300"
+                                    className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4 transition-colors duration-300"
                                     style={{ color: activeInfo.color }}
                                 >
                                     {activeInfo.title}
                                 </h3>
                                 <div
-                                    className="w-16 h-1.5 mb-6 rounded-full transition-colors duration-300"
+                                    className="w-12 sm:w-14 lg:w-16 h-1 sm:h-1.5 mb-4 sm:mb-5 lg:mb-6 rounded-full transition-colors duration-300"
                                     style={{ backgroundColor: activeInfo.color === '#ffffff' ? '#374151' : activeInfo.color }}
                                 />
-                                <p className="text-gray-400 leading-relaxed text-sm transition-all duration-300">
+                                <p className="text-gray-400 leading-relaxed text-xs sm:text-sm transition-all duration-300">
                                     {activeInfo.desc}
                                 </p>
                                 {activeInfo.tools.length > 0 && (
-                                    <div className="mt-4 flex flex-wrap gap-2">
+                                    <div className="mt-3 sm:mt-4 flex flex-wrap gap-1.5 sm:gap-2">
                                         {activeInfo.tools.map((tool) => {
                                             // Convert hex to rgb for opacity
                                             const hex = activeInfo.color.replace('#', '');
@@ -397,7 +397,7 @@ export default function Skills() {
                                             return (
                                                 <span
                                                     key={tool}
-                                                    className="text-[10px] px-2 py-1 rounded border font-mono"
+                                                    className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border font-mono"
                                                     style={{
                                                         backgroundColor: bgColor,
                                                         borderColor: borderColor,
@@ -417,7 +417,7 @@ export default function Skills() {
                                 style={{ backgroundColor: activeInfo.color === '#ffffff' ? 'rgba(31, 41, 55, 0.2)' : activeInfo.color }}
                             />
 
-                            <div className="mt-auto pt-4 border-t border-white/5 flex justify-between text-[10px] font-mono text-gray-600">
+                            <div className="mt-auto pt-3 sm:pt-4 border-t border-white/5 flex justify-between text-[8px] sm:text-[9px] lg:text-[10px] font-mono text-gray-600">
                                 <span>STATUS: ACTIVE</span>
                                 <span>LATENCY: 12ms</span>
                             </div>
