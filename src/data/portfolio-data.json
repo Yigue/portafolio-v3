@@ -1,28 +1,34 @@
 {
   "metadata": {
-    "title": "Guillermo Riedel | DevSecOps / Backend / Automation",
+    "title": "Guillermo Riedel | Backend / DevOps",
     "description": "Portfolio profesional de DevSecOps, Backend y automatización. Soporte TI a escala (Andreani), estudiante de Lic. en Sistemas (UADE) y constructor de productos (SaaS, dashboards, tooling).",
     "locale": "es-AR",
     "timezone": "America/Argentina/Buenos_Aires"
   },
   "hero": {
     "title": "Guillermo Riedel",
-    "subtitle": "DevSecOps / Backend / Automation · Soporte TI a escala en Andreani · UADE (Lic. en Sistemas).",
+    "subtitle": "Backend / DevOps · Soporte TI a escala en Andreani · UADE (Lic. en Sistemas).",
     "scrollIndicator": "SCROLL TO EXPLORE",
-    "ctaPrimary": { "label": "Ver Proyectos", "href": "#projects" },
-    "ctaSecondary": { "label": "Contactar", "href": "#contact" }
+    "ctaPrimary": {
+      "label": "Ver Proyectos",
+      "href": "#projects"
+    },
+    "ctaSecondary": {
+      "label": "Contactar",
+      "href": "#contact"
+    }
   },
   "about": {
     "badge": "Sobre mí",
     "title": "Más que código,<br />diseño operación.",
-    "description": "Soy Guillermo Riedel. Trabajo en Soporte TI (L1) en Andreani, donde resuelvo incidentes de infraestructura y endpoints a gran escala, y a la vez construyo productos y automatizaciones enfocadas en eficiencia operativa.\n\nMi estilo: diagnóstico rápido, documentación impecable y sistemas con estándares. Me interesan especialmente Backend moderno (.NET/Node), automatización (PowerShell/Python), y prácticas DevSecOps (CI/CD, observabilidad, hardening y seguridad por diseño).",
+    "description": "Soy **Guillermo Riedel**. Inicié mi camino como desarrollador independiente, construyendo proyectos propios y desarrollando habilidades técnicas de manera autodidacta, impulsado por una fuerte orientación a crear y resolver problemas reales.\n\nCon el tiempo decidí dar un salto estratégico hacia el entorno corporativo e ingresé a **Andreani**, con el objetivo de profesionalizarme y profundizar mi experiencia en infraestructura y operación de sistemas.\n\nActualmente, desde el área de **Soporte TI**, gestiono incidentes críticos, herramientas internas y entornos corporativos, lo que me permitió desarrollar una comprensión integral del ciclo tecnológico: desde el código hasta la operación y su impacto directo en el negocio y en los usuarios finales. Esta experiencia fortaleció mis bases en sistemas, redes, automatización y resolución estructurada de problemas.\n\nHoy oriento mi carrera hacia el rol de **DevOps / Ingeniero de Software**, con un fuerte enfoque en **Ciberseguridad**. Entiendo que las soluciones realmente eficientes, resilientes y escalables se construyen sobre arquitectura sólida, automatización bien diseñada, buenas prácticas de ingeniería y seguridad integrada desde el diseño.",
     "tags": [
-      "DevSecOps",
+      "Soporte TI",
       "Backend",
-      "Automation"
+      "DevOps"
     ],
     "experience": {
-      "years": "2+ Años",
+      "years": "3+ Años",
       "label": "Experiencia aplicada"
     },
     "highlights": [
@@ -37,244 +43,351 @@
       {
         "type": "core",
         "icon": "⚡",
-        "title": "DevSecOps Architect",
+        "title": "DevOps / Software Architect",
         "label": "ARCHITECT",
-        "desc": "Rol estratégico que orquesta la integración de Seguridad, Desarrollo y Operaciones para crear sistemas resilientes.",
+        "desc": "Perfil orientado a integrar Desarrollo, Infraestructura y Seguridad para diseñar sistemas resilientes, automatizados y escalables.",
         "color": "#ffffff",
         "borderColor": "rgba(255, 255, 255, 0.4)",
         "textColor": "white",
-        "position": { "top": "50%", "left": "50%" }
+        "position": {
+          "top": "50%",
+          "left": "50%"
+        }
       },
       {
         "type": "area",
         "icon": "DEV",
         "title": "Programación",
         "label": "Code",
-        "desc": "Ingeniería de software enfocada en código limpio, escalable y seguro.",
+        "desc": "Ingeniería de software basada en Clean Architecture, buenas prácticas y desarrollo seguro.",
         "color": "#3b82f6",
         "borderColor": "rgb(59, 130, 246)",
         "textColor": "rgb(96, 165, 250)",
-        "position": { "top": "25%", "left": "50%" }
+        "position": {
+          "top": "25%",
+          "left": "50%"
+        }
       },
       {
         "type": "area",
         "icon": "OPS",
         "title": "Infraestructura",
         "label": "Infra",
-        "desc": "Diseño y gestión de plataformas cloud, redes y servidores automatizados.",
+        "desc": "Automatización, contenedores, Linux y CI/CD con enfoque en entornos escalables y cloud-ready.",
         "color": "#a855f7",
         "borderColor": "rgb(168, 85, 247)",
         "textColor": "rgb(192, 132, 252)",
-        "position": { "top": "65%", "left": "28%" }
+        "position": {
+          "top": "65%",
+          "left": "28%"
+        }
       },
       {
         "type": "area",
         "icon": "SEC",
         "title": "Ciberseguridad",
         "label": "Security",
-        "desc": "Protección activa de activos digitales, gestión de riesgos y compliance.",
+        "desc": "Aplicación de principios secure-by-design, OWASP Top 10, controles ISO 27001 y protección de aplicaciones.",
         "color": "#30d158",
         "borderColor": "rgb(48, 209, 88)",
         "textColor": "rgb(74, 222, 128)",
-        "position": { "top": "65%", "left": "72%" }
+        "position": {
+          "top": "65%",
+          "left": "72%"
+        }
       },
       {
         "type": "tool",
         "icon": "C#",
-        "title": ".NET Core 8",
+        "title": ".NET Core",
         "label": ".NET",
-        "desc": "Backend de alto rendimiento con C#.",
+        "desc": "APIs backend con arquitectura limpia, asincronía y buenas prácticas.",
         "color": "#60a5fa",
         "borderColor": "rgb(59, 130, 246)",
         "textColor": "rgb(96, 165, 250)",
-        "position": { "top": "10%", "left": "30%" }
+        "position": {
+          "top": "10%",
+          "left": "30%"
+        }
       },
       {
         "type": "tool",
         "icon": "⚛️",
         "title": "React & Next.js",
         "label": "React",
-        "desc": "Frontend moderno y SSR.",
+        "desc": "Frontend moderno con SSR, tipado fuerte y enfoque en performance.",
         "color": "#60a5fa",
         "borderColor": "rgb(59, 130, 246)",
         "textColor": "rgb(96, 165, 250)",
-        "position": { "top": "5%", "left": "42%" }
+        "position": {
+          "top": "5%",
+          "left": "40%"
+        }
+      },
+      {
+        "type": "tool",
+        "icon": "⚛️",
+        "title": "Software Architect",
+        "label": "Architect",
+        "desc": "Diseño de sistemas escalables, buenas practicas y ",
+        "color": "#60a5fa",
+        "borderColor": "rgb(59, 130, 246)",
+        "textColor": "rgb(96, 165, 250)",
+        "position": {
+          "top": "4%",
+          "left": "50%"
+        }
       },
       {
         "type": "tool",
         "icon": "Py",
         "title": "Python",
         "label": "Python",
-        "desc": "Scripting y automatización.",
+        "desc": "Automatización, scripting y tooling orientado a infraestructura.",
         "color": "#60a5fa",
         "borderColor": "rgb(59, 130, 246)",
         "textColor": "rgb(96, 165, 250)",
-        "position": { "top": "5%", "left": "58%" }
+        "position": {
+          "top": "5%",
+          "left": "60%"
+        }
       },
       {
         "type": "tool",
         "icon": "TS",
         "title": "TypeScript",
         "label": "TS",
-        "desc": "Tipado estático para JS escalable.",
+        "desc": "Desarrollo escalable con tipado estático y buenas prácticas.",
         "color": "#60a5fa",
         "borderColor": "rgb(59, 130, 246)",
         "textColor": "rgb(96, 165, 250)",
-        "position": { "top": "10%", "left": "70%" }
+        "position": {
+          "top": "10%",
+          "left": "70%"
+        }
       },
       {
         "type": "tool",
         "icon": "DB",
         "title": "SQL / NoSQL",
         "label": "Data",
-        "desc": "Gestión de datos relacionales y documentales.",
+        "desc": "Modelado y gestión eficiente de bases de datos relacionales y documentales.",
         "color": "#60a5fa",
         "borderColor": "rgb(59, 130, 246)",
         "textColor": "rgb(96, 165, 250)",
-        "position": { "top": "18%", "left": "80%" }
+        "position": {
+          "top": "18%",
+          "left": "80%"
+        }
       },
       {
         "type": "tool",
         "icon": "Git",
         "title": "Git & GitHub",
         "label": "Git",
-        "desc": "Control de versiones y colaboración.",
+        "desc": "Control de versiones, workflows colaborativos y CI integrado.",
         "color": "#60a5fa",
         "borderColor": "rgb(59, 130, 246)",
         "textColor": "rgb(96, 165, 250)",
-        "position": { "top": "18%", "left": "20%" }
+        "position": {
+          "top": "18%",
+          "left": "20%"
+        }
       },
       {
         "type": "tool",
         "icon": "🐳",
-        "title": "Docker & K8s",
-        "label": "K8s",
-        "desc": "Containerización y orquestación.",
+        "title": "Docker",
+        "label": "Containers",
+        "desc": "Containerización y orquestación para entornos escalables.",
         "color": "#c084fc",
         "borderColor": "rgb(168, 85, 247)",
         "textColor": "rgb(192, 132, 252)",
-        "position": { "top": "55%", "left": "10%" }
+        "position": {
+          "top": "55%",
+          "left": "10%"
+        }
       },
       {
         "type": "tool",
         "icon": "☁️",
-        "title": "AWS Cloud",
-        "label": "AWS",
-        "desc": "Infraestructura en la nube.",
+        "title": "Cloud (AWS - Learning)",
+        "label": "Cloud",
+        "desc": "Fundamentos de arquitectura cloud y servicios IaaS/PaaS.",
         "color": "#c084fc",
         "borderColor": "rgb(168, 85, 247)",
         "textColor": "rgb(192, 132, 252)",
-        "position": { "top": "70%", "left": "5%" }
+        "position": {
+          "top": "70%",
+          "left": "5%"
+        }
       },
       {
         "type": "tool",
         "icon": "IaC",
-        "title": "Terraform",
-        "label": "Terra",
-        "desc": "Infraestructura como Código (IaC).",
+        "title": "Infraestructure as a code",
+        "label": "IaC",
+        "desc": "Infraestructura como Código para entornos reproducibles.\n Ansible(nivel intermedio) \n Terraform(learning",
         "color": "#c084fc",
         "borderColor": "rgb(168, 85, 247)",
         "textColor": "rgb(192, 132, 252)",
-        "position": { "top": "85%", "left": "10%" }
+        "position": {
+          "top": "85%",
+          "left": "10%"
+        }
       },
       {
         "type": "tool",
         "icon": "🐧",
-        "title": "Linux System",
+        "title": "Linux Systems",
         "label": "Linux",
-        "desc": "Administración de sistemas y scripting bash.",
+        "desc": "Administración de sistemas, networking básico y scripting bash.",
         "color": "#c084fc",
         "borderColor": "rgb(168, 85, 247)",
         "textColor": "rgb(192, 132, 252)",
-        "position": { "top": "92%", "left": "25%" }
+        "position": {
+          "top": "92%",
+          "left": "25%"
+        }
       },
       {
         "type": "tool",
         "icon": "CI",
-        "title": "CI/CD (Jenkins)",
+        "title": "CI/CD Pipelines",
         "label": "CI/CD",
-        "desc": "Pipelines de despliegue continuo.",
+        "desc": "Automatización de build, testing y despliegue continuo.",
         "color": "#c084fc",
         "borderColor": "rgb(168, 85, 247)",
         "textColor": "rgb(192, 132, 252)",
-        "position": { "top": "88%", "left": "40%" }
+        "position": {
+          "top": "88%",
+          "left": "40%"
+        }
+      },
+      {
+        "type": "tool",
+        "icon": "🔧",
+        "title": "Kubernetes",
+        "label": "Kubernetes",
+        "desc": "Orquetacion de contenedores y creacion de clubter",
+        "color": "#c084fc",
+        "borderColor": "rgb(168, 85, 247)",
+        "textColor": "rgb(192, 132, 252)",
+        "position": {
+          "top": "75%",
+          "left": "50%"
+        }
       },
       {
         "type": "tool",
         "icon": "🛡️",
-        "title": "Pentesting",
-        "label": "Pen",
-        "desc": "Ethical Hacking y pruebas ofensivas.",
+        "title": "OWASP Top 10",
+        "label": "OWASP",
+        "desc": "Identificación y mitigación de vulnerabilidades comunes en aplicaciones.",
         "color": "#4ade80",
         "borderColor": "rgb(48, 209, 88)",
         "textColor": "rgb(74, 222, 128)",
-        "position": { "top": "55%", "left": "90%" }
+        "position": {
+          "top": "70%",
+          "left": "90%"
+        }
       },
       {
         "type": "tool",
-        "icon": "🔐",
-        "title": "Auth / IAM",
-        "label": "Auth",
-        "desc": "Gestión de identidades y accesos.",
+        "icon": "ISO",
+        "title": "ISO 27001 Basics",
+        "label": "ISO",
+        "desc": "Fundamentos de gestión de seguridad de la información.",
         "color": "#4ade80",
         "borderColor": "rgb(48, 209, 88)",
         "textColor": "rgb(74, 222, 128)",
-        "position": { "top": "70%", "left": "95%" }
-      },
-      {
-        "type": "tool",
-        "icon": "SAST",
-        "title": "SonarQube",
-        "label": "Sonar",
-        "desc": "Análisis estático de seguridad (SAST).",
-        "color": "#4ade80",
-        "borderColor": "rgb(48, 209, 88)",
-        "textColor": "rgb(74, 222, 128)",
-        "position": { "top": "85%", "left": "90%" }
-      },
-      {
-        "type": "tool",
-        "icon": "GRC",
-        "title": "Compliance",
-        "label": "GRC",
-        "desc": "Normativas y estándares (ISO, GDPR).",
-        "color": "#4ade80",
-        "borderColor": "rgb(48, 209, 88)",
-        "textColor": "rgb(74, 222, 128)",
-        "position": { "top": "92%", "left": "75%" }
-      },
-      {
-        "type": "tool",
-        "icon": "🕵️",
-        "title": "SIEM",
-        "label": "SIEM",
-        "desc": "Monitoreo y respuesta a incidentes.",
-        "color": "#4ade80",
-        "borderColor": "rgb(48, 209, 88)",
-        "textColor": "rgb(74, 222, 128)",
-        "position": { "top": "88%", "left": "60%" }
+        "position": {
+          "top": "85%",
+          "left": "80%"
+        }
       }
     ],
     "connections": [
-      [0, 1],
-      [0, 2],
-      [0, 3],
-      [1, 4],
-      [1, 5],
-      [1, 6],
-      [1, 7],
-      [1, 8],
-      [1, 9],
-      [2, 10],
-      [2, 11],
-      [2, 12],
-      [2, 13],
-      [2, 14],
-      [3, 15],
-      [3, 16],
-      [3, 17],
-      [3, 18],
-      [3, 19]
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        11
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        2,
+        13
+      ],
+      [
+        2,
+        14
+      ],
+      [
+        2,
+        15
+      ],
+      [
+        3,
+        16
+      ],
+      [
+        3,
+        17
+      ],
+      [
+        3,
+        18
+      ],
+      [
+        3,
+        19
+      ],
+      [
+        3,
+        20
+      ]
     ]
   },
   "timeline": {
@@ -307,21 +420,36 @@
         "title": "Soporte TI (L1) — Andreani",
         "description": "Resolución de incidentes y operación de endpoints/infra corporativa: AD, despliegues, impresoras, RF handhelds, diagnóstico de red y estandarización.",
         "branch": "andreani",
-        "tags": ["Active Directory", "SCCM", "Troubleshooting", "Operación"]
+        "tags": [
+          "Active Directory",
+          "SCCM",
+          "Troubleshooting",
+          "Operación"
+        ]
       },
       {
         "date": "2025 - Presente",
         "title": "Constructor de proyectos (SaaS / Tooling)",
         "description": "Desarrollo de productos y herramientas: dashboards, automatización, y arquitectura limpia con foco en mantenibilidad.",
         "branch": "freelance",
-        "tags": ["Next.js", "TypeScript", ".NET", "Python", "Clean Architecture"]
+        "tags": [
+          "Next.js",
+          "TypeScript",
+          ".NET",
+          "Python",
+          "Clean Architecture"
+        ]
       },
       {
         "date": "2025 - Presente",
         "title": "Digitalización ganadera (Entre Ríos)",
         "description": "Diseño de un dashboard y flujo operativo para stock, reproducción, potreros y KPIs; foco en trazabilidad y datos accionables.",
         "branch": "freelance",
-        "tags": ["KPIs", "Dashboards", "Domain Modeling"]
+        "tags": [
+          "KPIs",
+          "Dashboards",
+          "Domain Modeling"
+        ]
       }
     ],
     "futureGoals": [
@@ -355,7 +483,12 @@
       "subtitle": "Dashboard Ganadero",
       "desc": "Plataforma para digitalizar operación ganadera: stock por categoría/potrero, trazabilidad, reproducción, KPIs (destete, productividad) y tablero de decisiones. Diseñada para crecer por módulos y mantener dominio claro.",
       "image": "https://images.unsplash.com/photo-1527847263472-aa5338d178b8?fit=crop&w=1200&q=80",
-      "tech": ["Next.js", "TypeScript", "Node.js", "Clean Architecture"],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Node.js",
+        "Clean Architecture"
+      ],
       "features": [
         "Stock total y por potrero, con métricas accionables",
         "Modelo de dominio orientado a operación real",
@@ -369,7 +502,12 @@
       "subtitle": "PowerShell / Python",
       "desc": "Toolkit de automatización para soporte y operación: diagnósticos, tareas repetitivas, inventario y acciones remotas. Enfoque en seguridad (mínimos privilegios), logging y reutilización.",
       "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
-      "tech": ["PowerShell", "Python", "WinRM", "WMI"],
+      "tech": [
+        "PowerShell",
+        "Python",
+        "WinRM",
+        "WMI"
+      ],
       "features": [
         "Ejecución remota y tareas repetibles",
         "Módulos reutilizables + logging consistente",
@@ -383,7 +521,12 @@
       "subtitle": "Generación de sitios y activos",
       "desc": "SaaS orientado a negocios locales para generar landing pages y activos digitales con una estética minimalista y foco en conversión. Arquitectura preparada para suscripción y multitenancy.",
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80",
-      "tech": ["Next.js", "TypeScript", "Supabase", "Prisma"],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Supabase",
+        "Prisma"
+      ],
       "features": [
         "Plantillas y componentes reutilizables",
         "Arquitectura lista para suscripción",
@@ -397,7 +540,12 @@
       "subtitle": "Knowledge & AI Workspace",
       "desc": "Sistema de notas y conocimiento (Obsidian + flujos) para ingerir PDFs, transcripciones y notas; estructuración, indexación y generación asistida para estudio y operación.",
       "image": "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?fit=crop&w=1200&q=80",
-      "tech": ["Obsidian", "TypeScript", "Next.js", "Automation"],
+      "tech": [
+        "Obsidian",
+        "TypeScript",
+        "Next.js",
+        "Automation"
+      ],
       "features": [
         "Estructuras reutilizables y plantillas",
         "Ingesta y normalización de contenido",
@@ -405,35 +553,45 @@
         "Documentación orientada a ejecución"
       ]
     },
-      {
-        "id": 5,
-        "title": "Security",
-        "subtitle": "Audit Tool",
-        "desc": "Plataforma de análisis de seguridad y compliance automatizado. Herramientas de auditoría y monitoreo continuo de vulnerabilidades.",
-        "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
-        "tech": ["Python", "Docker", "Postgres", "React"],
-        "features": [
-          "Escaneo automatizado",
-          "Reportes detallados",
-          "Compliance tracking",
-          "Alertas en tiempo real"
-        ]
-      },
-      {
-        "id": 6,
-        "title": "DevOps",
-        "subtitle": "Platform",
-        "desc": "CI/CD pipeline completo con monitoreo y alertas. Plataforma integral para automatización de despliegues y gestión de infraestructura.",
-        "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80",
-        "tech": ["Jenkins", "K8s", "Docker", "Prometheus"],
-        "features": [
-          "CI/CD automatizado",
-          "Monitoreo continuo",
-          "Gestión de infraestructura",
-          "Alertas proactivas"
-        ]
-      }
-    ],
+    {
+      "id": 5,
+      "title": "Security",
+      "subtitle": "Audit Tool",
+      "desc": "Plataforma de análisis de seguridad y compliance automatizado. Herramientas de auditoría y monitoreo continuo de vulnerabilidades.",
+      "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
+      "tech": [
+        "Python",
+        "Docker",
+        "Postgres",
+        "React"
+      ],
+      "features": [
+        "Escaneo automatizado",
+        "Reportes detallados",
+        "Compliance tracking",
+        "Alertas en tiempo real"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "DevOps",
+      "subtitle": "Platform",
+      "desc": "CI/CD pipeline completo con monitoreo y alertas. Plataforma integral para automatización de despliegues y gestión de infraestructura.",
+      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80",
+      "tech": [
+        "Jenkins",
+        "K8s",
+        "Docker",
+        "Prometheus"
+      ],
+      "features": [
+        "CI/CD automatizado",
+        "Monitoreo continuo",
+        "Gestión de infraestructura",
+        "Alertas proactivas"
+      ]
+    }
+  ],
   "contact": {
     "title": "¿Listo para escalar?",
     "description": "Actualmente disponible para proyectos freelance.",
@@ -445,4 +603,3 @@
     "footer": "Diseñado con precisión. © 2026."
   }
 }
-
