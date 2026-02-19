@@ -79,6 +79,17 @@ export interface PortfolioData {
         tech: string[];
         features: string[];
     }>;
+    certificates: Array<{
+        id: number;
+        title: string;
+        subtitle: string;
+        desc: string;
+        image: string;
+        tech: string[];
+        features: string[];
+        pdfUrl?: string; // Optional: URL to the PDF file
+        status?: 'completed' | 'coming_soon'; // Status of the certificate
+    }>;
     contact: {
         title: string;
         description: string;
@@ -103,5 +114,6 @@ export const aboutData = typedPortfolioData.about;
 export const skillsData = typedPortfolioData.skills;
 export const timelineData = typedPortfolioData.timeline;
 export const projectsData = typedPortfolioData.projects;
+export const certificatesData = typedPortfolioData.certificates;
 export const contactData = typedPortfolioData.contact;
 

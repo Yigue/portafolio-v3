@@ -34,7 +34,7 @@ export default function Timeline() {
         const ctx = gsap.context(() => {
             // 1. ANIMACIÓN DE LA LÍNEA PRINCIPAL
             [mainLineRef.current, mainLineGlowRef.current].forEach(path => {
-                if(!path) return;
+                if (!path) return;
                 gsap.to(path, {
                     strokeDashoffset: 0,
                     ease: 'none',
@@ -119,7 +119,7 @@ export default function Timeline() {
                 </div>
 
                 <div ref={wrapperRef} className="timeline-wrapper relative pb-[250px]"> {/* Aumenté el padding inferior */}
-                    
+
                     {/* SVG Paths */}
                     <svg className="svg-layer absolute top-0 left-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1000 2000" preserveAspectRatio="xMidYMin slice">
                         <defs>
@@ -132,15 +132,15 @@ export default function Timeline() {
 
                         {/* Background paths */}
                         <path d="M500,0 L500,900" className="path-bg opacity-20" stroke="white" strokeWidth="2" />
-                        <path d="M500,900 C500,1000 250,1000 250,1100 L250,1800" className="path-bg opacity-20" stroke="white" strokeWidth="2"/>
-                        <path d="M500,900 C500,1000 750,1000 750,1100 L750,1800" className="path-bg opacity-20" stroke="white" strokeWidth="2"/>
-                        <path d="M250,1800 C250,1850 375,1850 500,1880" className="path-bg opacity-20" stroke="white" strokeWidth="2"/>
-                        <path d="M750,1800 C750,1850 625,1850 500,1880" className="path-bg opacity-20" stroke="white" strokeWidth="2"/>
+                        <path d="M500,900 C500,1000 250,1000 250,1100 L250,1800" className="path-bg opacity-20" stroke="white" strokeWidth="2" />
+                        <path d="M500,900 C500,1000 750,1000 750,1100 L750,1800" className="path-bg opacity-20" stroke="white" strokeWidth="2" />
+                        <path d="M250,1800 C250,1850 375,1850 500,1880" className="path-bg opacity-20" stroke="white" strokeWidth="2" />
+                        <path d="M750,1800 C750,1850 625,1850 500,1880" className="path-bg opacity-20" stroke="white" strokeWidth="2" />
 
                         {/* Active paths */}
                         <path ref={mainLineRef} d="M500,0 L500,900" className="path-active" stroke="#30d158" strokeWidth="4" fill="none" />
-                        <path ref={mainLineGlowRef} d="M500,0 L500,900" className="path-active" stroke="url(#gradMain)" strokeWidth="4" fill="none" style={{filter: 'blur(5px)'}} />
-                        
+                        <path ref={mainLineGlowRef} d="M500,0 L500,900" className="path-active" stroke="url(#gradMain)" strokeWidth="4" fill="none" style={{ filter: 'blur(5px)' }} />
+
                         <path ref={leftLineRef} d="M500,900 C500,1000 250,1000 250,1100 L250,1800" className="path-active" stroke="#bf5af2" strokeWidth="4" fill="none" />
                         <path ref={rightLineRef} d="M500,900 C500,1000 750,1000 750,1100 L750,1800" className="path-active" stroke="#30d158" strokeWidth="4" fill="none" />
                         <path ref={mergeLeftRef} d="M250,1800 C250,1850 375,1850 500,1880" className="path-active" stroke="#bf5af2" strokeWidth="4" fill="none" />
@@ -174,7 +174,7 @@ export default function Timeline() {
                                         <span className="date-tag text-purple-400">{event.date}</span>
                                         <h3 className={`${index === 0 ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'} font-bold text-white`}>{event.title}</h3>
                                         <p className="text-gray-400 text-xs sm:text-sm mt-2">{event.description}</p>
-                                        {event.tags.length > 0 && (
+                                        {event.tags?.length > 0 && (
                                             <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
                                                 {event.tags.map((tag) => (
                                                     <span key={tag} className="text-[9px] sm:text-[10px] bg-purple-500/10 text-purple-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-purple-500/20">
@@ -195,7 +195,7 @@ export default function Timeline() {
                                         <span className="date-tag text-green-400">{event.date}</span>
                                         <h3 className={`${index === 0 ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'} font-bold text-white`}>{event.title}</h3>
                                         <p className="text-gray-400 text-xs sm:text-sm mt-2">{event.description}</p>
-                                        {event.tags.length > 0 && (
+                                        {event.tags?.length > 0 && (
                                             <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2 justify-start md:justify-end">
                                                 {event.tags.map((tag) => (
                                                     <span key={tag} className="text-[9px] sm:text-[10px] bg-green-500/10 text-green-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-green-500/20">
@@ -209,9 +209,9 @@ export default function Timeline() {
                             ))}
                         </div>
                     </div>
-                            <div className="relative z-40" style={{ height: '150px' }}/>
+                    <div className="relative z-40" style={{ height: '150px' }} />
                     {/* Future Card */}
-              
+
                     {/* Future Card - Posicionada justo donde terminan las líneas (y=1880 del viewBox = 94%) */}
                     <div className="absolute left-1/2 -translate-x-1/2 z-40" style={{ top: '95%' }}>
                         <div className="timeline-card max-w-md w-full px-4">

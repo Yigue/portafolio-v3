@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { projects, Project } from '@/data/projects';
+import { certificates, Certificate } from '@/data/certificates';
 
-export default function Projects() {
+export default function Certificates() {
     const sectionRef = useRef<HTMLElement>(null);
     const stripRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -17,7 +17,7 @@ export default function Projects() {
 
         const ctx = gsap.context(() => {
             // Card entrance animation
-            gsap.from('.project-card', {
+            gsap.from('.certificate-card', {
                 opacity: 0,
                 scale: 0.8,
                 duration: 0.8,
@@ -65,14 +65,14 @@ export default function Projects() {
         };
     }, []);
 
-    const expandProject = (project: Project) => {
-        if (expandedId === project.id) return;
-        setExpandedId(project.id);
+    const expandCertificate = (cert: Certificate) => {
+        if (expandedId === cert.id) return;
+        setExpandedId(cert.id);
 
-        const wrapper = cardRefs.current[project.id - 1];
+        const wrapper = cardRefs.current[cert.id - 1];
         if (!wrapper) return;
 
-        const detailsPanel = wrapper.querySelector('.project-details-panel') as HTMLElement;
+        const detailsPanel = wrapper.querySelector('.certificate-details-panel') as HTMLElement;
         if (!detailsPanel) return;
 
         // Full-screen overlay animation for all devices
@@ -86,8 +86,8 @@ export default function Projects() {
 
         // Dim other cards
         cardRefs.current.forEach((w, i) => {
-            if (w && i !== project.id - 1) {
-                gsap.to(w.querySelector('.project-card'), {
+            if (w && i !== cert.id - 1) {
+                gsap.to(w.querySelector('.certificate-card'), {
                     opacity: 0.4,
                     scale: 0.95,
                     duration: 0.4,
@@ -99,13 +99,13 @@ export default function Projects() {
         wrapper.classList.add('expanded');
     };
 
-    const collapseProject = () => {
+    const collapseCertificate = () => {
         if (expandedId === null) return;
 
         const wrapper = cardRefs.current[expandedId - 1];
         if (!wrapper) return;
 
-        const detailsPanel = wrapper.querySelector('.project-details-panel') as HTMLElement;
+        const detailsPanel = wrapper.querySelector('.certificate-details-panel') as HTMLElement;
         if (detailsPanel) {
             gsap.to(detailsPanel, {
                 opacity: 0,
@@ -119,7 +119,7 @@ export default function Projects() {
         // Restore all cards
         cardRefs.current.forEach((w) => {
             if (w) {
-                gsap.to(w.querySelector('.project-card'), {
+                gsap.to(w.querySelector('.certificate-card'), {
                     opacity: 1,
                     scale: 1,
                     duration: 0.4,
@@ -133,46 +133,46 @@ export default function Projects() {
     };
 
     return (
-        <section ref={sectionRef} id="projects" className="overflow-hidden bg-[#020202] relative min-h-screen">
-            <div ref={wrapperRef} className="projects-wrapper h-screen w-full flex items-center relative pl-10 md:pl-20 overflow-hidden">
+        <section ref={sectionRef} id="certificates" className="overflow-hidden bg-[#020202] relative min-h-screen">
+            <div ref={wrapperRef} className="certificates-wrapper h-screen w-full flex items-center relative pl-10 md:pl-20 overflow-hidden">
                 {/* Header */}
                 <div className="absolute top-10 left-10 z-20">
-                    <h2 className="text-6xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">Proyectos</h2>
+                    <h2 className="text-6xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">Certificaciones</h2>
                     <div className="flex items-center gap-2 mt-2 ml-2">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                        <p className="text-blue-500 font-mono text-xs">DESLIZA PARA EXPLORAR →</p>
+                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+                        <p className="text-purple-500 font-mono text-xs">DESLIZA PARA EXPLORAR →</p>
                     </div>
                 </div>
 
-                {/* Projects Strip */}
-                <div ref={stripRef} className="projects-strip flex gap-16 px-10">
-                    {projects.map((project) => (
+                {/* Certificates Strip */}
+                <div ref={stripRef} className="certificates-strip flex gap-16 px-10">
+                    {certificates.map((cert) => (
                         <div
-                            key={project.id}
-                            ref={(el) => { cardRefs.current[project.id - 1] = el; }}
-                            className="project-card-wrapper flex-shrink-0"
-                            data-project={project.id}
+                            key={cert.id}
+                            ref={(el) => { cardRefs.current[cert.id - 1] = el; }}
+                            className="certificate-card-wrapper flex-shrink-0"
+                            data-certificate={cert.id}
                         >
                             <div
-                                className="project-card w-[90vw] md:w-[600px] h-[60vh] md:h-[60vh] spotlight-card rounded-2xl md:rounded-3xl relative group cursor-pointer perspective-container overflow-hidden"
-                                onClick={() => expandProject(project)}
+                                className="certificate-card w-[90vw] md:w-[600px] h-[60vh] md:h-[60vh] spotlight-card rounded-2xl md:rounded-3xl relative group cursor-pointer perspective-container overflow-hidden"
+                                onClick={() => expandCertificate(cert)}
                             >
                                 <div className="preserve-3d w-full h-full relative">
                                     <img
-                                        src={project.image}
-                                        alt={project.title}
+                                        src={cert.image}
+                                        alt={cert.title}
                                         className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500 rounded-2xl md:rounded-3xl grayscale group-hover:grayscale-0"
                                     />
 
-                                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 bg-gradient-to-t from-black via-black/80 to-transparent rounded-b-2xl md:rounded-b-3xl project-content">
+                                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 bg-gradient-to-t from-black via-black/80 to-transparent rounded-b-2xl md:rounded-b-3xl certificate-content">
                                         <h3 className="text-2xl md:text-4xl font-bold text-white mb-2 leading-tight">
-                                            {project.title}<br />{project.subtitle}
+                                            {cert.title}<br />{cert.subtitle}
                                         </h3>
                                         <p className="text-gray-300 max-w-lg mb-4 md:mb-6 text-sm md:text-base opacity-0 group-hover:opacity-100 transition-opacity delay-100 transform translate-y-4 group-hover:translate-y-0">
-                                            {project.desc.slice(0, 70)}...
+                                            {cert.desc.slice(0, 70)}...
                                         </p>
                                         <div className="flex gap-2">
-                                            {project.tech.slice(0, 2).map((t) => (
+                                            {cert.tech.slice(0, 2).map((t) => (
                                                 <span key={t} className="px-2.5 py-1 md:px-3 md:py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] md:text-xs text-white">
                                                     {t}
                                                 </span>
@@ -182,23 +182,49 @@ export default function Projects() {
                                 </div>
 
                                 {/* Details Panel - Full screen overlay */}
-                                <div className="project-details-panel fixed inset-0 z-50 w-full h-full bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none p-6 md:p-12 overflow-y-auto flex items-center justify-center">
+                                <div className="certificate-details-panel fixed inset-0 z-50 w-full h-full bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none p-6 md:p-12 overflow-y-auto flex items-center justify-center">
                                     <button
                                         className="absolute top-4 right-4 text-white/80 hover:text-white text-3xl md:text-2xl z-10 w-10 h-10 flex items-center justify-center"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            collapseProject();
+                                            collapseCertificate();
                                         }}
                                     >
                                         ×
                                     </button>
-                                    <div className="project-details-content max-w-2xl md:max-w-none mx-auto">
-                                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 pr-10">{project.title} {project.subtitle}</h2>
-                                        <p className="text-gray-300 mb-6 leading-relaxed text-sm md:text-sm">{project.desc}</p>
+                                    <div className="certificate-details-content max-w-2xl md:max-w-none mx-auto">
+                                        <div className="flex justify-between items-start mb-4 pr-10">
+                                            <div>
+                                                <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">{cert.title}</h2>
+                                                <p className="text-purple-400 font-mono text-sm mt-1">{cert.subtitle}</p>
+                                            </div>
+                                            {cert.status === 'coming_soon' && (
+                                                <span className="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold whitespace-nowrap">
+                                                    COMING SOON
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <p className="text-gray-300 mb-6 leading-relaxed text-sm md:text-sm">{cert.desc}</p>
+
+                                        {cert.pdfUrl && (
+                                            <a
+                                                href={cert.pdfUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-bold text-sm transition-all mb-8 shadow-lg shadow-purple-900/20 group/btn"
+                                            >
+                                                <span>Ver Diploma Oficial</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                                </svg>
+                                            </a>
+                                        )}
+
                                         <div className="mb-6">
-                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Tecnologías</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Temas</h3>
                                             <div className="flex flex-wrap gap-2">
-                                                {project.tech.map((t) => (
+                                                {cert.tech.map((t) => (
                                                     <span key={t} className="px-3 py-1.5 bg-white/10 rounded-full text-xs text-white border border-white/20">
                                                         {t}
                                                     </span>
@@ -206,11 +232,11 @@ export default function Projects() {
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Características</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Conceptos Clave</h3>
                                             <ul className="space-y-2 text-gray-300 text-sm">
-                                                {project.features.map((f) => (
+                                                {cert.features.map((f) => (
                                                     <li key={f} className="flex items-start gap-2">
-                                                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 flex-shrink-0" />
+                                                        <span className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1.5 flex-shrink-0" />
                                                         <span>{f}</span>
                                                     </li>
                                                 ))}

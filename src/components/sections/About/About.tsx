@@ -35,22 +35,22 @@ export default function About() {
         <section
             ref={sectionRef}
             id="about"
-            className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-black py-20 md:py-0"
+            className="h-screen max-h-screen w-full relative flex items-center justify-center overflow-hidden bg-black py-10 md:py-0"
         >
-            <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 max-w-6xl">
+            <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-6 md:gap-10 items-center relative z-10 max-w-7xl h-full md:h-auto">
                 {/* Text Content */}
-                <div ref={textRef} className="opacity-0 translate-y-20 space-y-4 md:space-y-6 order-1">
-                    <span className="text-blue-500 font-semibold tracking-widest uppercase text-xs sm:text-sm">
+                <div ref={textRef} className="opacity-0 translate-y-20 space-y-3 md:space-y-5 order-1 flex flex-col justify-center">
+                    <span className="text-blue-500 font-semibold tracking-widest uppercase text-xs">
                         {aboutData.badge}
                     </span>
-                    <h2 
-                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight"
+                    <h2
+                        className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
                         dangerouslySetInnerHTML={{ __html: aboutData.title }}
                     />
-                    <p className="text-gray-400 text-base md:text-lg leading-relaxed">
+                    <div className="text-gray-400 text-sm md:text-base leading-relaxed max-h-[40vh] md:max-h-none overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                         {aboutData.description.split('\n').map((line, lineIndex) => (
-                            <span key={lineIndex}>
-                                {line.split(' perfecto').map((part, partIndex, parts) => 
+                            <p key={lineIndex} className="mb-3 last:mb-0">
+                                {line.split(' perfecto').map((part, partIndex, parts) =>
                                     partIndex === parts.length - 1 ? (
                                         <span key={partIndex}>
                                             {part.includes('perfecto') ? (
@@ -67,13 +67,12 @@ export default function About() {
                                         <span key={partIndex}>{part}</span>
                                     )
                                 )}
-                                {lineIndex < aboutData.description.split('\n').length - 1 && <br />}
-                            </span>
+                            </p>
                         ))}
-                    </p>
-                    <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
+                    </div>
+                    <div className="flex flex-wrap gap-2 pt-2">
                         {aboutData.tags.map((tag, index) => (
-                            <div key={index} className="px-4 py-2 md:px-6 md:py-3 glass-panel rounded-lg text-xs sm:text-sm">
+                            <div key={index} className="px-3 py-1.5 md:px-4 md:py-2 glass-panel rounded-full text-xs text-center border border-white/5 bg-white/5 hover:bg-white/10 transition-colors cursor-default">
                                 {tag}
                             </div>
                         ))}
@@ -81,16 +80,16 @@ export default function About() {
                 </div>
 
                 {/* Visual Content */}
-                <div ref={visualRef} className="opacity-0 scale-90 relative order-2 max-w-md mx-auto w-full md:max-w-full">
-                    <div className="w-full aspect-square rounded-3xl overflow-hidden glass-panel relative p-2">
+                <div ref={visualRef} className="opacity-0 scale-90 relative order-2 flex justify-center items-center h-full max-h-[50vh] md:max-h-full">
+                    <div className="w-full max-w-[350px] md:max-w-[450px] aspect-[4/5] md:aspect-square rounded-2xl md:rounded-3xl overflow-hidden glass-panel relative p-1.5 md:p-2 rotate-2 hover:rotate-0 transition-transform duration-500 shadow-2xl shadow-blue-900/10">
                         <img
                             src={aboutData.image}
                             alt="Guillermo Riedel"
-                            className="w-full h-full object-cover rounded-2xl opacity-80"
+                            className="w-full h-full object-cover rounded-xl md:rounded-2xl opacity-90 grayscale hover:grayscale-0 transition-all duration-500"
                         />
-                        <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 glass-panel p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl border border-white/10">
-                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{aboutData.experience.years}</div>
-                            <div className="text-[9px] sm:text-[10px] md:text-xs text-gray-400 uppercase mt-0.5 sm:mt-1">{aboutData.experience.label}</div>
+                        <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 glass-panel p-3 sm:p-5 rounded-xl border border-white/10 backdrop-blur-md bg-black/40">
+                            <div className="text-2xl sm:text-4xl font-bold text-white tracking-tighter">{aboutData.experience.years}</div>
+                            <div className="text-[10px] sm:text-xs text-gray-400 uppercase font-medium tracking-wide">{aboutData.experience.label}</div>
                         </div>
                     </div>
                 </div>
