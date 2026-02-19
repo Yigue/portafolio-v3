@@ -19,21 +19,21 @@ export default function Hero() {
     }, []);
 
     return (
-        <section id="hero" className="h-screen flex flex-col items-center justify-center relative overflow-hidden">
+        <section id="hero" className="min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden py-20">
             {/* Background Gradient */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black" />
 
             {/* Content */}
-            <div className="z-10 text-center space-y-4 sm:space-y-6 px-4">
+            <div className="z-10 text-center space-y-4 sm:space-y-6 px-4 max-w-[95vw]">
                 <h1
                     ref={titleRef}
-                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tighter text-gradient opacity-0 translate-y-10"
+                    className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tighter text-gradient opacity-0 translate-y-10 leading-tight"
                 >
                     {heroData.title}
                 </h1>
                 <p
                     ref={subtitleRef}
-                    className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500 max-w-2xl mx-auto opacity-0 translate-y-10 font-light px-2"
+                    className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500 max-w-2xl mx-auto opacity-0 translate-y-10 font-light px-4 leading-relaxed"
                 >
                     {heroData.subtitle}
                 </p>

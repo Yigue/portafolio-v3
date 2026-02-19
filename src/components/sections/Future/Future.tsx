@@ -47,7 +47,7 @@ export default function Future() {
         <section
             ref={sectionRef}
             id="future"
-            className="h-screen w-full flex flex-col justify-center items-center bg-[#050505] relative blueprint-grid border-t border-white/5 overflow-hidden"
+            className="min-h-screen w-full flex flex-col justify-center items-center bg-[#050505] relative blueprint-grid border-t border-white/5 overflow-hidden py-20"
         >
             <div className="container mx-auto px-6 z-10">
                 <div className="text-center mb-16 future-header opacity-0">

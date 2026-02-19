@@ -14,41 +14,47 @@ export default function Certificates() {
 
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
+        const mm = gsap.matchMedia();
 
         const ctx = gsap.context(() => {
             // Card entrance animation
-            gsap.from('.certificate-card', {
-                opacity: 0,
-                scale: 0.8,
-                duration: 0.8,
-                stagger: 0.15,
-                ease: 'power2.out',
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                    toggleActions: 'play none none none',
-                },
+            mm.add("(min-width: 768px)", () => {
+                gsap.from('.certificate-card', {
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none',
+                    },
+                });
             });
 
             // Horizontal scroll with pin
-            if (stripRef.current) {
-                gsap.to(stripRef.current, {
-                    x: () => -(stripRef.current!.scrollWidth - window.innerWidth + 200),
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: wrapperRef.current,
-                        start: 'top top',
-                        end: () => '+=' + stripRef.current!.scrollWidth * 1.2,
-                        pin: true,
-                        scrub: 1,
-                        invalidateOnRefresh: true,
-                    },
-                });
-            }
+            mm.add("(min-width: 768px)", () => {
+                if (stripRef.current && wrapperRef.current) {
+                    gsap.to(stripRef.current, {
+                        x: () => -(stripRef.current!.scrollWidth - window.innerWidth + 200),
+                        ease: 'none',
+                        scrollTrigger: {
+                            trigger: wrapperRef.current,
+                            start: 'top top',
+                            end: () => '+=' + stripRef.current!.scrollWidth * 1.2,
+                            pin: true,
+                            scrub: 1,
+                            invalidateOnRefresh: true,
+                        },
+                    });
+                }
+            });
         }, sectionRef);
 
         // Mouse spotlight effect
         const handleMouseMove = (e: MouseEvent) => {
+            if (window.innerWidth < 768) return;
             const cards = document.querySelectorAll('.spotlight-card, .glass-panel');
             cards.forEach((card) => {
                 const rect = (card as HTMLElement).getBoundingClientRect();
@@ -57,11 +63,12 @@ export default function Certificates() {
             });
         };
 
-        document.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousemove', handleMouseMove);
 
         return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mousemove', handleMouseMove);
             ctx.revert();
+            mm.revert();
         };
     }, []);
 
@@ -133,19 +140,20 @@ export default function Certificates() {
     };
 
     return (
-        <section ref={sectionRef} id="certificates" className="overflow-hidden bg-[#020202] relative min-h-screen">
-            <div ref={wrapperRef} className="certificates-wrapper h-screen w-full flex items-center relative pl-10 md:pl-20 overflow-hidden">
+        <section ref={sectionRef} id="certificates" className="overflow-x-hidden bg-[#020202] relative min-h-screen pb-20 md:pb-0">
+            <div ref={wrapperRef} className="certificates-wrapper min-h-screen md:h-screen w-full flex flex-col md:flex-row items-start md:items-center relative pt-32 md:pt-0 pl-0 md:pl-20 overflow-visible md:overflow-hidden">
                 {/* Header */}
-                <div className="absolute top-10 left-10 z-20">
-                    <h2 className="text-6xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">Certificaciones</h2>
+                <div className="absolute top-10 left-6 md:left-10 z-20">
+                    <h2 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">Certificaciones</h2>
                     <div className="flex items-center gap-2 mt-2 ml-2">
                         <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                        <p className="text-purple-500 font-mono text-xs">DESLIZA PARA EXPLORAR →</p>
+                        <p className="text-purple-500 font-mono text-xs hidden md:block">DESLIZA PARA EXPLORAR →</p>
+                        <p className="text-purple-500 font-mono text-xs md:hidden">DESLIZA →</p>
                     </div>
                 </div>
 
                 {/* Certificates Strip */}
-                <div ref={stripRef} className="certificates-strip flex gap-16 px-10">
+                <div ref={stripRef} className="certificates-strip flex flex-row md:gap-16 gap-6 px-6 md:px-10 overflow-x-auto md:overflow-visible snap-x snap-mandatory w-full md:w-auto pb-10 md:pb-0 hide-scrollbar">
                     {certificates.map((cert) => (
                         <div
                             key={cert.id}

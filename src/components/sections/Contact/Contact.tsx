@@ -56,7 +56,7 @@ export default function Contact() {
 
         try {
             console.log('📧 Enviando email con EmailJS SDK...');
-            
+
             // Usar el SDK oficial de EmailJS
             const result = await emailjs.send(
                 serviceId,
@@ -98,7 +98,7 @@ export default function Contact() {
     };
 
     return (
-        <section ref={sectionRef} id="contact" className="min-h-screen flex items-center justify-center relative bg-black pt-20">
+        <section ref={sectionRef} id="contact" className="min-h-screen flex items-center justify-center relative bg-black pt-32 pb-20">
             <div className="container mx-auto px-6 max-w-5xl text-center">
                 <h2 className="text-5xl md:text-7xl font-bold mb-8 reveal-item opacity-0 translate-y-10">
                     {contactData.title}

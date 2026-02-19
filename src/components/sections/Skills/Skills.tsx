@@ -211,12 +211,12 @@ export default function Skills() {
                 duration: 0.5,
                 ease: 'power2.out',
             })
-            // Animate panel container (node inspector) - faster entry
-            .to(panelContainerRef.current, {
-                opacity: 1,
-                duration: 0.5,
-                ease: 'power2.out',
-            }, '-=0.3');
+                // Animate panel container (node inspector) - faster entry
+                .to(panelContainerRef.current, {
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                }, '-=0.3');
         }, sectionRef);
 
         // Draw lines on resize
@@ -313,11 +313,11 @@ export default function Skills() {
                 {/* Main Content: Network + Panel */}
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch justify-center">
                     {/* Network Container */}
-                    <div 
+                    <div
                         ref={(el) => {
                             containerRef.current = el;
                             networkContainerRef.current = el;
-                        }} 
+                        }}
                         className="network-container glass-panel rounded-2xl lg:rounded-3xl p-3 sm:p-4 lg:p-6 opacity-0"
                     >
                         <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
@@ -331,6 +331,7 @@ export default function Skills() {
                                 style={{ top: node.position.top, left: node.position.left }}
                                 onMouseEnter={() => handleNodeEnter(index)}
                                 onMouseLeave={handleNodeLeave}
+                                onClick={() => handleNodeEnter(index)}
                             >
                                 <div
                                     className="node-icon"
@@ -348,7 +349,7 @@ export default function Skills() {
                     </div>
 
                     {/* Info Panel */}
-                    <div 
+                    <div
                         ref={panelContainerRef}
                         className="w-full lg:w-[420px] self-stretch opacity-0"
                     >
@@ -393,7 +394,7 @@ export default function Skills() {
                                             const bgColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
                                             const borderColor = `rgba(${r}, ${g}, ${b}, 0.2)`;
                                             const textColor = activeInfo.color;
-                                            
+
                                             return (
                                                 <span
                                                     key={tool}
