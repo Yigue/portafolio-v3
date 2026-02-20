@@ -3,9 +3,24 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { certificates, Certificate } from '@/data/certificates';
+import { useLanguage } from '@/context/LanguageContext';
+
+interface Certificate {
+    id: number;
+    title: string;
+    subtitle: string;
+    desc: string;
+    image: string;
+    tech: string[];
+    features: string[];
+    pdfUrl?: string;
+    status?: 'completed' | 'coming_soon';
+}
 
 export default function Certificates() {
+    const { language, data } = useLanguage();
+    const certificates = data.certificates as Certificate[];
+
     const sectionRef = useRef<HTMLElement>(null);
     const stripRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -144,11 +159,17 @@ export default function Certificates() {
             <div ref={wrapperRef} className="certificates-wrapper min-h-screen md:h-screen w-full flex flex-col md:flex-row items-start md:items-center relative pt-32 md:pt-0 pl-0 md:pl-20 overflow-visible md:overflow-hidden">
                 {/* Header */}
                 <div className="absolute top-10 left-6 md:left-10 z-20">
-                    <h2 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">Certificaciones</h2>
+                    <h2 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">
+                        {language === 'en' ? 'Certifications' : 'Certificaciones'}
+                    </h2>
                     <div className="flex items-center gap-2 mt-2 ml-2">
                         <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                        <p className="text-purple-500 font-mono text-xs hidden md:block">DESLIZA PARA EXPLORAR →</p>
-                        <p className="text-purple-500 font-mono text-xs md:hidden">DESLIZA →</p>
+                        <p className="text-purple-500 font-mono text-xs hidden md:block">
+                            {language === 'en' ? 'SCROLL TO EXPLORE →' : 'DESLIZA PARA EXPLORAR →'}
+                        </p>
+                        <p className="text-purple-500 font-mono text-xs md:hidden">
+                            {language === 'en' ? 'SCROLL →' : 'DESLIZA →'}
+                        </p>
                     </div>
                 </div>
 
@@ -208,7 +229,7 @@ export default function Certificates() {
                                             </div>
                                             {cert.status === 'coming_soon' && (
                                                 <span className="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold whitespace-nowrap">
-                                                    COMING SOON
+                                                    {language === 'en' ? 'COMING SOON' : 'PRÓXIMAMENTE'}
                                                 </span>
                                             )}
                                         </div>
@@ -222,7 +243,7 @@ export default function Certificates() {
                                                 rel="noopener noreferrer"
                                                 className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-bold text-sm transition-all mb-8 shadow-lg shadow-purple-900/20 group/btn"
                                             >
-                                                <span>Ver Diploma Oficial</span>
+                                                <span>{language === 'en' ? 'View Official Diploma' : 'Ver Diploma Oficial'}</span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                                 </svg>
@@ -230,7 +251,9 @@ export default function Certificates() {
                                         )}
 
                                         <div className="mb-6">
-                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Temas</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">
+                                                {language === 'en' ? 'Topics' : 'Temas'}
+                                            </h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {cert.tech.map((t) => (
                                                     <span key={t} className="px-3 py-1.5 bg-white/10 rounded-full text-xs text-white border border-white/20">
@@ -240,7 +263,9 @@ export default function Certificates() {
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Conceptos Clave</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">
+                                                {language === 'en' ? 'Key Concepts' : 'Conceptos Clave'}
+                                            </h3>
                                             <ul className="space-y-2 text-gray-300 text-sm">
                                                 {cert.features.map((f) => (
                                                     <li key={f} className="flex items-start gap-2">

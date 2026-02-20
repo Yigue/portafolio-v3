@@ -3,10 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { contactData } from '@/data/portfolio-data';
+import { useLanguage } from '@/context/LanguageContext';
 import emailjs from '@emailjs/browser';
 
 export default function Contact() {
+    const { language, data } = useLanguage();
+    const contactData = data.contact;
+
     const sectionRef = useRef<HTMLElement>(null);
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
@@ -90,8 +93,8 @@ export default function Contact() {
 
     const handleDownloadCV = () => {
         const link = document.createElement('a');
-        link.href = '/CV Guillermo riedel.pdf';
-        link.download = 'CV_Guillermo_Riedel.pdf';
+        link.href = language === 'en' ? '/cv-en.pdf' : '/cv-es.pdf';
+        link.download = language === 'en' ? 'CV_Guillermo_Riedel_EN.pdf' : 'CV_Guillermo_Riedel_ES.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -135,13 +138,23 @@ export default function Contact() {
                                 disabled={isSubmitting}
                                 className="w-full bg-white text-black font-bold py-3 md:py-4 rounded-xl hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                             >
-                                {isSubmitting ? 'Enviando...' : submitStatus === 'success' ? '✓ Enviado' : submitStatus === 'error' ? '✗ Error' : contactData.submitButton}
+                                {isSubmitting
+                                    ? (language === 'en' ? 'Sending...' : 'Enviando...')
+                                    : submitStatus === 'success'
+                                        ? (language === 'en' ? '✓ Sent' : '✓ Enviado')
+                                        : submitStatus === 'error'
+                                            ? (language === 'en' ? '✗ Error' : '✗ Error')
+                                            : contactData.submitButton}
                             </button>
                             {submitStatus === 'success' && (
-                                <p className="text-green-400 text-sm text-center">¡Mensaje enviado con éxito!</p>
+                                <p className="text-green-400 text-sm text-center">
+                                    {language === 'en' ? 'Message sent successfully!' : '¡Mensaje enviado con éxito!'}
+                                </p>
                             )}
                             {submitStatus === 'error' && (
-                                <p className="text-red-400 text-sm text-center">Error al enviar. Por favor, intenta de nuevo.</p>
+                                <p className="text-red-400 text-sm text-center">
+                                    {language === 'en' ? 'Error sending. Please try again.' : 'Error al enviar. Por favor, intenta de nuevo.'}
+                                </p>
                             )}
                         </form>
                     </div>
@@ -159,7 +172,9 @@ export default function Contact() {
                             </div>
                             <div>
                                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2">{contactData.cvTitle}</h3>
-                                <p className="text-sm text-gray-400">Click para descargar PDF</p>
+                                <p className="text-sm text-gray-400">
+                                    {language === 'en' ? 'Click to download PDF' : 'Click para descargar PDF'}
+                                </p>
                             </div>
                         </button>
                     </div>
@@ -167,7 +182,9 @@ export default function Contact() {
 
                 {/* Footer */}
                 <footer className="mt-12 md:mt-20 py-8 md:py-10 border-t border-white/5 text-gray-600 text-xs md:text-sm px-4">
-                    {contactData.footer}
+                    {language === 'en'
+                        ? '© 2026 Guillermo Riedel. All rights reserved. Created with Next.js and Tailwind CSS.'
+                        : '© 2026 Guillermo Riedel. Todos los derechos reservados. Creado con Next.js y Tailwind CSS.'}
                 </footer>
             </div>
         </section>

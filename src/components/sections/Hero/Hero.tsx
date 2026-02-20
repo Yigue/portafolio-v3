@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { heroData } from '@/data/portfolio-data';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Hero() {
+    const { data } = useLanguage();
     const titleRef = useRef<HTMLHeadingElement>(null);
     const subtitleRef = useRef<HTMLParagraphElement>(null);
 
@@ -29,19 +30,19 @@ export default function Hero() {
                     ref={titleRef}
                     className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tighter text-gradient opacity-0 translate-y-10 leading-tight"
                 >
-                    {heroData.title}
+                    {data.hero.title}
                 </h1>
                 <p
                     ref={subtitleRef}
                     className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500 max-w-2xl mx-auto opacity-0 translate-y-10 font-light px-4 leading-relaxed"
                 >
-                    {heroData.subtitle}
+                    {data.hero.subtitle}
                 </p>
             </div>
 
             {/* Scroll Indicator */}
             <div className="absolute bottom-8 sm:bottom-10 animate-pulse text-gray-600 text-[10px] sm:text-xs tracking-[0.2em]">
-                {heroData.scrollIndicator}
+                {data.hero.scrollIndicator}
             </div>
         </section>
     );

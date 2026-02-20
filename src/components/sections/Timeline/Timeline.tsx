@@ -3,9 +3,12 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { mainTimeline, branchEvents } from '@/data/timeline';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Timeline() {
+    const { language, data } = useLanguage();
+    const { mainTimeline, branchEvents } = data.timeline;
+
     const sectionRef = useRef(null);
     const wrapperRef = useRef(null);
     const mainLineRef = useRef(null);
@@ -107,15 +110,19 @@ export default function Timeline() {
         return () => ctx.revert();
     }, []);
 
-    const andreaniEvents = branchEvents.filter((e) => e.branch === 'andreani');
-    const freelanceEvents = branchEvents.filter((e) => e.branch === 'freelance');
+    const andreaniEvents = branchEvents.filter((e: any) => e.branch === 'andreani');
+    const freelanceEvents = branchEvents.filter((e: any) => e.branch === 'freelance');
 
     return (
         <>
             <section ref={sectionRef} id="timeline" className="relative w-full min-h-screen bg-[#020202]">
                 <div className="text-center pt-16 sm:pt-20 pb-8 sm:pb-10 px-4">
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">Trayectoria</h2>
-                    <p className="text-gray-500 font-mono text-xs sm:text-sm">Desliza para conectar los puntos</p>
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
+                        {language === 'en' ? 'Career Path' : 'Trayectoria'}
+                    </h2>
+                    <p className="text-gray-500 font-mono text-xs sm:text-sm">
+                        {language === 'en' ? 'Scroll to connect the dots' : 'Desliza para conectar los puntos'}
+                    </p>
                 </div>
 
                 <div ref={wrapperRef} className="timeline-wrapper relative pb-[250px]"> {/* Aumenté el padding inferior */}
@@ -148,7 +155,7 @@ export default function Timeline() {
                     </svg>
 
                     {/* Main Timeline Cards */}
-                    {mainTimeline.map((event, index) => (
+                    {mainTimeline.map((event: any, index: number) => (
                         <div key={index} className={`timeline-card card-${event.side} relative z-10 `}>
                             <div className="glass-box  ">
                                 <span className="date-tag">{event.date}</span>
@@ -161,14 +168,14 @@ export default function Timeline() {
                     {/* Branch Split Indicator */}
                     <div className="text-center py-12 sm:py-16 md:py-20 relative z-20">
                         <div className="inline-block px-3 sm:px-4 py-1 rounded-full bg-gray-900 border border-gray-700 text-[10px] sm:text-xs font-mono text-gray-400">
-                            AGOSTO 2025: BRANCH SPLIT
+                            {language === 'en' ? 'AUGUST 2025: BRANCH SPLIT' : 'AGOSTO 2025: BRANCH SPLIT'}
                         </div>
                     </div>
 
                     {/* Split Section */}
                     <div className="split-section relative z-10 ">
                         <div className="split-col">
-                            {andreaniEvents.map((event, index) => (
+                            {andreaniEvents.map((event: any, index: number) => (
                                 <div key={index} className="branch-card andreani" style={index > 0 ? { marginTop: '50px' } : {}}>
                                     <div className="glass-box">
                                         <span className="date-tag text-purple-400">{event.date}</span>
@@ -176,7 +183,7 @@ export default function Timeline() {
                                         <p className="text-gray-400 text-xs sm:text-sm mt-2">{event.description}</p>
                                         {event.tags?.length > 0 && (
                                             <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
-                                                {event.tags.map((tag) => (
+                                                {event.tags.map((tag: string) => (
                                                     <span key={tag} className="text-[9px] sm:text-[10px] bg-purple-500/10 text-purple-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-purple-500/20">
                                                         {tag}
                                                     </span>
@@ -189,7 +196,7 @@ export default function Timeline() {
                         </div>
 
                         <div className="split-col">
-                            {freelanceEvents.map((event, index) => (
+                            {freelanceEvents.map((event: any, index: number) => (
                                 <div key={index} className="branch-card freelance" style={index > 0 ? { marginTop: '50px' } : {}}>
                                     <div className="glass-box">
                                         <span className="date-tag text-green-400">{event.date}</span>
@@ -197,7 +204,7 @@ export default function Timeline() {
                                         <p className="text-gray-400 text-xs sm:text-sm mt-2">{event.description}</p>
                                         {event.tags?.length > 0 && (
                                             <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2 justify-start md:justify-end">
-                                                {event.tags.map((tag) => (
+                                                {event.tags.map((tag: string) => (
                                                     <span key={tag} className="text-[9px] sm:text-[10px] bg-green-500/10 text-green-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-green-500/20">
                                                         {tag}
                                                     </span>
@@ -216,9 +223,15 @@ export default function Timeline() {
                     <div className="absolute left-1/2 -translate-x-1/2 z-40" style={{ top: '95%' }}>
                         <div className="timeline-card max-w-md w-full px-4">
                             <div className="glass-box text-center border-2 border-blue-500/50">
-                                <span className="date-tag text-blue-400">Futuro</span>
-                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">La Historia Continúa...</h3>
-                                <p className="text-gray-400 text-xs sm:text-sm">Siempre aprendiendo, siempre creciendo, siempre construyendo.</p>
+                                <span className="date-tag text-blue-400">
+                                    {language === 'en' ? 'Future' : 'Futuro'}
+                                </span>
+                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                                    {language === 'en' ? 'The Story Continues...' : 'La Historia Continúa...'}
+                                </h3>
+                                <p className="text-gray-400 text-xs sm:text-sm">
+                                    {language === 'en' ? 'Always learning, always growing, always building.' : 'Siempre aprendiendo, siempre creciendo, siempre construyendo.'}
+                                </p>
                             </div>
                         </div>
                     </div>

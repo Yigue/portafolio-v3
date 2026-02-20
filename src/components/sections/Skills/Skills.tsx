@@ -3,7 +3,19 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { skillNodes, connections, getToolsForArea } from '@/data/skills';
+import { useLanguage } from '@/context/LanguageContext';
+
+interface SkillNode {
+    type: 'core' | 'area' | 'tool';
+    icon: string;
+    title: string;
+    label: string;
+    desc: string;
+    color: string;
+    borderColor: string;
+    textColor: string;
+    position: { top: string; left: string };
+}
 
 interface InfoState {
     title: string;
@@ -12,14 +24,20 @@ interface InfoState {
     tools: string[];
 }
 
-const defaultInfo: InfoState = {
-    title: 'Selecciona un Nodo',
-    desc: 'Interactúa con el grafo de la izquierda para ver detalles de cada tecnología y su rol en la arquitectura.',
-    color: '#ffffff',
-    tools: [],
-};
-
 export default function Skills() {
+    const { language, data } = useLanguage();
+    const skillNodes = data.skills.nodes as SkillNode[];
+    const connections = data.skills.connections as [number, number][];
+
+    const defaultInfo: InfoState = {
+        title: language === 'en' ? 'Select a Node' : 'Selecciona un Nodo',
+        desc: language === 'en'
+            ? 'Interact with the graph on the left to view details of each technology and its role in the architecture.'
+            : 'Interactúa con el grafo de la izquierda para ver detalles de cada tecnología y su rol en la arquitectura.',
+        color: '#ffffff',
+        tools: [],
+    };
+
     const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const networkContainerRef = useRef<HTMLDivElement>(null);
@@ -29,6 +47,21 @@ export default function Skills() {
     const panelRef = useRef<HTMLDivElement>(null);
     const [activeInfo, setActiveInfo] = useState<InfoState>(defaultInfo);
     const autoSelectingRef = useRef(false);
+
+    // Update info when language changes
+    useEffect(() => {
+        setActiveInfo(defaultInfo);
+    }, [language]);
+
+    const getToolsForArea = useCallback((areaIndex: number) => {
+        const toolIndices = connections
+            .filter(([fromIdx]) => fromIdx === areaIndex)
+            .map(([, toIdx]) => toIdx);
+
+        return toolIndices
+            .map((idx) => skillNodes[idx]?.title)
+            .filter((title): title is string => Boolean(title));
+    }, [connections, skillNodes]);
 
     // Helper function to select a node (used by both hover and auto-tour)
     const selectNode = useCallback((index: number) => {
@@ -299,14 +332,16 @@ export default function Skills() {
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-900/10 mb-4">
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                         <span className="text-[10px] font-mono text-blue-300 tracking-widest uppercase">
-                            System Online
+                            {language === 'en' ? 'System Online' : 'Sistema Online'}
                         </span>
                     </div>
                     <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
-                        Ecosistema Técnico
+                        {language === 'en' ? 'Technical Ecosystem' : 'Ecosistema Técnico'}
                     </h2>
                     <p className="text-gray-500 mt-4 max-w-lg mx-auto text-sm md:text-base">
-                        Una arquitectura DevSecOps integrada. Pasa el cursor sobre los nodos para explorar.
+                        {language === 'en'
+                            ? 'An integrated DevSecOps architecture. Hover over nodes to explore.'
+                            : 'Una arquitectura DevSecOps integrada. Pasa el cursor sobre los nodos para explorar.'}
                     </p>
                 </div>
 
@@ -360,7 +395,7 @@ export default function Skills() {
                         >
                             <div className="flex justify-between items-center mb-4 sm:mb-5 lg:mb-6 border-b border-white/10 pb-3 sm:pb-4">
                                 <span className="font-mono text-[9px] sm:text-[10px] text-gray-500 tracking-widest">
-                                    NODE INSPECTOR
+                                    {language === 'en' ? 'NODE INSPECTOR' : 'INSPECTOR DE NODOS'}
                                 </span>
                                 <div className="flex gap-1.5 sm:gap-2">
                                     <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500" />
@@ -419,8 +454,8 @@ export default function Skills() {
                             />
 
                             <div className="mt-auto pt-3 sm:pt-4 border-t border-white/5 flex justify-between text-[8px] sm:text-[9px] lg:text-[10px] font-mono text-gray-600">
-                                <span>STATUS: ACTIVE</span>
-                                <span>LATENCY: 12ms</span>
+                                <span>{language === 'en' ? 'STATUS: ACTIVE' : 'ESTADO: ACTIVO'}</span>
+                                <span>{language === 'en' ? 'LATENCY: 12ms' : 'LATENCIA: 12ms'}</span>
                             </div>
                         </div>
                     </div>

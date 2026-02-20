@@ -3,9 +3,22 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { projects, Project } from '@/data/projects';
+import { useLanguage } from '@/context/LanguageContext';
+
+interface Project {
+    id: number;
+    title: string;
+    subtitle: string;
+    desc: string;
+    image: string;
+    tech: string[];
+    features: string[];
+}
 
 export default function Projects() {
+    const { language, data } = useLanguage();
+    const projects = data.projects as Project[];
+
     const sectionRef = useRef<HTMLElement>(null);
     const stripRef = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -144,11 +157,17 @@ export default function Projects() {
             <div ref={wrapperRef} className="projects-wrapper min-h-screen md:h-screen w-full flex flex-col md:flex-row items-start md:items-center relative pt-32 md:pt-0 pl-0 md:pl-20 overflow-visible md:overflow-hidden">
                 {/* Header */}
                 <div className="absolute top-10 left-6 md:left-10 z-20">
-                    <h2 className="text-5xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">Proyectos</h2>
+                    <h2 className="text-5xl md:text-8xl font-bold text-white/10 uppercase tracking-tighter">
+                        {language === 'en' ? 'Projects' : 'Proyectos'}
+                    </h2>
                     <div className="flex items-center gap-2 mt-2 ml-2">
                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                        <p className="text-blue-500 font-mono text-xs hidden md:block">DESLIZA PARA EXPLORAR →</p>
-                        <p className="text-blue-500 font-mono text-xs md:hidden">DESLIZA →</p>
+                        <p className="text-blue-500 font-mono text-xs hidden md:block">
+                            {language === 'en' ? 'SCROLL TO EXPLORE →' : 'DESLIZA PARA EXPLORAR →'}
+                        </p>
+                        <p className="text-blue-500 font-mono text-xs md:hidden">
+                            {language === 'en' ? 'SCROLL →' : 'DESLIZA →'}
+                        </p>
                     </div>
                 </div>
 
@@ -204,7 +223,9 @@ export default function Projects() {
                                         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 pr-10">{project.title} {project.subtitle}</h2>
                                         <p className="text-gray-300 mb-6 leading-relaxed text-sm md:text-sm">{project.desc}</p>
                                         <div className="mb-6">
-                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Tecnologías</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">
+                                                {language === 'en' ? 'Technologies' : 'Tecnologías'}
+                                            </h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {project.tech.map((t) => (
                                                     <span key={t} className="px-3 py-1.5 bg-white/10 rounded-full text-xs text-white border border-white/20">
@@ -214,7 +235,9 @@ export default function Projects() {
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">Características</h3>
+                                            <h3 className="text-base md:text-lg font-bold text-white mb-3">
+                                                {language === 'en' ? 'Features' : 'Características'}
+                                            </h3>
                                             <ul className="space-y-2 text-gray-300 text-sm">
                                                 {project.features.map((f) => (
                                                     <li key={f} className="flex items-start gap-2">

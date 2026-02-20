@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import { metadata as portfolioMetadata } from "@/data/portfolio-data";
+import { LanguageProvider } from '@/context/LanguageContext';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -48,10 +49,12 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className={inter.className}>
-        <SmoothScroll>
-
-          {children}
-        </SmoothScroll>
+        <LanguageProvider>
+          <SmoothScroll>
+            <Navbar />
+            {children}
+          </SmoothScroll>
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -3,9 +3,12 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { futureGoals } from '@/data/timeline';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Future() {
+    const { language, data } = useLanguage();
+    const { futureGoals } = data.timeline;
+
     const sectionRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -52,11 +55,13 @@ export default function Future() {
             <div className="container mx-auto px-6 z-10">
                 <div className="text-center mb-16 future-header opacity-0">
                     <span className="text-blue-500 font-mono text-xs">[ ROADMAP 2026+ ]</span>
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mt-2">Objetivos Desbloqueables</h2>
+                    <h2 className="text-4xl md:text-5xl font-bold text-white mt-2">
+                        {language === 'en' ? 'Unlockable Objectives' : 'Objetivos Desbloqueables'}
+                    </h2>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8">
-                    {futureGoals.map((goal, index) => (
+                    {futureGoals.map((goal: any, index: number) => (
                         <div
                             key={index}
                             className="future-card glass-panel p-8 rounded-xl border-dashed border-gray-700 relative opacity-0 translate-y-10"
