@@ -135,7 +135,7 @@ export default function Skills() {
                 }
             }
         });
-    }, []);
+    }, [skillNodes, getToolsForArea]);
 
     // Draw SVG lines between connected nodes
     const drawLines = useCallback(() => {

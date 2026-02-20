@@ -391,60 +391,53 @@ export const portfolioData = {
         },
         projects: [
             {
-                id: 1,
-                title: "Unsort",
-                subtitle: "Dashboard Ganadero",
-                desc: "Plataforma para digitalizar operación ganadera: stock por categoría/potrero, trazabilidad, reproducción, KPIs (destete, productividad) y tablero de decisiones. Diseñada para crecer por módulos y mantener dominio claro.",
-                image: "https://images.unsplash.com/photo-1527847263472-aa5338d178b8?fit=crop&w=1200&q=80",
-                tech: ["Next.js", "TypeScript", "Node.js", "Clean Architecture"],
-                features: ["Stock total y por potrero", "Dominio Operativo", "KPIs de Producción", "Escalabilidad Modular"]
+                "id": 1,
+                "title": "Unsort",
+                "subtitle": "Dashboard de Gestión Ganadera",
+                "desc": "Plataforma integral para la digitalización de operaciones ganaderas: trazabilidad, métricas de reproducción y control de stock en tiempo real. Diseñada bajo una arquitectura modular para garantizar escalabilidad y consistencia del dominio.",
+                "image": "https://images.unsplash.com/photo-1527847263472-aa5338d178b8?fit=crop&w=1200&q=80",
+                "tech": ["Next.js", "TypeScript", "Node.js", "Clean Architecture", "Docker"],
+                "features": ["Seguimiento de Stock por Categoría", "Enfoque en Dominio Operativo", "KPIs de Producción Real", "Despliegue Contenerizado"]
             },
             {
-                id: 2,
-                title: "Ops Automation Toolkit",
-                subtitle: "PowerShell / Python",
-                desc: "Toolkit de automatización para soporte y operación: diagnósticos, tareas repetitivas, inventario y acciones remotas. Enfoque en seguridad (mínimos privilegios), logging y reutilización.",
-                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
-                tech: ["PowerShell", "Python", "WinRM", "WMI"],
-                features: ["Ejecución Remota", "Logging Centralizado", "Diagnóstico Automático", "Plantillas de Operación"]
+                "id": 2,
+                "title": "Ops Automation Toolkit",
+                "subtitle": "Suite de Automatización de Infraestructura",
+                "desc": "Conjunto de herramientas especializadas para automatizar tareas repetitivas de IT y operaciones de soporte. Enfocado en la ejecución remota segura, logging centralizado y la reducción de errores humanos en entornos productivos.",
+                "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
+                "tech": ["PowerShell", "Python", "WinRM", "WMI", "Ansible"],
+                "features": ["Ejecución de Tareas Remotas", "Auditoría y Logging Centralizado", "Diagnóstico Automático de Red", "Plantillas de Operación Reutilizables"]
+            },
+
+            {
+                "id": 3,
+                "title": "CarStore",
+                "subtitle": "SaaS Automotriz (CRM + Gestión de Stock)",
+                "desc": "Solución SaaS para concesionarias que gestiona el inventario, pipelines de ventas y leads de clientes. Implementado con principios de DDD para soportar lógicas de negocio complejas y crecimiento modular.",
+                "image": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?fit=crop&w=1200&q=80",
+                "tech": ["Next.js", "TypeScript", ".NET", "SQL", "Clean Architecture"],
+                "features": ["Motor de Inventario y Precios", "Pipeline de Ventas/CRM", "Dashboard de Analíticas", "Servicios de Backend Modulares"]
             },
             {
-                id: 3,
-                title: "Landing SaaS",
-                subtitle: "Generación de sitios",
-                desc: "SaaS orientado a negocios locales para generar landing pages y activos digitales con una estética minimalista y foco en conversión. Arquitectura preparada para suscripción y multitenancy.",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80",
-                tech: ["Next.js", "TypeScript", "Supabase", "Prisma"],
-                features: ["Plantillas Reutilizables", "Multi-tenancy", "SEO Optimizado", "Gestión de Contenido"]
+                "id": 4,
+                "title": "Hybrid Cloud Lab",
+                "subtitle": "Infraestructura como Código & CI/CD",
+                "desc": "Despliegue de entornos cloud automatizados utilizando herramientas modernas de DevOps. Foco en la provisión de infraestructura inmutable y la creación de pipelines de entrega continua para aplicaciones web.",
+                "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?fit=crop&w=1200&q=80",
+                "tech": ["Terraform", "Ansible", "AWS", "GitHub Actions", "Docker"],
+                "features": ["Provisión Cloud Automatizada", "Gestión de Configuración (Ansible)", "Pipelines de CI/CD", "Despliegues Zero-Touch"]
             },
             {
-                id: 4,
-                title: "Second Brain",
-                subtitle: "Knowledge System",
-                desc: "Sistema de notas y conocimiento (Obsidian + flujos) para ingerir PDFs, transcripciones y notas; estructuración, indexación y generación asistida para estudio y operación.",
-                image: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?fit=crop&w=1200&q=80",
-                tech: ["Obsidian", "TypeScript", "Next.js", "Automation"],
-                features: ["Organización de Conocimiento", "Flujos de Ingesta", "Búsqueda Semántica", "Templates de Estudio"]
-            },
-            {
-                id: 5,
-                title: "Security Audit Tool",
-                subtitle: "Herramienta de Auditoría",
-                desc: "Plataforma de análisis de seguridad y compliance automatizado. Herramientas de auditoría y monitoreo continuo de vulnerabilidades.",
-                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
-                tech: ["Python", "Docker", "Postgres", "React"],
-                features: ["Escaneo de Vulnerabilidades", "Reportes de Compliance", "Monitoreo Continuo", "Alertas de Seguridad"]
-            },
-            {
-                id: 6,
-                title: "DevOps Platform",
-                subtitle: "Infraestructura & CI/CD",
-                desc: "CI/CD pipeline completo con monitoreo y alertas. Plataforma integral para automatización de despliegues y gestión de infraestructura.",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80",
-                tech: ["Jenkins", "Kubernetes", "Docker", "Prometheus"],
-                features: ["Pipelines CI/CD", "Orquestación K8s", "Métricas en Tiempo Real", "Gestión de Logs"]
+                "id": 5,
+                "title": "Migración de Infraestructura",
+                "subtitle": "Despliegue de Sistemas y Redes Corporativas",
+                "desc": "Gestión integral de la migración de infraestructura para oficinas: planificación de redes, estrategia de cutover y despliegue físico de hardware para asegurar la continuidad del negocio sin tiempos de inactividad.",
+                "image": "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?fit=crop&w=1200&q=80",
+                "tech": ["Networking", "Switching", "Routing", "Active Directory", "CCTV"],
+                "features": ["Estrategia de Migración y Cutover", "Armado de Racks y Red Física", "Validación de Conectividad de Servicios", "Soporte y Estabilización Post-Migración"]
             }
         ],
+
         certificates: [
             {
                 id: 3,
@@ -540,7 +533,7 @@ export const portfolioData = {
             messagePlaceholder: "Mensaje",
             submitButton: "Enviar",
             cvTitle: "Descargar CV",
-            footer: "Diseñado con precisión. © 2026."
+            footer: "Diseñado con precisión. ©Riedel Guillermo 2026."
         },
         navbar: {
             home: "Inicio",
@@ -888,58 +881,49 @@ export const portfolioData = {
         },
         projects: [
             {
-                id: 1,
-                title: "Unsort",
-                subtitle: "Livestock Dashboard",
-                desc: "Platform to digitize livestock operations: stock by category/paddock, traceability, reproduction, KPIs (weaning, productivity), and decision dashboard. Designed to grow by modules and maintain clear domain.",
-                image: "https://images.unsplash.com/photo-1527847263472-aa5338d178b8?fit=crop&w=1200&q=80",
-                tech: ["Next.js", "TypeScript", "Node.js", "Clean Architecture"],
-                features: ["Total & Paddock Stock", "Operational Domain", "Production KPIs", "Modular Scalability"]
+                "id": 1,
+                "title": "Unsort",
+                "subtitle": "Livestock Management Dashboard",
+                "desc": "A digital platform for cattle operations featuring real-time stock tracking, traceability, and reproduction metrics. Built with a modular approach to ensure scalability and domain-driven consistency.",
+                "image": "https://images.unsplash.com/photo-1527847263472-aa5338d178b8?fit=crop&w=1200&q=80",
+                "tech": ["Next.js", "TypeScript", "Node.js", "Clean Architecture", "Docker"],
+                "features": ["Category & Location Stock Tracking", "Operational Domain Focus", "Production KPIs", "Containerized Deployment"]
             },
             {
-                id: 2,
-                title: "Ops Automation Toolkit",
-                subtitle: "PowerShell / Python",
-                desc: "Automation toolkit for support and operations: diagnostics, repetitive tasks, inventory, and remote actions. Focus on security (least privilege), logging, and reuse.",
-                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
-                tech: ["PowerShell", "Python", "WinRM", "WMI"],
-                features: ["Remote Execution", "Centralized Logging", "Auto Diagnostics", "Operational Templates"]
+                "id": 2,
+                "title": "Ops Automation Toolkit",
+                "subtitle": "Infrastructure Automation Suite",
+                "desc": "A specialized toolkit designed to automate repetitive IT operations and support tasks. Focuses on secure remote execution, centralized logging, and reducing human error in production environments.",
+                "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
+                "tech": ["PowerShell", "Python", "WinRM", "WMI", "Ansible"],
+                "features": ["Remote Task Execution", "Centralized Audit Logging", "Automated Diagnostics", "Reusable Operation Templates"]
             },
             {
-                id: 3,
-                title: "Landing SaaS",
-                subtitle: "Site Generation",
-                desc: "SaaS oriented to local businesses to generate landing pages and digital assets with minimalist aesthetics and conversion focus. Architecture ready for subscription and multi-tenancy.",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80",
-                tech: ["Next.js", "TypeScript", "Supabase", "Prisma"],
-                features: ["Reusable Templates", "Multi-tenancy", "SEO Optimized", "Content Management"]
+                "id": 3,
+                "title": "CarStore",
+                "subtitle": "Automotive SaaS (CRM & Inventory)",
+                "desc": "A comprehensive SaaS solution for car dealerships to manage inventory, sales pipelines, and customer leads. Implemented using DDD principles to support complex business logic and modular growth.",
+                "image": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?fit=crop&w=1200&q=80",
+                "tech": ["Next.js", "TypeScript", ".NET", "SQL", "Clean Architecture"],
+                "features": ["Inventory & Pricing Engine", "Lead/CRM Pipeline", "Sales Analytics Dashboard", "Modular Backend Services"]
             },
             {
-                id: 4,
-                title: "Second Brain",
-                subtitle: "Knowledge System",
-                desc: "Knowledge and note system (Obsidian + workflows) to ingest PDFs, transcripts, and notes; structuring, indexing, and assisted generation for study and operation.",
-                image: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?fit=crop&w=1200&q=80",
-                tech: ["Obsidian", "TypeScript", "Next.js", "Automation"],
-                features: ["Knowledge Organization", "Ingestion Workflows", "Semantic Search", "Study Templates"]
+                "id": 4,
+                "title": "Hybrid Cloud Lab",
+                "subtitle": "Infrastructure as Code & CI/CD",
+                "desc": "Deployment of automated cloud environments using modern DevOps tools. Focuses on provisioning immutable infrastructure and establishing robust delivery pipelines for web applications.",
+                "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?fit=crop&w=1200&q=80",
+                "tech": ["Terraform", "Ansible", "AWS", "GitHub Actions", "Docker"],
+                "features": ["Automated Cloud Provisioning", "Config Management via Ansible", "Automated CI/CD Pipelines", "Zero-Touch Deployments"]
             },
             {
-                id: 5,
-                title: "Security Audit Tool",
-                subtitle: "Audit Tool",
-                desc: "Automated security analysis and compliance platform. Audit tools and continuous vulnerability monitoring.",
-                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=1200&q=80",
-                tech: ["Python", "Docker", "Postgres", "React"],
-                features: ["Vulnerability Scanning", "Compliance Reports", "Continuous Monitoring", "Security Alerts"]
-            },
-            {
-                id: 6,
-                title: "DevOps Platform",
-                subtitle: "Infrastructure & CI/CD",
-                desc: "Complete CI/CD pipeline with monitoring and alerts. Comprehensive platform for deployment automation and infrastructure management.",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80",
-                tech: ["Jenkins", "Kubernetes", "Docker", "Prometheus"],
-                features: ["Automated CI/CD", "K8s Orchestration", "Real-time Metrics", "Log Management"]
+                "id": 5,
+                "title": "Infrastructure Migration",
+                "subtitle": "Enterprise Network & Systems Deployment",
+                "desc": "Successfully managed an end-to-end office infrastructure migration, including network planning, service cutover, and physical hardware deployment to ensure zero downtime for critical business operations.",
+                "image": "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?fit=crop&w=1200&q=80",
+                "tech": ["Networking", "Switching", "Routing", "Active Directory", "CCTV"],
+                "features": ["Cutover & Migration Strategy", "Rack/Network Physical Setup", "Service Connectivity Validation", "Post-Migration Stability Support"]
             }
         ],
         certificates: [
