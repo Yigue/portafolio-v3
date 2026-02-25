@@ -78,7 +78,7 @@ export const portfolioData = {
                 "Automatización: scripts PowerShell/Python para tareas repetitivas y diagnósticos.",
                 "Construcción de productos: dashboards, SaaS, tooling y arquitectura limpia."
             ],
-            image: "/me.JPG"
+            image: "/me.jpeg"
         },
         skills: {
             nodes: [
@@ -575,7 +575,7 @@ export const portfolioData = {
                 "Automation: PowerShell/Python scripts for repetitive tasks and diagnostics.",
                 "Product Building: dashboards, SaaS, tooling, and clean architecture."
             ],
-            image: "/me.JPG"
+            image: "/me.jpeg"
         },
         skills: {
             nodes: [
