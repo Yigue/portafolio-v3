@@ -523,6 +523,28 @@ export const portfolioData = {
                 status: "coming_soon",
                 tech: ["Pentesting", "Red Teaming", "Exploit Dev", "Active Directory"],
                 features: ["Network Attacks", "Lateral Movement", "Privilege Escalation", "Reporting"]
+            },
+            {
+                id: 9,
+                title: "Cybersecurity Fundamentals",
+                subtitle: "Fundamentos de Ciberseguridad",
+                desc: "Conceptos y principios fundamentales de ciberseguridad, gestión de riesgos y protección de activos de información.",
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?fit=crop&w=1200&q=80",
+                status: "completed",
+                pdfUrl: "/Diplomas/diploma-cybersec-fundamentals.pdf",
+                tech: ["Cybersecurity", "Network Security", "Risk Management"],
+                features: ["Principios de Seguridad", "Identificación de Amenazas", "Controles de Entrada", "Concientización"]
+            },
+            {
+                id: 10,
+                title: "Security Operations Fundamentals",
+                subtitle: "Fundamentos en Operaciones de Seguridad",
+                desc: "Conceptos esenciales para desempeñarse en un centro de operaciones de seguridad (SOC) y mitigar ciberataques.",
+                image: "https://images.unsplash.com/photo-1563206767-5b18f218e8de?fit=crop&w=1200&q=80",
+                status: "completed",
+                pdfUrl: "/Diplomas/diploma-Security-operations-fundamentals.pdf",
+                tech: ["SecOps", "SOC", "Incident Response", "Threat Intel"],
+                features: ["Monitoreo de Eventos", "Gestión de Incidentes", "Análisis de Vulnerabilidades", "Respuesta Rápida"]
             }
         ],
         contact: {
@@ -972,7 +994,29 @@ export const portfolioData = {
                 features: ["Naming Conventions", "Functions & Methods", "Unit Tests", "Code Smells"]
             },
             {
+                id: 3,
+                title: "Cybersecurity Fundamentals",
+                subtitle: "Cybersecurity Basics",
+                desc: "Fundamental concepts and principles of cybersecurity, risk management, and protection of information assets.",
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?fit=crop&w=1200&q=80",
+                status: "completed",
+                pdfUrl: "/Diplomas/diploma-cybersec-fundamentals.pdf",
+                tech: ["Cybersecurity", "Network Security", "Risk Management"],
+                features: ["Security Principles", "Threat Identification", "Entry Controls", "Awareness"]
+            },
+            {
                 id: 4,
+                title: "Security Operations Fundamentals",
+                subtitle: "Security Operations Basics",
+                desc: "Essential concepts to operate in a Security Operations Center (SOC) and mitigate cyber threats.",
+                image: "https://images.unsplash.com/photo-1563206767-5b18f218e8de?fit=crop&w=1200&q=80",
+                status: "completed",
+                pdfUrl: "/Diplomas/diploma-Security-operations-fundamentals.pdf",
+                tech: ["SecOps", "SOC", "Incident Response", "Threat Intel"],
+                features: ["Event Monitoring", "Incident Management", "Vulnerability Analysis", "Rapid Response"]
+            },
+            {
+                id: 5,
                 title: "Testing with Jest",
                 subtitle: "Software Quality",
                 desc: "Quality assurance through unit and integration testing with Jest. Mocking, spies, and test coverage in JavaScript/TypeScript applications.",
@@ -981,37 +1025,37 @@ export const portfolioData = {
                 pdfUrl: "/Diplomas/diploma-jest.pdf",
                 tech: ["Jest", "Unit Testing", "TDD", "Quality Assurance"],
                 features: ["Test Suites", "Mocking & Spies", "Coverage Reports", "Asynchronous Tests"]
-            },
-            {
-                id: 6,
-                title: "AWS Solutions Architect",
-                subtitle: "Associate (SAA-C03)",
-                desc: "Design of distributed, scalable, and resilient architectures on AWS. Intensive preparation for official certification.",
-                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?fit=crop&w=1200&q=80",
-                status: "coming_soon",
-                tech: ["AWS", "Cloud Architecture", "High Availability", "Cost Optimization"],
-                features: ["VPC & Networking", "Serverless (Lambda)", "Storage Solutions", "Database Architecture"]
-            },
-            {
-                id: 7,
-                title: "Kubernetes Administrator",
-                subtitle: "CKA Certification",
-                desc: "Advanced Kubernetes cluster administration. Deployment, scaling, and management of containerized applications in production environments.",
-                image: "https://images.unsplash.com/photo-1667372393119-c81c0cda0a29?fit=crop&w=1200&q=80",
-                status: "coming_soon",
-                tech: ["Kubernetes", "Docker", "Orchestration", "DevOps"],
-                features: ["Cluster Architecture", "Services & Networking", "Storage & Scheduling", "Troubleshooting"]
-            },
-            {
-                id: 8,
-                title: "Advanced Pentesting",
-                subtitle: "Offensive Security",
-                desc: "Advanced intrusion and post-exploitation techniques. Defense evasion, pivoting, and privilege escalation in corporate environments.",
-                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?fit=crop&w=1200&q=80",
-                status: "coming_soon",
-                tech: ["Pentesting", "Red Teaming", "Exploit Dev", "Active Directory"],
-                features: ["Network Attacks", "Lateral Movement", "Privilege Escalation", "Reporting"]
             }
+            // {
+            //     id: 6,
+            //     title: "AWS Solutions Architect",
+            //     subtitle: "Associate (SAA-C03)",
+            //     desc: "Design of distributed, scalable, and resilient architectures on AWS. Intensive preparation for official certification.",
+            //     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?fit=crop&w=1200&q=80",
+            //     status: "coming_soon",
+            //     tech: ["AWS", "Cloud Architecture", "High Availability", "Cost Optimization"],
+            //     features: ["VPC & Networking", "Serverless (Lambda)", "Storage Solutions", "Database Architecture"]
+            // },
+            // {
+            //     id: 7,
+            //     title: "Kubernetes Administrator",
+            //     subtitle: "CKA Certification",
+            //     desc: "Advanced Kubernetes cluster administration. Deployment, scaling, and management of containerized applications in production environments.",
+            //     image: "https://images.unsplash.com/photo-1667372393119-c81c0cda0a29?fit=crop&w=1200&q=80",
+            //     status: "coming_soon",
+            //     tech: ["Kubernetes", "Docker", "Orchestration", "DevOps"],
+            //     features: ["Cluster Architecture", "Services & Networking", "Storage & Scheduling", "Troubleshooting"]
+            // },
+            // {
+            //     id: 8,
+            //     title: "Advanced Pentesting",
+            //     subtitle: "Offensive Security",
+            //     desc: "Advanced intrusion and post-exploitation techniques. Defense evasion, pivoting, and privilege escalation in corporate environments.",
+            //     image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?fit=crop&w=1200&q=80",
+            //     status: "coming_soon",
+            //     tech: ["Pentesting", "Red Teaming", "Exploit Dev", "Active Directory"],
+            //     features: ["Network Attacks", "Lateral Movement", "Privilege Escalation", "Reporting"]
+            // }
         ],
         contact: {
             title: "Ready to scale?",
